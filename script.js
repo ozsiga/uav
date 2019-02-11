@@ -65,54 +65,58 @@ function getCustomData(success, error) {
         }
 
 
-        var svg = d3.select('#svgview').selectAll("svg").data(input.data, function (d) {
+        var svg = d3.select('.leaflet-pane').selectAll("svg").data(input.data, function (d) {
             return d.id
         });
 
         svg.exit().remove();
 
+
+        var offsetX = 200;
+        var offsetY = 200;
+
         var newSvg = svg.enter().append("svg");
-        newSvg.attr("z-index", 1000)
+        newSvg.style("width", 2 * offsetX);
+        newSvg.style("height", 2* offsetY);
+
+        newSvg.style("z-index", 1000)
         newSvg.append("line");
         svg = newSvg.merge(svg);
 
 
 
         svg.select("line")
-            .attr("x1", 10)
-            .attr("y1", 10)
+            .attr("x1", offsetX)
+            .attr("y1", offsetY)
             .attr("x2", function (d) {
-                return d.speed.x * 30
+                return offsetX + d.speed.x ;
             })
             .attr("y2", function (d) {
-                return d.speed.y * 30
+                return offsetY -d.speed.y ;
             })
             .attr("stroke", "red")
             .attr("stroke-width", 2)
 
+            
+            
+            setTimeout(function(){
+                var uav = document.getElementsByClassName('leaflet-marker-icon');
+             var line = document.getElementsByTagName("svg");
+             for (var i = 0; i < uav.length; i++) {
+                 line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";      
+                 line[i].style.marginTop = uav[i].style.marginTop ;      
+                 line[i].style.marginLeft = uav[i].style.marginLeft ;
+                 line[i].style.position = "absolute" ;     
+                 console.log(uav[i].style);
+                 console.log(line[i].style);
+                };
+            }, 50);
+            
         //return the GeoJSON FeatureCollection
-
         return fs;
     }
 
     function isNumeric(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
-
 }
-
-const uav = document.getElementsByClassName('leaflet-marker-icon');
-const line = document.getElementsByTagName("line")
-
-
-
-for (let i = 0; i < uav.length; i++) {
-    console.log(uav[i]);
-}
-for (let k = 0; k < line.length; k++) {
-    console.log(line[k]);
-}
-
-
-console.log(uav)
-console.log(line)
