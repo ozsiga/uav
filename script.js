@@ -1,4 +1,4 @@
-var map = L.map('map'),
+var map = L.map('map').setView([47.529349, 19.032751], 10),
     realtime = L.realtime(getCustomData, {
         interval: 0.1 * 1000
     }).addTo(map);
@@ -7,11 +7,10 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-realtime.on('update', function () {
-    map.fitBounds(realtime.getBounds(), {
-        maxZoom: 12
-    });
-});
+map.fitBounds([
+    [47.52934912, 19.03275112],
+    [47.77412312, 19.12512312]
+], );
 
 //Get data from server
 
