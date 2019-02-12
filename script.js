@@ -77,7 +77,7 @@ function getCustomData(success, error) {
 
         var newSvg = svg.enter().append("svg");
         newSvg.style("width", 2 * offsetX);
-        newSvg.style("height", 2* offsetY);
+        newSvg.style("height", 2 * offsetY);
 
         newSvg.style("z-index", 1000)
         newSvg.append("line");
