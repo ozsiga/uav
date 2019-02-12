@@ -1,4 +1,4 @@
-var map = L.map('map').setView([47.529349, 19.032751], 10),
+var map = L.map('map'),
     realtime = L.realtime(getCustomData, {
         interval: 0.1 * 1000
     }).addTo(map);
@@ -7,10 +7,11 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-map.fitBounds([
-    [47.52934912, 19.03275112],
-    [47.77412312, 19.12512312]
-], );
+realtime.on('update', function () {
+    map.fitBounds(realtime.getBounds(), {
+        maxZoom: 12
+    });
+});
 
 //Get data from server
 
@@ -49,7 +50,7 @@ function getCustomData(success, error) {
                 "type": "Feature",
                 "geometry": {
                     "type": "Point",
-                    "coordinates": [ele['lon'], ele['lat']]
+                    "coordinates": [ele['longitude'], ele['latitude']]
                 }
             };
 
@@ -58,7 +59,7 @@ function getCustomData(success, error) {
             //set the id
             feature.properties["id"] = i;
             //check that the elements are numeric and only then insert
-            if (isNumeric(ele['lon']) && isNumeric(ele['lat'])) {
+            if (isNumeric(ele['longitude']) && isNumeric(ele['latitude'])) {
                 //add this feature to the features array
                 fs.features.push(feature)
             }
@@ -89,29 +90,29 @@ function getCustomData(success, error) {
             .attr("x1", offsetX)
             .attr("y1", offsetY)
             .attr("x2", function (d) {
-                return offsetX + d.speed.x ;
+                return offsetX + d.speed.x;
             })
             .attr("y2", function (d) {
-                return offsetY -d.speed.y ;
+                return offsetY - d.speed.y;
             })
             .attr("stroke", "red")
             .attr("stroke-width", 2)
 
-            
-            
-            setTimeout(function(){
-                var uav = document.getElementsByClassName('leaflet-marker-icon');
-             var line = document.getElementsByTagName("svg");
-             for (var i = 0; i < uav.length; i++) {
-                 line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";      
-                 line[i].style.marginTop = uav[i].style.marginTop ;      
-                 line[i].style.marginLeft = uav[i].style.marginLeft ;
-                 line[i].style.position = "absolute" ;     
-                 console.log(uav[i].style);
-                 console.log(line[i].style);
-                };
-            }, 50);
-            
+
+
+        setTimeout(function () {
+            var uav = document.getElementsByClassName('leaflet-marker-icon');
+            var line = document.getElementsByTagName("svg");
+            for (var i = 0; i < uav.length; i++) {
+                line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";
+                line[i].style.marginTop = uav[i].style.marginTop;
+                line[i].style.marginLeft = uav[i].style.marginLeft;
+                line[i].style.position = "absolute";
+                console.log(uav[i].style);
+                console.log(line[i].style);
+            };
+        }, 50);
+
         //return the GeoJSON FeatureCollection
         return fs;
     }
