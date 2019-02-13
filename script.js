@@ -4,11 +4,9 @@ var map = L.map('map').setView([47.529349, 19.032751], 10)
 
 // }).addTo(map);
 
-
-
-setInterval(function () {
-   getCustomData();
-}, 10000);
+setInterval(() => {
+    getCustomData();
+}, 5000);
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -21,134 +19,113 @@ map.fitBounds([
 
 //Get data from server
 
-function getCustomData(success, error) {
+function getCustomData() {
     let url = "http://localhost:8080/UAVServerPOC/rest/fake"; //url of service
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
-    xhr.onload = function () {
+    xhr.onload = () => {
         if (xhr.status === 200) {
             var res = convertToGeoJSON(xhr.responseText);
-            success(res);
+            console.log(res);
         } else {
-            var e = new Error("HTTP Rquest")
+            var e = new Error("HTTP Request")
             error(e, xhr.status);
         }
     };
     xhr.send();
+}
 
+//Convert JSON to GeoJson
 
+function convertToGeoJSON(input) {
+    //convert input to Object, if it is of type string
+    if (typeof (input) == "string") {
+        input = JSON.parse(input);
+    }
 
-    //Convert JSON to GeoJson
-
-    function convertToGeoJSON(input) {
-        //convert input to Object, if it is of type string
-        if (typeof (input) == "string") {
-            input = JSON.parse(input);
-        }
-
-        var fs = {
-            "type": "FeatureCollection",
-            "features": []
-        };
-        for (var i = 0; i < input.data.length; i++) {
-            var ele = input.data[i].position;
-            var feature = {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ele['longitude'], ele['latitude']]
-                }
-            };
-
-
-            feature.properties = ele;
-            //set the id
-            feature.properties["id"] = i;
-            //check that the elements are numeric and only then insert
-            if (isNumeric(ele['longitude']) && isNumeric(ele['latitude'])) {
-                //add this feature to the features array
-                fs.features.push(feature)
+    var fs = {
+        "type": "FeatureCollection",
+        "features": []
+    };
+    for (var i = 0; i < input.data.length; i++) {
+        var ele = input.data[i].position;
+        var feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [ele['longitude'], ele['latitude']]
             }
+        };
+
+        feature.properties = ele;
+
+        //set the id
+        feature.properties["id"] = input.data[i].id;
+
+        //check that the elements are numeric and only then insert
+        if (isNumeric(ele['longitude']) && isNumeric(ele['latitude'])) {
+            //add this feature to the features array
+            fs.features.push(feature)
         }
-
-
-        var svg = d3.select('.leaflet-pane').selectAll("svg").data(input.data, function (d) {
-            return d.id
-        });
-
-        svg.exit().remove();
-
-
-        var offsetX = 200;
-        var offsetY = 200
-
-        var newSvg = svg.enter().append("svg");
-        newSvg.style("width", 2 * offsetX);
-        newSvg.style("height", 2 * offsetY);
-
-        newSvg.style("z-index", 1000)
-        newSvg.append("line");
-        svg = newSvg.merge(svg);
-
-
-
-        svg.select("line")
-            .attr("x1", offsetX)
-            .attr("y1", offsetY)
-            .attr("x2", function (d) {
-                return offsetX + d.speed.x;
-            })
-            .attr("y2", function (d) {
-                return offsetY - d.speed.y;
-            })
-            .attr("stroke", "red")
-            .attr("stroke-width", 2)
-
-
-
-        setTimeout(function () {
-            var uav = document.getElementsByClassName('leaflet-marker-icon');
-            var line = document.getElementsByTagName("svg");
-            for (var i = 0; i < uav.length; i++) {
-                line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";
-                line[i].style.marginTop = -22;
-                line[i].style.marginLeft = 9;
-                // line[i].style.position = "absolute";
-                // console.log(uav[i].style);
-                // console.log(line[i].style);
-            };
-        }, 5);
-
-
-
-        //return the GeoJSON FeatureCollection
-        var fsFeatures = fs.features;
-        //console.log(fsFeatures)
-        // getMarkerLatLon(fsFeatures);
-        // map.removeLayer()
-        for (i = 0; i < fsFeatures.length; i++) {
-            
-            L.marker(getMarkerLatLon(fsFeatures, i)).addTo(map)
-            // console.log(getMarkerLatLon(fsFeatures, i))
-            //if(){
-
-            //}
-        }
-        return fsFeatures;
-
-
-
     }
 
+    var svg = d3.select('.leaflet-pane').selectAll("svg").data(input.data, (d) => {
+        return d.id
+    });
 
-    function isNumeric(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
+    svg.exit().remove();
+
+    var offsetX = 200;
+    var offsetY = 200
+
+    var newSvg = svg.enter().append("svg");
+    newSvg.style("width", 2 * offsetX);
+    newSvg.style("height", 2 * offsetY);
+
+    newSvg.style("z-index", 1000)
+    newSvg.append("line");
+    svg = newSvg.merge(svg);
+
+    svg.select("line")
+        .attr("x1", offsetX)
+        .attr("y1", offsetY)
+        .attr("x2", (d) => {
+            return offsetX + d.speed.x;
+        })
+        .attr("y2", (d) => {
+            return offsetY - d.speed.y;
+        })
+        .attr("stroke", "red")
+        .attr("stroke-width", 2)
+
+    setTimeout(() => {
+        var uav = document.getElementsByClassName('leaflet-marker-icon');
+        var line = document.getElementsByTagName("svg");
+        for (var i = 0; i < uav.length; i++) {
+            line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";
+            line[i].style.marginTop = -22;
+            line[i].style.marginLeft = 9;
+        };
+    }, 50);
+
+    // //return the GeoJSON FeatureCollection
+    var fsFeatures = fs.features;
+    // //console.log(fsFeatures) // lat, long, id
+
+    for (i = 0; i < fsFeatures.length; i++) {
+        L.marker(getMarkerLatLon(fsFeatures, i)).addTo(map);
     }
+
+    return fsFeatures;
+}
+
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 function getMarkerLatLon(fs, i) {
     var latlon = [];
-        latlon.push(fs[i].properties.latitude, fs[i].properties.longitude , i)
-        console.log(latlon)
-        return latlon;
+    latlon.push(fs[i].properties.latitude, fs[i].properties.longitude, fs[i].properties.id)
+    // console.log(latlon)
+    return latlon;
 }
