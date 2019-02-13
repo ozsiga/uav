@@ -1,7 +1,14 @@
-var map = L.map('map').setView([47.529349, 19.032751], 10),
-    realtime = L.realtime(getCustomData, {
-        interval: 0.1 * 1000
-    }).addTo(map);
+var map = L.map('map').setView([47.529349, 19.032751], 10)
+// realtime = L.realtime(getCustomData, {
+//     interval: 0.1 * 1000
+
+// }).addTo(map);
+
+
+
+setInterval(function () {
+   getCustomData();
+}, 10000);
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -49,7 +56,7 @@ function getCustomData(success, error) {
                 "type": "Feature",
                 "geometry": {
                     "type": "Point",
-                    "coordinates": [ele['lon'], ele['lat']]
+                    "coordinates": [ele['longitude'], ele['latitude']]
                 }
             };
 
@@ -58,7 +65,7 @@ function getCustomData(success, error) {
             //set the id
             feature.properties["id"] = i;
             //check that the elements are numeric and only then insert
-            if (isNumeric(ele['lon']) && isNumeric(ele['lat'])) {
+            if (isNumeric(ele['longitude']) && isNumeric(ele['latitude'])) {
                 //add this feature to the features array
                 fs.features.push(feature)
             }
@@ -73,7 +80,7 @@ function getCustomData(success, error) {
 
 
         var offsetX = 200;
-        var offsetY = 200;
+        var offsetY = 200
 
         var newSvg = svg.enter().append("svg");
         newSvg.style("width", 2 * offsetX);
@@ -89,34 +96,59 @@ function getCustomData(success, error) {
             .attr("x1", offsetX)
             .attr("y1", offsetY)
             .attr("x2", function (d) {
-                return offsetX + d.speed.x ;
+                return offsetX + d.speed.x;
             })
             .attr("y2", function (d) {
-                return offsetY -d.speed.y ;
+                return offsetY - d.speed.y;
             })
             .attr("stroke", "red")
             .attr("stroke-width", 2)
 
-            
-            
-            setTimeout(function(){
-                var uav = document.getElementsByClassName('leaflet-marker-icon');
-             var line = document.getElementsByTagName("svg");
-             for (var i = 0; i < uav.length; i++) {
-                 line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";      
-                 line[i].style.marginTop = uav[i].style.marginTop ;      
-                 line[i].style.marginLeft = uav[i].style.marginLeft ;
-                 line[i].style.position = "absolute" ;     
-                 console.log(uav[i].style);
-                 console.log(line[i].style);
-                };
-            }, 50);
-            
+
+
+        setTimeout(function () {
+            var uav = document.getElementsByClassName('leaflet-marker-icon');
+            var line = document.getElementsByTagName("svg");
+            for (var i = 0; i < uav.length; i++) {
+                line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";
+                line[i].style.marginTop = -22;
+                line[i].style.marginLeft = 9;
+                // line[i].style.position = "absolute";
+                // console.log(uav[i].style);
+                // console.log(line[i].style);
+            };
+        }, 5);
+
+
+
         //return the GeoJSON FeatureCollection
-        return fs;
+        var fsFeatures = fs.features;
+        //console.log(fsFeatures)
+        // getMarkerLatLon(fsFeatures);
+        // map.removeLayer()
+        for (i = 0; i < fsFeatures.length; i++) {
+            
+            L.marker(getMarkerLatLon(fsFeatures, i)).addTo(map)
+            // console.log(getMarkerLatLon(fsFeatures, i))
+            //if(){
+
+            //}
+        }
+        return fsFeatures;
+
+
+
     }
+
 
     function isNumeric(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
+}
+
+function getMarkerLatLon(fs, i) {
+    var latlon = [];
+        latlon.push(fs[i].properties.latitude, fs[i].properties.longitude , i)
+        console.log(latlon)
+        return latlon;
 }
