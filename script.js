@@ -110,8 +110,8 @@ function convertToGeoJSON(input) {
     var fsFeatures = fs.features;
     // //console.log(fsFeatures) // lat, long, id
 
-    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0)).bindPopup(`${getMarkerLatLon(fsFeatures, 0)}`).openPopup();
-    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1)).bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
+    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0));
+    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1));
 
     return fsFeatures;
 }
