@@ -1,8 +1,7 @@
-var map = L.map('map').setView([47.529349, 19.032751], 10)
-// realtime = L.realtime(getCustomData, {
-//     interval: 0.1 * 1000
+var map = L.map('map').setView([47.529349, 19.032751], 10);
 
-// }).addTo(map);
+let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
+let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
 
 setInterval(() => {
     getCustomData();
@@ -33,10 +32,6 @@ function getCustomData() {
     };
     xhr.send();
 }
-
-let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
-let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
-
 
 //Convert JSON to GeoJson
 
@@ -115,8 +110,8 @@ function convertToGeoJSON(input) {
     var fsFeatures = fs.features;
     // //console.log(fsFeatures) // lat, long, id
 
-    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0));
-    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1));
+    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0)).bindPopup(`${getMarkerLatLon(fsFeatures, 0)}`).openPopup();
+    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1)).bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
 
     return fsFeatures;
 }
