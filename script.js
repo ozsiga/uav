@@ -37,6 +37,7 @@ function getCustomData() {
 let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
 let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
 
+
 //Convert JSON to GeoJson
 
 function convertToGeoJSON(input) {
