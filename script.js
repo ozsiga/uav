@@ -6,7 +6,7 @@ var map = L.map('map').setView([47.529349, 19.032751], 10)
 
 setInterval(() => {
     getCustomData();
-}, 5000);
+}, 100);
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -26,7 +26,6 @@ function getCustomData() {
     xhr.onload = () => {
         if (xhr.status === 200) {
             var res = convertToGeoJSON(xhr.responseText);
-            console.log(res);
         } else {
             var e = new Error("HTTP Request")
             error(e, xhr.status);
@@ -34,6 +33,9 @@ function getCustomData() {
     };
     xhr.send();
 }
+
+let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
+let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
 
 //Convert JSON to GeoJson
 
@@ -112,9 +114,8 @@ function convertToGeoJSON(input) {
     var fsFeatures = fs.features;
     // //console.log(fsFeatures) // lat, long, id
 
-    for (i = 0; i < fsFeatures.length; i++) {
-        L.marker(getMarkerLatLon(fsFeatures, i)).addTo(map);
-    }
+    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0));
+    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1));
 
     return fsFeatures;
 }
@@ -125,7 +126,7 @@ function isNumeric(n) {
 
 function getMarkerLatLon(fs, i) {
     var latlon = [];
-    latlon.push(fs[i].properties.latitude, fs[i].properties.longitude, fs[i].properties.id)
+    latlon.push(fs[i].properties.latitude, fs[i].properties.longitude);
     // console.log(latlon)
     return latlon;
 }
