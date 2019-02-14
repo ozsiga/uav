@@ -1,16 +1,23 @@
 var map = L.map('map').setView([47.529349, 19.032751], 10);
 
+
+//Set markers default value
 let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
 let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
 
+// set server request interval
 setInterval(() => {
     getCustomData();
 }, 100);
 
+
+//set maps layer
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+
+//set maps default bounds
 map.fitBounds([
     [47.52934912, 19.03275112],
     [47.77412312, 19.12512312]
@@ -67,6 +74,8 @@ function convertToGeoJSON(input) {
         }
     }
 
+
+    // initialize svg
     var svg = d3.select('.leaflet-pane').selectAll("svg").data(input.data, (d) => {
         return d.id
     });
@@ -95,7 +104,10 @@ function convertToGeoJSON(input) {
         })
         .attr("stroke", "red")
         .attr("stroke-width", 2)
+        .attr("marker-end","url(#arrow)");  
 
+
+        // bind line to marker icon
     setTimeout(() => {
         var uav = document.getElementsByClassName('leaflet-marker-icon');
         var line = document.getElementsByTagName("svg");
@@ -106,13 +118,21 @@ function convertToGeoJSON(input) {
         };
     }, 50);
 
-    // //return the GeoJSON FeatureCollection
+
+    // set marker latlng 
     var fsFeatures = fs.features;
-    // //console.log(fsFeatures) // lat, long, id
-
-    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0)).bindPopup(`${getMarkerLatLon(fsFeatures, 0)}`).openPopup();
-    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1)).bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
-
+    var customPopup = "UAV in da MAP<br/><img src='https://media.giphy.com/media/xUA7bcuTndaPQ6jtew/giphy.gif' alt='maptime logo gif' width='350px'/>";
+    
+    // specify popup options 
+    var customOptions =
+        {
+        'maxWidth': '500',
+        'className' : 'custom'
+        }
+    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0)).bindPopup(customPopup,customOptions)  //.openPopup();
+    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1)).bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`)  //.openPopup();
+    
+    //return the GeoJSON FeatureCollection
     return fsFeatures;
 }
 
@@ -120,6 +140,19 @@ function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+//useless
+function getAllMarker() {
+    var markers = [];
+    map.eachLayer(function (layer) {
+        if (layer instanceof L.Marker) {
+            if (map.getBounds().contains(layer.getLatLng())) {
+                markers.push(layer.feature);
+            }
+        }
+    });
+    return markers;
+}
+// get markers latitude and longitude
 function getMarkerLatLon(fs, i) {
     var latlon = [];
     latlon.push(fs[i].properties.latitude, fs[i].properties.longitude);
