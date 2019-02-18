@@ -1,4 +1,4 @@
-var map = L.map('map').setView([47.529349, 19.032751], 10);
+var map = L.map('map').setView([47.529349, 19.032751], 12);
 
 
 //Set markers default value
@@ -8,7 +8,7 @@ let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
 // set server request interval
 setInterval(() => {
     getCustomData();
-}, 100);
+}, 10);
 
 
 //set maps layer
@@ -19,8 +19,8 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 //set maps default bounds
 map.fitBounds([
-    [47.52934912, 19.03275112],
-    [47.77412312, 19.12512312]
+    [marker1.getBounds()],
+    [marker2.getBounds()]
 ], );
 
 //Get data from server
@@ -107,7 +107,7 @@ function convertToGeoJSON(input) {
         .attr("marker-end","url(#arrow)");  
 
 
-        // bind line to marker icon
+    // bind line to marker icon
     setTimeout(() => {
         var uav = document.getElementsByClassName('leaflet-marker-icon');
         var line = document.getElementsByTagName("svg");
@@ -129,8 +129,10 @@ function convertToGeoJSON(input) {
         'maxWidth': '500',
         'className' : 'custom'
         }
-    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0)).bindPopup(customPopup,customOptions)  //.openPopup();
-    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1)).bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`)  //.openPopup();
+
+    //set marker latlng to server data
+    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0))  //.bindPopup(customPopup,customOptions).openPopup();
+    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1))  //.bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
     
     //return the GeoJSON FeatureCollection
     return fsFeatures;
