@@ -1,16 +1,25 @@
-//Set mat view
+// Set map view
 var map = L.map('map').setView([47.529349, 19.032751], 11);
-
 
 //Set markers default value
 let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
 let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
+
+let sensor1;
+let sensor2;
+
+let sensorIcon = L.icon({
+    iconUrl: './img/sensor-icon.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32]
+});
 
 // set server request interval
 setInterval(() => {
     getCustomData();
 }, 1);
 
+getSensorData();
 
 //set maps layer
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -25,7 +34,6 @@ map.fitBounds([
 ], );
 
 //Get data from server
-
 function getCustomData() {
     let url = "http://localhost:8080/UAVServerPOC/rest/fake"; //url of service
     var xhr = new XMLHttpRequest();
@@ -105,7 +113,7 @@ function convertToGeoJSON(input) {
         })
         .attr("stroke", "red")
         .attr("stroke-width", 2)
-        .attr("marker-end","url(#arrow)");  
+        .attr("marker-end", "url(#arrow)");
 
 
     // bind line to marker icon
@@ -123,18 +131,17 @@ function convertToGeoJSON(input) {
     // set marker latlng 
     var fsFeatures = fs.features;
     var customPopup = "UAV in da MAP<br/><img src='https://media.giphy.com/media/xUA7bcuTndaPQ6jtew/giphy.gif' alt='maptime logo gif' width='350px'/>";
-    
+
     // specify popup options 
-    var customOptions =
-        {
+    var customOptions = {
         'maxWidth': '500',
-        'className' : 'custom'
-        }
+        'className': 'custom'
+    }
 
     //set marker latlng
-    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0))  //.bindPopup(customPopup,customOptions).openPopup();
-    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1))  //.bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
-    
+    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0)) //.bindPopup(customPopup,customOptions).openPopup();
+    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1)) //.bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
+
     //return the GeoJSON FeatureCollection
     return fsFeatures;
 }
@@ -162,4 +169,29 @@ function getAllMarker() {
         }
     });
     return markers;
+}
+
+// Get sensor data from server
+function getSensorData() {
+    let url = 'http://localhost:8080/UAVServerPOC/rest/sensor/all';
+    let xml = new XMLHttpRequest();
+    xml.open("GET", url);
+    xml.onload = () => {
+        if (xml.status === 200) {
+            let sensorData = JSON.parse(xml.responseText).sensors;
+            let sensorsLatLon = sensorData.map(data => Object.values(data.domain.cordinate));
+            console.log(sensorsLatLon);
+
+            sensor1 = L.marker(sensorsLatLon[0], {
+                icon: sensorIcon
+            }).addTo(map);
+            sensor2 = L.marker(sensorsLatLon[1], {
+                icon: sensorIcon
+            }).addTo(map);
+        } else {
+            let e = new Error("HTTP Request")
+            error(e, xml.status);
+        }
+    };
+    xml.send();
 }
