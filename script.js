@@ -1,4 +1,5 @@
-var map = L.map('map').setView([47.529349, 19.032751], 12);
+//Set mat view
+var map = L.map('map').setView([47.529349, 19.032751], 11);
 
 
 //Set markers default value
@@ -8,7 +9,7 @@ let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
 // set server request interval
 setInterval(() => {
     getCustomData();
-}, 10);
+}, 1);
 
 
 //set maps layer
@@ -130,7 +131,7 @@ function convertToGeoJSON(input) {
         'className' : 'custom'
         }
 
-    //set marker latlng to server data
+    //set marker latlng
     marker1.setLatLng(getMarkerLatLon(fsFeatures, 0))  //.bindPopup(customPopup,customOptions).openPopup();
     marker2.setLatLng(getMarkerLatLon(fsFeatures, 1))  //.bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
     
@@ -140,6 +141,14 @@ function convertToGeoJSON(input) {
 
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// get markers latitude and longitude
+function getMarkerLatLon(fs, i) {
+    var latlon = [];
+    latlon.push(fs[i].properties.latitude, fs[i].properties.longitude);
+    // console.log(latlon)
+    return latlon;
 }
 
 //useless
@@ -153,11 +162,4 @@ function getAllMarker() {
         }
     });
     return markers;
-}
-// get markers latitude and longitude
-function getMarkerLatLon(fs, i) {
-    var latlon = [];
-    latlon.push(fs[i].properties.latitude, fs[i].properties.longitude);
-    // console.log(latlon)
-    return latlon;
 }
