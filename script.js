@@ -9,6 +9,9 @@ let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
 let sensor1;
 let sensor2;
 let sensor3;
+var sector1;
+var sector2;
+var sector3;
 
 let sensorIcon = L.icon({
     iconUrl: './img/sensor-icon.png',
@@ -28,6 +31,39 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+
+
+// measuring range svg
+// function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+//     var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+
+//     return {
+//         x: centerX + (radius * Math.cos(angleInRadians)),
+//         y: centerY + (radius * Math.sin(angleInRadians))
+//     };
+// }
+
+// function describeArc(x, y, radius, startAngle, endAngle) {
+
+//     var start = polarToCartesian(x, y, radius, endAngle);
+//     var end = polarToCartesian(x, y, radius, startAngle);
+
+//     var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
+
+//     var d = [
+//         "M", start.x, start.y,
+//         "A", radius, radius, 0, arcSweep, 0, end.x, end.y,
+//         "L", x, y,
+//         "L", start.x, start.y
+//     ].join(" ");
+
+//     console.log(d);
+
+//     return d;
+// }
+
+// var arc = describeArc(30, 30, 30, 30, 90);
+// document.getElementById("arc1").setAttribute("d", arc);
 
 //set maps default bounds
 map.fitBounds([
@@ -86,8 +122,8 @@ function convertToGeoJSON(input) {
     }
 
 
-    // initialize svg
-    var svg = d3.select('.leaflet-pane').selectAll("svg").data(input.data, (d) => {
+    //initialize svg
+    var svg = d3.select('.leaflet-pane').selectAll("svg.lineSvg").data(input.data, (d) => {
         return d.id
     });
 
@@ -97,6 +133,7 @@ function convertToGeoJSON(input) {
     var offsetY = 200
 
     var newSvg = svg.enter().append("svg");
+    newSvg.attr('class', 'lineSvg');
     newSvg.style("width", 2 * offsetX);
     newSvg.style("height", 2 * offsetY);
 
@@ -121,7 +158,7 @@ function convertToGeoJSON(input) {
     // bind line to marker icon
     setTimeout(() => {
         var uav = document.getElementsByClassName('droneMarkerIcon');
-        var line = document.getElementsByTagName("svg");
+        var line = document.getElementsByClassName("lineSvg");
         for (var i = 0; i < uav.length; i++) {
             line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";
             line[i].style.marginTop = -20.5;
@@ -197,6 +234,23 @@ function getSensorData() {
             sensor3 = L.marker(sensorsLatLon[2], {
                 icon: sensorIcon
             }).addTo(map);
+            sector1 = L.semiCircle(sensorsLatLon[0], {
+                radius: 900,
+                startAngle: 45,
+                stopAngle: 90,
+            }).addTo(map);
+            sector2 = L.semiCircle(sensorsLatLon[1], {
+                radius: 700,
+                startAngle: 20,
+                stopAngle: 110,
+            }).addTo(map);
+            sector3 = L.semiCircle(sensorsLatLon[2], {
+                radius: 500,
+                startAngle: 90,
+                stopAngle: 180,
+            }).addTo(map);
+    
+
         } else {
             let e = new Error("HTTP Request")
             error(e, xml.status);
@@ -210,5 +264,4 @@ function getSensorData() {
     for (var k = 0; k < llMarkers.length; k++) {
         llMarkers[k].classList.add('droneMarkerIcon');
     }
-    
 }
