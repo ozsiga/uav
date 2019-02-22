@@ -5,8 +5,10 @@ var map = L.map('map').setView([47.529349, 19.032751], 11);
 let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
 let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
 
+
 let sensor1;
 let sensor2;
+let sensor3;
 
 let sensorIcon = L.icon({
     iconUrl: './img/sensor-icon.png',
@@ -118,7 +120,14 @@ function convertToGeoJSON(input) {
 
     // bind line to marker icon
     setTimeout(() => {
+        // for(var k =0; k< document.getElementsByClassName('leaflet-marker-icon').length; k++){
+        //     //document.getElementsByClassName('leaflet-marker-icon')[k].classList.remove('leaflet-marker-icon')
+        //     document.getElementsByClassName('leaflet-marker-icon')[k].classList.add('droneMarkerIcon');
+        //     console.log(document.getElementsByClassName('droneMarkerIcon'))
+        // }  
+        console.log(document.getElementsByClassName('leaflet-marker-icon').classList)
         var uav = document.getElementsByClassName('leaflet-marker-icon');
+        //console.log(uav)
         var line = document.getElementsByTagName("svg");
         for (var i = 0; i < uav.length; i++) {
             line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";
@@ -140,7 +149,9 @@ function convertToGeoJSON(input) {
 
     //set marker latlng
     marker1.setLatLng(getMarkerLatLon(fsFeatures, 0)) //.bindPopup(customPopup,customOptions).openPopup();
+    
     marker2.setLatLng(getMarkerLatLon(fsFeatures, 1)) //.bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
+    
 
     //return the GeoJSON FeatureCollection
     return fsFeatures;
@@ -180,12 +191,22 @@ function getSensorData() {
         if (xml.status === 200) {
             let sensorData = JSON.parse(xml.responseText).sensors;
             let sensorsLatLon = sensorData.map(data => Object.values(data.domain.cordinate));
-            console.log(sensorsLatLon);
+            sensorsNewLatLon1 = []
+            for (var i = 0; i < sensorsLatLon.length; i++) {
+                sensorsNewLatLon = []
+                sensorsNewLatLon.push(sensorsLatLon[i][1], sensorsLatLon[i][0])
+                sensorsNewLatLon1.push(sensorsNewLatLon)
+                //console.log(sensorsNewLatLon1);  
+            }
+            //console.log(sensorsLatLon);
 
-            sensor1 = L.marker(sensorsLatLon[0], {
+            sensor1 = L.marker(sensorsNewLatLon1[0], {
                 icon: sensorIcon
             }).addTo(map);
-            sensor2 = L.marker(sensorsLatLon[1], {
+            sensor2 = L.marker(sensorsNewLatLon1[1], {
+                icon: sensorIcon
+            }).addTo(map);
+            sensor3 = L.marker(sensorsNewLatLon1[2], {
                 icon: sensorIcon
             }).addTo(map);
         } else {
