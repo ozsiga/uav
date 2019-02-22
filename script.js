@@ -120,13 +120,7 @@ function convertToGeoJSON(input) {
 
     // bind line to marker icon
     setTimeout(() => {
-        // for(var k =0; k< document.getElementsByClassName('leaflet-marker-icon').length; k++){
-        //     document.getElementsByClassName('leaflet-marker-icon')[k].classList.add('droneMarkerIcon');
-        //     console.log(document.getElementsByClassName('droneMarkerIcon'))
-        // }  
-        //console.log(document.getElementsByClassName('leaflet-marker-icon').classList)
-        var uav = document.getElementsByClassName('leaflet-marker-icon');
-        //console.log(uav)
+        var uav = document.getElementsByClassName('droneMarkerIcon');
         var line = document.getElementsByTagName("svg");
         for (var i = 0; i < uav.length; i++) {
             line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";
@@ -148,9 +142,9 @@ function convertToGeoJSON(input) {
 
     //set marker latlng
     marker1.setLatLng(getMarkerLatLon(fsFeatures, 0)) //.bindPopup(customPopup,customOptions).openPopup();
-    
+
     marker2.setLatLng(getMarkerLatLon(fsFeatures, 1)) //.bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
-    
+
 
     //return the GeoJSON FeatureCollection
     return fsFeatures;
@@ -189,22 +183,11 @@ function getSensorData() {
     xml.onload = () => {
         if (xml.status === 200) {
             let sensorData = JSON.parse(xml.responseText).sensors;
-            let sensorsLatLon=[]
+            let sensorsLatLon = []
             let coor = sensorData.map(data => Object(data.domain.cordinate))
-            for(var i =0; i< coor.length;i++){
+            for (var i = 0; i < coor.length; i++) {
                 sensorsLatLon.push([coor[i].latitude, coor[i].longitude]);
             }
-
-            // sensorsNewLatLon1 = []
-            // for (var i = 0; i < sensorsLatLon.length; i++) {
-            //     sensorsNewLatLon = []
-            //     sensorsNewLatLon.push(sensorsLatLon[i][1], sensorsLatLon[i][0])
-            //     sensorsNewLatLon1.push(sensorsNewLatLon)
-            //     //console.log(sensorsNewLatLon1);  
-            // }
-            // //console.log(sensorsLatLon);
-
-
             sensor1 = L.marker(sensorsLatLon[0], {
                 icon: sensorIcon
             }).addTo(map);
@@ -220,4 +203,12 @@ function getSensorData() {
         }
     };
     xml.send();
+
+    //add droneMarkerIcon class to uavs
+
+    llMarkers = document.getElementsByClassName('leaflet-marker-icon')
+    for (var k = 0; k < llMarkers.length; k++) {
+        llMarkers[k].classList.add('droneMarkerIcon');
+    }
+    
 }
