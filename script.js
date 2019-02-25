@@ -33,37 +33,31 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 
 
-// measuring range svg
-// function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-//     var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-
-//     return {
-//         x: centerX + (radius * Math.cos(angleInRadians)),
-//         y: centerY + (radius * Math.sin(angleInRadians))
-//     };
-// }
-
-// function describeArc(x, y, radius, startAngle, endAngle) {
-
-//     var start = polarToCartesian(x, y, radius, endAngle);
-//     var end = polarToCartesian(x, y, radius, startAngle);
-
-//     var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
-
-//     var d = [
-//         "M", start.x, start.y,
-//         "A", radius, radius, 0, arcSweep, 0, end.x, end.y,
-//         "L", x, y,
-//         "L", start.x, start.y
-//     ].join(" ");
-
-//     console.log(d);
-
-//     return d;
-// }
-
-// var arc = describeArc(30, 30, 30, 30, 90);
-// document.getElementById("arc1").setAttribute("d", arc);
+function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+    var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
+  
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY + (radius * Math.sin(angleInRadians))
+    };
+  }
+  
+  function describeArc(x, y, radius, startAngle, endAngle){
+  
+      var start = polarToCartesian(x, y, radius, endAngle);
+      var end = polarToCartesian(x, y, radius, startAngle);
+  
+      var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+  
+      var d = [
+          "M", start.x, start.y, 
+          "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
+      ].join(" ");
+  
+      return d;       
+  }
+  
+  
 
 //set maps default bounds
 map.fitBounds([
@@ -228,40 +222,74 @@ function getSensorData() {
             sensor1 = L.marker(sensorsLatLon[0], {
                 icon: sensorIcon
             }).addTo(map);
+            // console.log(sensor1)
+             console.log(map.latLngToLayerPoint(sensorsLatLon[1]))
+            
             sensor2 = L.marker(sensorsLatLon[1], {
                 icon: sensorIcon
             }).addTo(map);
             sensor3 = L.marker(sensorsLatLon[2], {
                 icon: sensorIcon
             }).addTo(map);
-            sector1 = L.semiCircle(sensorsLatLon[0], {
-                radius: 900,
-                startAngle: 45,
-                stopAngle: 90,
-            }).addTo(map);
-            sector2 = L.semiCircle(sensorsLatLon[1], {
-                radius: 700,
-                startAngle: 20,
-                stopAngle: 110,
-            }).addTo(map);
-            sector3 = L.semiCircle(sensorsLatLon[2], {
-                radius: 500,
-                startAngle: 90,
-                stopAngle: 180,
-            }).addTo(map);
-    
+            console.log(sensorData)
+            szenzorRajz(sensorData[1].domain, 3)
 
         } else {
             let e = new Error("HTTP Request")
             error(e, xml.status);
         }
+  
+        
     };
     xml.send();
-
+    
     //add droneMarkerIcon class to uavs
-
+    
     llMarkers = document.getElementsByClassName('leaflet-marker-icon')
     for (var k = 0; k < llMarkers.length; k++) {
         llMarkers[k].classList.add('droneMarkerIcon');
     }
 }
+function elemikörcikk (rmin, rmax, minAng, maxAng, x,y){
+    //console.log(rmax, rmin)
+    x = 0;
+    y= 0;
+    var element = {};
+    radius = rmin + (rmax - rmin) /  2
+    startx = radius * Math.cos(minAng) + x;
+    starty = - radius * Math.sin(minAng) - y;
+    endx = radius * Math.cos(maxAng) + x;
+    endy = - radius * Math.sin(maxAng) - y;
+    if(maxAng - minAng == Math.PI){
+        maxAng = maxAng + 0.00000001;
+    }
+    largeArcFlag = maxAng - minAng <= Math.PI ? "0" : "1";
+    element.d = [
+        "M", startx, starty, 
+        "A", radius, radius, 0, largeArcFlag, 0, endx, endy
+    ].join(" ");
+    element.width = (rmax - rmin) / 2
+    //console.log(element)
+    return element;   
+}
+function interpol (min, max, n, i){
+   return min + i * ( max - min ) / n 
+}
+function szenzorRajz(domain, n){
+        var rmin0 = domain.r.min0 * Math.cos(domain.theta.min0);
+        var rmin1 = domain.r.min1 * Math.cos(domain.theta.min0);
+        var rmax0 = domain.r.max0 * Math.cos(domain.theta.min0);
+        var rmax1 = domain.r.max1 * Math.cos(domain.theta.min0);
+        var angMin0 = domain.fi.min0;
+        var angMin1 = domain.fi.min1;
+        var angMax0 = domain.fi.max0;
+        var angMax1 = domain.fi.max1;
+        // xy = map.latLngToLayerPoint(sensorsLatLon);
+        for(var i =0 ; i <= n; i++){
+          element1 = elemikörcikk(interpol(rmin0, rmin1, n ,i), interpol(rmax0, rmax1, n, i ), interpol(angMin0, angMin1, n ,i), interpol(angMax0, angMax1, n ,i),100,100)
+          document.getElementById('arc' + i).setAttribute("d", element1.d)
+          document.getElementById('arc' + i).setAttribute("stroke-width", element1.width)
+        }
+    }
+
+ 
