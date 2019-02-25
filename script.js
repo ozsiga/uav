@@ -1,17 +1,16 @@
 // Set map view
-var map = L.map('map').setView([47.529349, 19.032751], 11);
+let map = L.map('map').setView([47.529349, 19.032751], 11);
 
 //Set markers default value
 let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
 let marker2 = L.marker([47.529360, 19.032760]).addTo(map);
 
-
 let sensor1;
 let sensor2;
 let sensor3;
-var sector1;
-var sector2;
-var sector3;
+let sector1;
+let sector2;
+let sector3;
 
 let sensorIcon = L.icon({
     iconUrl: './img/sensor-icon.png',
@@ -21,7 +20,7 @@ let sensorIcon = L.icon({
 
 // set server request interval
 setInterval(() => {
-    getCustomData();
+    getMarkerData();
 }, 1);
 
 getSensorData();
@@ -31,7 +30,158 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+//set maps default bounds
+map.fitBounds([
+    [marker1.getBounds()],
+    [marker2.getBounds()]
+], );
 
+//Get marker data from server
+function getMarkerData() {
+    let url = "http://localhost:8080/UAVServerPOC/rest/fake"; //url of service
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.onload = () => {
+        if (xhr.status === 200) {
+            let markerData = JSON.parse(xhr.responseText).data;
+            let markerLatLon = [];
+            let coords = markerData.map(data => Object(data.position));
+
+            for (let i = 0; i < coords.length; i++) {
+                if (isNumeric(coords[i].latitude) && isNumeric(coords[i].longitude)) {
+                    markerLatLon.push([coords[i].latitude, coords[i].longitude]);
+                }
+            }
+
+            setMarkerSvg(markerData);
+
+            marker1.setLatLng(markerLatLon[0]);
+            marker2.setLatLng(markerLatLon[1]);
+        } else {
+            let e = new Error("HTTP Request")
+            error(e, xhr.status);
+        }
+    };
+    xhr.send();
+}
+
+// Set SVG arrow to markers
+function setMarkerSvg(input) {
+    //initialize svg
+    let svg = d3.select('.leaflet-pane').selectAll("svg.lineSvg").data(input, (d) => {
+        return d.id
+    });
+
+    svg.exit().remove();
+
+    let offsetX = 200;
+    let offsetY = 200
+
+    let newSvg = svg.enter().append("svg");
+    newSvg.attr('class', 'lineSvg');
+    newSvg.style("width", 2 * offsetX);
+    newSvg.style("height", 2 * offsetY);
+
+    newSvg.style("z-index", 1000)
+    newSvg.append("line");
+    svg = newSvg.merge(svg);
+
+    svg.select("line")
+        .attr("x1", offsetX)
+        .attr("y1", offsetY)
+        .attr("x2", (d) => {
+            return offsetX + d.speed.x;
+        })
+        .attr("y2", (d) => {
+            return offsetY - d.speed.y;
+        })
+        .attr("stroke", "red")
+        .attr("stroke-width", 2)
+        .attr("marker-end", "url(#arrow)");
+
+
+    // bind line to marker icon
+    setTimeout(() => {
+        let uav = document.getElementsByClassName('droneMarkerIcon');
+        let line = document.getElementsByClassName("lineSvg");
+        for (let i = 0; i < uav.length; i++) {
+            line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";
+            line[i].style.marginTop = -20.5;
+            line[i].style.marginLeft = 9;
+        };
+    }, 50);
+}
+
+// Check if values are numeric
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// Get sensor data from server
+function getSensorData() {
+    let url = 'http://localhost:8080/UAVServerPOC/rest/sensor/all';
+    let xml = new XMLHttpRequest();
+    xml.open("GET", url);
+    xml.onload = () => {
+        if (xml.status === 200) {
+            let sensorData = JSON.parse(xml.responseText).sensors;
+            let sensorsLatLon = [];
+            let coords = sensorData.map(data => Object(data.domain.cordinate))
+
+            for (let i = 0; i < coords.length; i++) {
+                sensorsLatLon.push([coords[i].latitude, coords[i].longitude]);
+            }
+
+            sensor1 = L.marker(sensorsLatLon[0], {
+                icon: sensorIcon
+            }).addTo(map);
+            sensor2 = L.marker(sensorsLatLon[1], {
+                icon: sensorIcon
+            }).addTo(map);
+            sensor3 = L.marker(sensorsLatLon[2], {
+                icon: sensorIcon
+            }).addTo(map);
+            // sector1 = L.semiCircle(sensorsLatLon[0], {
+            //     radius: 900,
+            //     startAngle: 45,
+            //     stopAngle: 90,
+            // }).addTo(map);
+            // sector2 = L.semiCircle(sensorsLatLon[1], {
+            //     radius: 700,
+            //     startAngle: 20,
+            //     stopAngle: 110,
+            // }).addTo(map);
+            // sector3 = L.semiCircle(sensorsLatLon[2], {
+            //     radius: 500,
+            //     startAngle: 90,
+            //     stopAngle: 180,
+            // }).addTo(map);
+        } else {
+            let e = new Error("HTTP Request")
+            error(e, xml.status);
+        }
+    };
+    xml.send();
+
+    //add droneMarkerIcon class to uavs
+    llMarkers = document.getElementsByClassName('leaflet-marker-icon')
+    for (var k = 0; k < llMarkers.length; k++) {
+        llMarkers[k].classList.add('droneMarkerIcon');
+    }
+}
+
+//useless
+// function getAllMarker() {
+//     var markers = [];
+//     map.eachLayer(function (layer) {
+//         if (layer instanceof L.Marker) {
+//             if (map.getBounds().contains(layer.getLatLng())) {
+//                 markers.push(layer.feature);
+//             }
+//         }
+//     });
+//     return markers;
+// }
 
 // measuring range svg
 // function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -64,204 +214,3 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 
 // var arc = describeArc(30, 30, 30, 30, 90);
 // document.getElementById("arc1").setAttribute("d", arc);
-
-//set maps default bounds
-map.fitBounds([
-    [marker1.getBounds()],
-    [marker2.getBounds()]
-], );
-
-//Get data from server
-function getCustomData() {
-    let url = "http://localhost:8080/UAVServerPOC/rest/fake"; //url of service
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    xhr.onload = () => {
-        if (xhr.status === 200) {
-            var res = convertToGeoJSON(xhr.responseText);
-        } else {
-            var e = new Error("HTTP Request")
-            error(e, xhr.status);
-        }
-    };
-    xhr.send();
-}
-
-//Convert JSON to GeoJson
-
-function convertToGeoJSON(input) {
-    //convert input to Object, if it is of type string
-    if (typeof (input) == "string") {
-        input = JSON.parse(input);
-    }
-
-    var fs = {
-        "type": "FeatureCollection",
-        "features": []
-    };
-    for (var i = 0; i < input.data.length; i++) {
-        var ele = input.data[i].position;
-        var feature = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [ele['longitude'], ele['latitude']]
-            }
-        };
-
-        feature.properties = ele;
-
-        //set the id
-        feature.properties["id"] = input.data[i].id;
-
-        //check that the elements are numeric and only then insert
-        if (isNumeric(ele['longitude']) && isNumeric(ele['latitude'])) {
-            //add this feature to the features array
-            fs.features.push(feature)
-        }
-    }
-
-
-    //initialize svg
-    var svg = d3.select('.leaflet-pane').selectAll("svg.lineSvg").data(input.data, (d) => {
-        return d.id
-    });
-
-    svg.exit().remove();
-
-    var offsetX = 200;
-    var offsetY = 200
-
-    var newSvg = svg.enter().append("svg");
-    newSvg.attr('class', 'lineSvg');
-    newSvg.style("width", 2 * offsetX);
-    newSvg.style("height", 2 * offsetY);
-
-    newSvg.style("z-index", 1000)
-    newSvg.append("line");
-    svg = newSvg.merge(svg);
-
-    svg.select("line")
-        .attr("x1", offsetX)
-        .attr("y1", offsetY)
-        .attr("x2", (d) => {
-            return offsetX + d.speed.x;
-        })
-        .attr("y2", (d) => {
-            return offsetY - d.speed.y;
-        })
-        .attr("stroke", "red")
-        .attr("stroke-width", 2)
-        .attr("marker-end", "url(#arrow)");
-
-
-    // bind line to marker icon
-    setTimeout(() => {
-        var uav = document.getElementsByClassName('droneMarkerIcon');
-        var line = document.getElementsByClassName("lineSvg");
-        for (var i = 0; i < uav.length; i++) {
-            line[i].style.transform = uav[i].style.transform + " translate(" + -offsetX + "px ," + -offsetY + "px)";
-            line[i].style.marginTop = -20.5;
-            line[i].style.marginLeft = 9;
-        };
-    }, 50);
-
-
-    // set marker latlng 
-    var fsFeatures = fs.features;
-    var customPopup = "UAV in da MAP<br/><img src='https://media.giphy.com/media/xUA7bcuTndaPQ6jtew/giphy.gif' alt='maptime logo gif' width='350px'/>";
-
-    // specify popup options 
-    var customOptions = {
-        'maxWidth': '500',
-        'className': 'custom'
-    }
-
-    //set marker latlng
-    marker1.setLatLng(getMarkerLatLon(fsFeatures, 0)) //.bindPopup(customPopup,customOptions).openPopup();
-
-    marker2.setLatLng(getMarkerLatLon(fsFeatures, 1)) //.bindPopup(`${getMarkerLatLon(fsFeatures, 1)}`).openPopup();
-
-
-    //return the GeoJSON FeatureCollection
-    return fsFeatures;
-}
-
-function isNumeric(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
-// get markers latitude and longitude
-function getMarkerLatLon(fs, i) {
-    var latlon = [];
-    latlon.push(fs[i].properties.latitude, fs[i].properties.longitude);
-    // console.log(latlon)
-    return latlon;
-}
-
-//useless
-function getAllMarker() {
-    var markers = [];
-    map.eachLayer(function (layer) {
-        if (layer instanceof L.Marker) {
-            if (map.getBounds().contains(layer.getLatLng())) {
-                markers.push(layer.feature);
-            }
-        }
-    });
-    return markers;
-}
-
-// Get sensor data from server
-function getSensorData() {
-    let url = 'http://localhost:8080/UAVServerPOC/rest/sensor/all';
-    let xml = new XMLHttpRequest();
-    xml.open("GET", url);
-    xml.onload = () => {
-        if (xml.status === 200) {
-            let sensorData = JSON.parse(xml.responseText).sensors;
-            let sensorsLatLon = []
-            let coor = sensorData.map(data => Object(data.domain.cordinate))
-            for (var i = 0; i < coor.length; i++) {
-                sensorsLatLon.push([coor[i].latitude, coor[i].longitude]);
-            }
-            sensor1 = L.marker(sensorsLatLon[0], {
-                icon: sensorIcon
-            }).addTo(map);
-            sensor2 = L.marker(sensorsLatLon[1], {
-                icon: sensorIcon
-            }).addTo(map);
-            sensor3 = L.marker(sensorsLatLon[2], {
-                icon: sensorIcon
-            }).addTo(map);
-            sector1 = L.semiCircle(sensorsLatLon[0], {
-                radius: 900,
-                startAngle: 45,
-                stopAngle: 90,
-            }).addTo(map);
-            sector2 = L.semiCircle(sensorsLatLon[1], {
-                radius: 700,
-                startAngle: 20,
-                stopAngle: 110,
-            }).addTo(map);
-            sector3 = L.semiCircle(sensorsLatLon[2], {
-                radius: 500,
-                startAngle: 90,
-                stopAngle: 180,
-            }).addTo(map);
-    
-
-        } else {
-            let e = new Error("HTTP Request")
-            error(e, xml.status);
-        }
-    };
-    xml.send();
-
-    //add droneMarkerIcon class to uavs
-
-    llMarkers = document.getElementsByClassName('leaflet-marker-icon')
-    for (var k = 0; k < llMarkers.length; k++) {
-        llMarkers[k].classList.add('droneMarkerIcon');
-    }
-}
