@@ -10,8 +10,6 @@
 <body>
   <div id="map">
   </div>
-  <div id="svgview" style=" position: absolute; z-index: 1000; top: 0;">
-  </div>
   <svg width="0%" height="0%" class="lineSvg">
     <defs>
       <marker id="arrow" markerUnits="strokeWidth" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="6" refY="6"
@@ -20,20 +18,8 @@
       </marker>
     </defs>
   </svg>
-  <svg style=" height: 200; width: 200; z-index: 1000; position:relative" viewBox = "-1000 -1000 2000 2000"  >
-      <path id="arc0" fill="none" stroke="#ff0000" stroke-width="50" opacity="0.05" />
-      <path id="arc2" fill="none" stroke="#ff0000" stroke-width="40" opacity="0.05" />
-      <path id="arc3" fill="none" stroke="#ff0000" stroke-width="30" opacity="0.05" />
-      <path id="arc1" fill="none" stroke="#ff0000" stroke-width="45" opacity="0.05" />
-      <path id="arc4" fill="none" stroke="#ff0000" stroke-width="20" opacity="0.05" />
-      <path id="arc5" fill="none" stroke="#ff0000" stroke-width="20" opacity="0.05" />
-      <path id="arc6" fill="none" stroke="#ff0000" stroke-width="20" opacity="0.05" />
-      <path id="arc7" fill="none" stroke="#ff0000" stroke-width="20" opacity="0.05" />
-      <path id="arc8" fill="none" stroke="#ff0000" stroke-width="20" opacity="0.05" />
-      <path id="arc9" fill="none" stroke="#ff0000" stroke-width="20" opacity="0.05" />
-      <path id="arc10" fill="none" stroke="#ff0000" stroke-width="20" opacity="0.05" />
-      <path id="arc11" fill="none" stroke="#ff0000" stroke-width="20" opacity="0.05" />
-    </svg>
+  <svg style=" height: 200px; width: 200px; z-index: 1000; position:relative" viewBox="-1000 -1000 2000 2000" id="mr">
+  </svg>
 
   <script type="text/javascript" src="/node_modules/leaflet/dist/leaflet.js" data-require="leaflet@1.4.0" data-semver="1.4.0"></script>
   <script type="text/javascript" src="/node_modules/leaflet-realtime/dist/leaflet-realtime.js"></script>
