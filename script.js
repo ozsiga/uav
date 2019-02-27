@@ -144,16 +144,18 @@ function getSensorData() {
             pixelPosition = map.latLngToLayerPoint(sensorsLatLon[1]);
             console.log(" LatLng = " + sensorsLatLon[1] + "\n Pixel position = " + pixelPosition);
 
-            console.log(map.latLngToLayerPoint(sensorsLatLon[1]).x)
-
             sensor2 = L.marker(sensorsLatLon[1], {
                 icon: sensorIcon
             }).addTo(map)
             sensor3 = L.marker(sensorsLatLon[2], {
                 icon: sensorIcon
             }).addTo(map);
-            console.log(sensorData)
+
+
             igazi(sensorData, 10);
+
+
+            //console.log(sensorData)
             // for (var i = 0; i < sensorData.length; i++) {
             //     szenzorRajz(sensorData[i].domain, 10)
 
@@ -226,8 +228,10 @@ function igazi(sensorData, n) {
     g.attr("transform", "scale(1, 1)")
         .attr("class", "svgG")
         .attr("transform", function (d) {
-            console.log(d.domain.cordinate)
+            // console.log(d.domain.cordinate)
             var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
+            console.log(map.latLngToLayerPoint(sensorLL))
+            //console.log(map.latLngToLayerPoint(map.getCenter()))
 
             return "scale(0.2 0.2) translate(" + (map.latLngToLayerPoint(sensorLL).x - 100) + " " + (map.latLngToLayerPoint(sensorLL).y - 100) + ")";
         });
@@ -239,9 +243,6 @@ function igazi(sensorData, n) {
         .attr("d", function (d) {
             return getSensorPath(d.domain, n);
         });
-
-
-
 
 }
 
@@ -268,50 +269,6 @@ function getSensorPath(domain, n) {
         )
         pathArr.push(element1.d);
     }
-    console.log(pathArr);
+    //console.log(pathArr);
     return pathArr;
 }
-
-
-// function setMrSvgPosition(el, snsLatLng) {
-//     el.style.transform = " translate(" + (map.latLngToLayerPoint(snsLatLng).x - 100) + "px ," + (map.latLngToLayerPoint(snsLatLng).y - 100) + "px)";
-// }
-
-
-// function szenzorRajz(sensorData, n) {
-
-//     var rmin0 = sensorData[i].domain.r.min0 * Math.cos(sensorData[i].domain.theta.min0);
-//     var rmin1 = sensorData[i].domain.r.min1 * Math.cos(sensorData[i].domain.theta.min0);
-//     var rmax0 = sensorData[i].domain.r.max0 * Math.cos(sensorData[i].domain.theta.min0);
-//     var rmax1 = sensorData[i].domain.r.max1 * Math.cos(sensorData[i].domain.theta.min0);
-//     var angMin0 = sensorData[i].domain.fi.min0;
-//     var angMin1 = sensorData[i].domain.fi.min1;
-//     var angMax0 = sensorData[i].domain.fi.max0;
-//     var angMax1 = sensorData[i].domain.fi.max1;
-
-//     for (var i = 0; i <= n; i++) {
-//         element1 = elemikorcikk(
-//             interpol(rmin0, rmin1, n, i),
-//             interpol(rmax0, rmax1, n, i),
-//             interpol(angMin0, angMin1, n, i),
-//             interpol(angMax0, angMax1, n, i),
-//             100,
-//             100
-//         )
-//         //document.getElementById('arc' + i).setAttribute("d", element1.d)
-//         //document.getElementById('arc' + i).setAttribute("stroke-width", element1.width)
-//         var svg = d3.select("#mr").data(sensorData, (d) => {
-//             return d.id
-//         });;
-//         svg.exit().remove();
-//         let newSvg = svg.enter().append("svg");
-//         svg = newSvg.merge(svg);
-//         var g = svg.append("g")
-//         var path = g.append("path")
-//             .attr("fill", "none")
-//             .attr("stroke", 'red')
-//             .attr("opacity", '0.05')
-//             .attr("stroke-width", element1.width)
-//         path.attr("d", element1.d);
-//     }
-// }
