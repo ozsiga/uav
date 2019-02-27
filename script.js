@@ -17,9 +17,26 @@ map.on("click", function(e) {
 map.on("zoom", function() {
   var svgContainer = d3.select(map.getPanes().overlayPane).select("svg");
   var g = svgContainer.selectAll("g");
-  //resetView();
+  positionSvgContainer();
   setPosition(g);
 });
+
+function positionSvgContainer() {
+  var svgContainer = d3.select(map.getPanes().overlayPane).select("svg");
+  var tr = d3
+    .selectAll(".leaflet-map-pane")
+    .style("transform")
+    .split(",");
+  var tx = -1 * tr[0].match(/-*\d+px/)[0].match(/-*\d+/)[0];
+  var ty = -1 * tr[1].match(/-*\d+px/)[0].match(/-*\d+/)[0];
+  var height = svgContainer.attr("height");
+  var width = svgContainer.attr("width");
+  svgContainer.style(
+    "transform",
+    "translate3d(" + tx + "px, " + ty + "px, 0px)"
+  );
+  svgContainer.attr("viewBox", tx + " " + ty + " " + width + " " + height);
+}
 
 //Set markers default value
 let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
