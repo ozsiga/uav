@@ -225,7 +225,7 @@ function igazi(sensorData, n) {
     let newG = g.enter().append("g");
     g = newG.merge(g);
 
-    g.attr("transform", "scale(1, 1)")
+    g.attr("transform", "scale(0.2, 0.2)")
         .attr("class", "svgG")
         .attr("transform", function (d) {
             // console.log(d.domain.cordinate)
@@ -233,21 +233,24 @@ function igazi(sensorData, n) {
             console.log(map.latLngToLayerPoint(sensorLL))
             //console.log(map.latLngToLayerPoint(map.getCenter()))
 
-            return "scale(0.2 0.2) translate(" + (map.latLngToLayerPoint(sensorLL).x - 100) + " " + (map.latLngToLayerPoint(sensorLL).y - 100) + ")";
+            return "scale(0.2 0.2) translate(" + (map.latLngToLayerPoint(sensorLL).x + 1000) + " " + (map.latLngToLayerPoint(sensorLL).y + 1000) + ")";
         });
-    var path = g.append("path")
-        .attr("fill", "none")
-        .attr("stroke", 'red')
-        .attr("opacity", '0.8')
-        .attr("stroke-width", 40)
-        .attr("d", function (d) {
-            return getSensorPath(d.domain, n);
-        });
+    for (i = 0; i < n; i++) {
+        var path = g.append("path")
+            .attr("fill", "none")
+            .attr("stroke", 'red')
+            .attr("opacity", '0.2')
+            .attr("stroke-width", 40)
+            .attr("d", function (d) {
+                console.log(getSensorPath(d.domain, n, i))
+                return getSensorPath(d.domain, n, i);
+            });
+    }
 
 }
 
 
-function getSensorPath(domain, n) {
+function getSensorPath(domain, n, i) {
     var rmin0 = domain.r.min0 * Math.cos(domain.theta.min0);
     var rmin1 = domain.r.min1 * Math.cos(domain.theta.min0);
     var rmax0 = domain.r.max0 * Math.cos(domain.theta.min0);
@@ -257,18 +260,16 @@ function getSensorPath(domain, n) {
     var angMax0 = domain.fi.max0;
     var angMax1 = domain.fi.max1;
 
-    var pathArr = [];
-    for (var i = 0; i <= n; i++) {
-        element1 = elemikorcikk(
-            interpol(rmin0, rmin1, n, i),
-            interpol(rmax0, rmax1, n, i),
-            interpol(angMin0, angMin1, n, i),
-            interpol(angMax0, angMax1, n, i),
-            100,
-            100
-        )
-        pathArr.push(element1.d);
-    }
+    //var pathArr = [];
+    element1 = elemikorcikk(
+        interpol(rmin0, rmin1, n, i),
+        interpol(rmax0, rmax1, n, i),
+        interpol(angMin0, angMin1, n, i),
+        interpol(angMax0, angMax1, n, i),
+        100,
+        100
+    )
+
     //console.log(pathArr);
-    return pathArr;
+    return element1.d;
 }
