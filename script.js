@@ -7,6 +7,11 @@ map.on('click', function (e) {
     var xy = map.latLngToLayerPoint(e.latlng)
     console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng + " xy:" + xy);
 });
+map.on("zoom", function () {
+    var svgContainer = d3.select(map.getPanes().overlayPane).select("svg");
+    var g = svgContainer.selectAll("g")
+    setPosition(g);
+});
 
 //Set markers default value
 let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
@@ -142,7 +147,7 @@ function getSensorData() {
             }).addTo(map);
 
             pixelPosition = map.latLngToLayerPoint(sensorsLatLon[1]);
-            console.log(" LatLng = " + sensorsLatLon[1] + "\n Pixel position = " + pixelPosition);
+            //console.log(" LatLng = " + sensorsLatLon[1] + "\n Pixel position = " + pixelPosition);
 
             sensor2 = L.marker(sensorsLatLon[1], {
                 icon: sensorIcon
@@ -153,18 +158,6 @@ function getSensorData() {
 
 
             igazi(sensorData, 10);
-
-
-            //console.log(sensorData)
-            // for (var i = 0; i < sensorData.length; i++) {
-            //     szenzorRajz(sensorData[i].domain, 10)
-
-            // }
-            //
-            //setMrSvgPosition(document.getElementsByClassName('svgG'), sensorsLatLon[1]);
-            // map.on("zoom", function () {
-            //     setMrSvgPosition(document.getElementsByClassName('svgG'), sensorsLatLon[1])
-            // });
 
         } else {
             let e = new Error("HTTP Request")
@@ -211,44 +204,58 @@ function interpol(min, max, n, i) {
 
 function igazi(sensorData, n) {
     var svgContainer = d3.select(map.getPanes().overlayPane).append("svg");
+    console.log(map.getPanes())
     d3.select("svg")
         .attr("z-index", 1000)
-        .attr("height", 695)
-        .attr("width", 1380)
+        .attr("height", 686)
+        .attr("width", 1162)
         .attr("id", "mr")
-    //var svg = svgContainer.selectAll("svg")
-    //var svg = d3.select("#mr");
     var g = svgContainer.selectAll("g").data(sensorData, (d) => {
         return d.id
     });;
+    //console.log(map.latLngToLayerPoint((map.getSize())));
     g.exit().remove();
     let newG = g.enter().append("g");
     g = newG.merge(g);
 
-    g.attr("transform", "scale(0.2, 0.2)")
-        .attr("class", "svgG")
-        .attr("transform", function (d) {
-            // console.log(d.domain.cordinate)
-            var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
-            console.log(map.latLngToLayerPoint(sensorLL))
-            //console.log(map.latLngToLayerPoint(map.getCenter()))
-
-            return "scale(0.2 0.2) translate(" + (map.latLngToLayerPoint(sensorLL).x + 1000) + " " + (map.latLngToLayerPoint(sensorLL).y + 1000) + ")";
-        });
+    setPosition(g);
+    // g.attr("class", "svgG")
+    //     .attr("transform-origin", function (d) {
+    //         var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
+    //         //console.log(map.latLngToLayerPoint(sensorLL))
+    //         return (map.latLngToLayerPoint(sensorLL).x) + " " + (map.latLngToLayerPoint(sensorLL).y);
+    //     })
+    //     .attr("transform", function (d) {
+    //         var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
+    //         //console.log(map.latLngToLayerPoint(sensorLL))
+    //         return "scale(0.1, 0.1), translate(" + (map.latLngToLayerPoint(sensorLL).x) + " " + (map.latLngToLayerPoint(sensorLL).y) + ")";
+    //     });
     for (i = 0; i < n; i++) {
         var path = g.append("path")
             .attr("fill", "none")
             .attr("stroke", 'red')
-            .attr("opacity", '0.2')
-            .attr("stroke-width", 40)
+            .attr("opacity", '0.1')
+            .attr("stroke-width", 50 + i)
             .attr("d", function (d) {
-                console.log(getSensorPath(d.domain, n, i))
+                //console.log(getSensorPath(d.domain, n, i))
                 return getSensorPath(d.domain, n, i);
             });
     }
-
 }
 
+function setPosition(g) {
+    g.attr("class", "svgG")
+        .attr("transform-origin", function (d) {
+            var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
+            //console.log(map.latLngToLayerPoint(sensorLL))
+            return (map.latLngToLayerPoint(sensorLL).x) + " " + (map.latLngToLayerPoint(sensorLL).y);
+        })
+        .attr("transform", function (d) {
+            var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
+            //console.log(map.latLngToLayerPoint(sensorLL))
+            return "scale(0.08, 0.08), translate(" + (map.latLngToLayerPoint(sensorLL).x) + " " + (map.latLngToLayerPoint(sensorLL).y) + ")";
+        });
+}
 
 function getSensorPath(domain, n, i) {
     var rmin0 = domain.r.min0 * Math.cos(domain.theta.min0);
@@ -266,10 +273,14 @@ function getSensorPath(domain, n, i) {
         interpol(rmax0, rmax1, n, i),
         interpol(angMin0, angMin1, n, i),
         interpol(angMax0, angMax1, n, i),
-        100,
-        100
+        0,
+        0
     )
 
     //console.log(pathArr);
     return element1.d;
 }
+
+// function setMrSvgPosition(el, d) {
+//     el.style.transform = " translate(" + (map.latLngToLayerPoint([d.domain.cordinate.latitude, d.domain.cordinate.longitude]).x) + "px ," + (map.latLngToLayerPoint([d.domain.cordinate.latitude, d.domain.cordinate.longitude]).y) + "px)";
+// }
