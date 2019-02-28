@@ -27,8 +27,9 @@ function positionSvgContainer() {
     .selectAll(".leaflet-map-pane")
     .style("transform")
     .split(",");
-  var tx = -1 * tr[0].match(/-*\d+px/)[0].match(/-*\d+/)[0];
-  var ty = -1 * tr[1].match(/-*\d+px/)[0].match(/-*\d+/)[0];
+  console.log(tr);
+  var tx = -1 * tr[0].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
+  var ty = -1 * tr[1].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
   var height = svgContainer.attr("height");
   var width = svgContainer.attr("width");
   svgContainer.style(
@@ -49,13 +50,13 @@ let sensor3;
 let sensorIcon = L.icon({
   iconUrl: "./img/sensor-icon.png",
   iconSize: [32, 32],
-  iconAnchor: [16, 32]
+  iconAnchor: [16, 16]
 });
 
 // set server request interval
 setInterval(() => {
   getMarkerData();
-}, 1);
+}, 100);
 
 getSensorData();
 
@@ -186,6 +187,7 @@ function getSensorData() {
       sensor2 = L.marker(sensorsLatLon[1], {
         icon: sensorIcon
       }).addTo(map);
+
       sensor3 = L.marker(sensorsLatLon[2], {
         icon: sensorIcon
       }).addTo(map);
@@ -242,12 +244,14 @@ function interpol(min, max, n, i) {
 }
 
 function igazi(sensorData, n) {
+  //for (i = 0; i < n; i++) {
   var svgContainer = d3.select(map.getPanes().overlayPane).append("svg");
   d3.select("svg")
     .attr("z-index", 1000)
     .attr("height", 686)
     .attr("width", 1162)
     .attr("id", "mr");
+
   var g = svgContainer.selectAll("g").data(sensorData, d => {
     return d.id;
   });
@@ -281,7 +285,7 @@ function igazi(sensorData, n) {
       });
   }
 }
-
+//}
 function setPosition(g) {
   g.attr("class", "svgG")
     .attr("transform-origin", function(d) {
