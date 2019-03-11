@@ -1,12 +1,13 @@
 // Set map view
 let map = L.map("map").setView([47.529349, 19.032751], 11);
-
+console.log(map);
 // if zoom repositioning svg
 map.on("zoom", function() {
   var svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
   var svg = svgContainer.selectAll("svg");
-  positionSvgContainer();
   setPosition(svg);
+  positionSvgContainer();
+  //console.log(svgContainer, svg);
 });
 
 //console.log click latlng + pixel points
@@ -25,6 +26,13 @@ map.on("click", function(e) {
   );
 });
 
+function getSvgOffsetToCenterPoint(pointX, svgWidth, svgScale) {
+  //return ( ( svgWidth / 2 ) - pointX ) / svgScale;
+  var initialPositionScaled = svgScale * pointX;
+  var desiredPosition = svgWidth / 2;
+  return (desiredPosition - initialPositionScaled) * -1;
+}
+
 // set svg container position to leaflet-map-pane position
 function positionSvgContainer() {
   var svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
@@ -36,12 +44,20 @@ function positionSvgContainer() {
   var ty = -1 * tr[1].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
   var height = svgContainer.attr("height");
   var width = svgContainer.attr("width");
+  //console.log(height, width);
+  console.log(getSvgOffsetToCenterPoint(tx, width, getScale()));
   svgContainer.style(
     "transform",
-    "scale(0.08, 0.08)",
-    "translate3d(" + tx + "px, " + ty + "px, 0px)"
+    "scale(" +
+      getScale() +
+      ") translate3d(" +
+      getSvgOffsetToCenterPoint(tx, width, getScale()) +
+      "px, " +
+      getSvgOffsetToCenterPoint(ty, width, getScale()) +
+      "px, 0px)"
   );
-  svgContainer.attr("viewBox", tx + " " + ty + " " + width + " " + height);
+  console.log(svgContainer.style("transform"));
+  //svgContainer.attr("viewBox", tx + " " + ty + " " + width + " " + height);
 }
 
 //Set markers default value
@@ -233,7 +249,7 @@ function elemikorcikk(rmin, rmax, minAng, maxAng, x, y) {
     endx,
     endy
   ].join(" ");
-  element.width = (rmax - rmin) / 2;
+  //element.width = (rmax - rmin) / 2;
   //console.log(rmin, rmax, element.d);
   return element;
 }
@@ -243,6 +259,20 @@ function interpol(min, max, n, i) {
 }
 
 //Create all mrSvgs->groups->paths
+
+function getScale() {
+  var pB = map.getPixelBounds();
+  var b = map.getBounds();
+  var atloinPixel = Math.sqrt(
+    (pB.max.x - pB.min.x) * (pB.max.x - pB.min.x) +
+      (pB.max.y - pB.min.y) * (pB.max.y - pB.min.y)
+  );
+  console.log(pB);
+  console.log(b);
+  console.log(map.distance(b._southWest, b._northEast));
+  console.log(atloinPixel);
+  return atloinPixel / map.distance(b._southWest, b._northEast);
+}
 
 function igazi(sensorData, n) {
   var svgContainer = d3.select(map.getPanes().overlayPane);
@@ -254,18 +284,38 @@ function igazi(sensorData, n) {
   svg.exit().remove();
   var newSvg = svg.enter().append("svg");
   svg = newSvg.merge(svg);
+  svg.attr("viewBox", function(d) {
+    var rMax = d.domain.r.max0 * Math.cos(d.domain.theta.min0);
+    console.log(
+      d.domain,
+      d.domain.theta.min0,
+      // Math.cos(3.141592654),
+      Math.cos(d.domain.theta.min0),
 
+      d.domain.r.max1,
+      rMax
+    );
+    console.log(rMax);
+    console.log(-rMax + " " + -rMax + " " + 2 * rMax + " " + 2 * rMax);
+    return " " + -rMax + " " + -rMax + " " + 2 * rMax + " " + 2 * rMax;
+  });
   svg
     .attr("z-index", 1000)
-    .attr("height", 686)
-    .attr("width", 1162)
+    .attr("height", function(d) {
+      var rMax = d.domain.r.max1 * Math.cos(d.domain.theta.min0);
+      return 2 * rMax;
+    })
+    .attr("width", function(d) {
+      var rMax = d.domain.r.max1 * Math.cos(d.domain.theta.min0);
+      return 2 * rMax;
+    })
     .attr("id", "mr");
 
   svg.each(function(d, i) {
     var path = d3
       .select(this)
       .selectAll("path")
-      .data(new Array(n));
+      .data(new Array(n + 1));
     path.exit().remove();
     let newPath = path.enter().append("path");
     path = newPath.merge(path);
@@ -286,7 +336,9 @@ function igazi(sensorData, n) {
 
 function setPosition(svg) {
   var svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
-  console.log(svgContainer);
+
+  //var svg = svgContainer.selectAll("svg");
+  //console.log(svgContainer);
   svgContainer
     //.attr("class", "svgSVG")
     .attr("transform-origin", function(d) {
@@ -306,9 +358,11 @@ function setPosition(svg) {
         d.domain.cordinate.latitude,
         d.domain.cordinate.longitude
       ];
-      //console.log(map.latLngToLayerPoint(sensorLL));
+      console.log(svgContainer.attr("width"));
       return (
-        "scale(0.08, 0.08), translate(" +
+        "scale(" +
+        getScale() +
+        "), translate(" +
         map.latLngToLayerPoint(sensorLL).x +
         " " +
         map.latLngToLayerPoint(sensorLL).y +
