@@ -120,6 +120,8 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+var zoomLevel = -1;
+
 // Get sensor data from server
 function getSensorData() {
   let url = "http://localhost:8080/UAVServerPOC/rest/sensor/all";
@@ -250,6 +252,10 @@ function getSensorSvgPath(sensorData, n) {
         return getSensorPath(d.domain, n, i);
       });
   });
+  if (newSvg !== null) {
+    positionSvgContainer();
+    zoomLevel = -1;
+  }
 }
 
 //get offset for measure range svg
@@ -262,50 +268,49 @@ function getSvgOffsetToCenterPoint(pointX, svgWidth, svgScale) {
 
 // set svg container position to leaflet-map-pane position
 function positionSvgContainer() {
-  var svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
-  var tr = d3
-    .selectAll(".leaflet-map-pane")
-    .style("transform")
-    .split(",");
-  var tx = -1 * tr[0].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
-  var ty = -1 * tr[1].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
+  //console.log(zoomLevel, map.getZoom());
+  if (zoomLevel !== map.getZoom()) {
+    zoomLevel = map.getZoom();
 
-  svgContainer.style("transform", function(d) {
-    var height = d3.select(this).attr("height");
-    var width = d3.select(this).attr("width");
-    var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
-    console.log(
-      getSvgOffsetToCenterPoint(
-        map.latLngToLayerPoint(sensorLL).x,
-        width,
-        getScale()
-      )
-    );
+    var svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
+    var tr = d3
+      .selectAll(".leaflet-map-pane")
+      .style("transform")
+      .split(",");
+    var tx = -1 * tr[0].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
+    var ty = -1 * tr[1].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
 
-    return (
-      "translate3d(" +
-      map.latLngToLayerPoint(sensorLL).x +
-      "px, " +
-      map.latLngToLayerPoint(sensorLL).y +
-      "px, 0px) scale(" +
-      getScale() +
-      ") translate3d(" +
-      (width / 2) * -1 +
-      "px, " +
-      (width / 2) * -1 +
-      "px, 0px)"
-    );
-  });
-  svgContainer.attr("transform-origin", function(d) {
-    var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
-    console.log(map.latLngToLayerPoint(sensorLL));
-    return "0 0";
-    // return (
-    //   map.latLngToLayerPoint(sensorLL).x +
-    //   " " +
-    //   map.latLngToLayerPoint(sensorLL).y
-    // );
-  });
+    svgContainer.style("transform", function(d) {
+      var height = d3.select(this).attr("height");
+      var width = d3.select(this).attr("width");
+      var sensorLL = [
+        d.domain.cordinate.latitude,
+        d.domain.cordinate.longitude
+      ];
+
+      return (
+        "translate3d(" +
+        map.latLngToLayerPoint(sensorLL).x +
+        "px, " +
+        map.latLngToLayerPoint(sensorLL).y +
+        "px, 0px) scale(" +
+        getScale() +
+        ") translate3d(" +
+        (width / 2) * -1 +
+        "px, " +
+        (width / 2) * -1 +
+        "px, 0px)"
+      );
+    });
+    svgContainer.attr("transform-origin", function(d) {
+      var sensorLL = [
+        d.domain.cordinate.latitude,
+        d.domain.cordinate.longitude
+      ];
+      //console.log(map.latLngToLayerPoint(sensorLL));
+      return "0 0";
+    });
+  }
 }
 
 function interpol(min, max, n, i) {
@@ -359,5 +364,3 @@ map.on("click", function(e) {
       xy
   );
 });
-
-positionSvgContainer();
