@@ -1,64 +1,12 @@
 // Set map view
 let map = L.map("map").setView([47.529349, 19.032751], 11);
-console.log(map);
+
 // if zoom repositioning svg
 map.on("zoom", function() {
   var svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
   var svg = svgContainer.selectAll("svg");
-  setPosition(svg);
   positionSvgContainer();
-  //console.log(svgContainer, svg);
 });
-
-//console.log click latlng + pixel points
-map.on("click", function(e) {
-  var coord = e.latlng;
-  var lat = coord.lat;
-  var lng = coord.lng;
-  var xy = map.latLngToLayerPoint(e.latlng);
-  console.log(
-    "You clicked the map at latitude: " +
-      lat +
-      " and longitude: " +
-      lng +
-      " xy:" +
-      xy
-  );
-});
-
-function getSvgOffsetToCenterPoint(pointX, svgWidth, svgScale) {
-  //return ( ( svgWidth / 2 ) - pointX ) / svgScale;
-  var initialPositionScaled = svgScale * pointX;
-  var desiredPosition = svgWidth / 2;
-  return (desiredPosition - initialPositionScaled) * -1;
-}
-
-// set svg container position to leaflet-map-pane position
-function positionSvgContainer() {
-  var svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
-  var tr = d3
-    .selectAll(".leaflet-map-pane")
-    .style("transform")
-    .split(",");
-  var tx = -1 * tr[0].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
-  var ty = -1 * tr[1].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
-  var height = svgContainer.attr("height");
-  var width = svgContainer.attr("width");
-  //console.log(height, width);
-  console.log(getSvgOffsetToCenterPoint(tx, width, getScale()));
-  svgContainer.style(
-    "transform",
-    "scale(" +
-      getScale() +
-      ") translate3d(" +
-      getSvgOffsetToCenterPoint(tx, width, getScale()) +
-      "px, " +
-      getSvgOffsetToCenterPoint(ty, width, getScale()) +
-      "px, 0px)"
-  );
-  console.log(svgContainer.style("transform"));
-  //svgContainer.attr("viewBox", tx + " " + ty + " " + width + " " + height);
-}
 
 //Set markers default value
 let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
@@ -185,7 +133,6 @@ function getSensorData() {
   xml.onload = () => {
     if (xml.status === 200) {
       let sensorData = JSON.parse(xml.responseText).sensors;
-
       let sensorsLatLon = [];
       let coords = sensorData.map(data => Object(data.domain.cordinate));
 
@@ -249,8 +196,6 @@ function elemikorcikk(rmin, rmax, minAng, maxAng, x, y) {
     endx,
     endy
   ].join(" ");
-  //element.width = (rmax - rmin) / 2;
-  //console.log(rmin, rmax, element.d);
   return element;
 }
 
@@ -267,10 +212,6 @@ function getScale() {
     (pB.max.x - pB.min.x) * (pB.max.x - pB.min.x) +
       (pB.max.y - pB.min.y) * (pB.max.y - pB.min.y)
   );
-  console.log(pB);
-  console.log(b);
-  console.log(map.distance(b._southWest, b._northEast));
-  console.log(atloinPixel);
   return atloinPixel / map.distance(b._southWest, b._northEast);
 }
 
@@ -286,17 +227,6 @@ function igazi(sensorData, n) {
   svg = newSvg.merge(svg);
   svg.attr("viewBox", function(d) {
     var rMax = d.domain.r.max0 * Math.cos(d.domain.theta.min0);
-    console.log(
-      d.domain,
-      d.domain.theta.min0,
-      // Math.cos(3.141592654),
-      Math.cos(d.domain.theta.min0),
-
-      d.domain.r.max1,
-      rMax
-    );
-    console.log(rMax);
-    console.log(-rMax + " " + -rMax + " " + 2 * rMax + " " + 2 * rMax);
     return " " + -rMax + " " + -rMax + " " + 2 * rMax + " " + 2 * rMax;
   });
   svg
@@ -332,13 +262,35 @@ function igazi(sensorData, n) {
       });
   });
 }
-// set mrSvg position to sensor marker
 
-function setPosition(svg) {
+function getSvgOffsetToCenterPoint(pointX, svgWidth, svgScale) {
+  //return ( ( svgWidth / 2 ) - pointX ) / svgScale;
+  var initialPositionScaled = svgScale * pointX;
+  var desiredPosition = svgWidth / 2;
+  return (desiredPosition - initialPositionScaled) * -1;
+}
+
+// set svg container position to leaflet-map-pane position
+function positionSvgContainer() {
   var svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
-
-  //var svg = svgContainer.selectAll("svg");
-  //console.log(svgContainer);
+  var tr = d3
+    .selectAll(".leaflet-map-pane")
+    .style("transform")
+    .split(",");
+  var tx = -1 * tr[0].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
+  var ty = -1 * tr[1].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
+  var height = svgContainer.attr("height");
+  var width = svgContainer.attr("width");
+  svgContainer.style(
+    "transform",
+    "scale(" +
+      getScale() +
+      ") translate3d(" +
+      getSvgOffsetToCenterPoint(tx, width, getScale()) +
+      "px, " +
+      getSvgOffsetToCenterPoint(ty, height, getScale()) +
+      "px, 0px)"
+  );
   svgContainer
     //.attr("class", "svgSVG")
     .attr("transform-origin", function(d) {
@@ -351,22 +303,6 @@ function setPosition(svg) {
         map.latLngToLayerPoint(sensorLL).x +
         " " +
         map.latLngToLayerPoint(sensorLL).y
-      );
-    })
-    .attr("transform", function(d) {
-      var sensorLL = [
-        d.domain.cordinate.latitude,
-        d.domain.cordinate.longitude
-      ];
-      console.log(svgContainer.attr("width"));
-      return (
-        "scale(" +
-        getScale() +
-        "), translate(" +
-        map.latLngToLayerPoint(sensorLL).x +
-        " " +
-        map.latLngToLayerPoint(sensorLL).y +
-        ")"
       );
     });
 }
@@ -404,3 +340,19 @@ function getSensorPathWidth(domain, n, i) {
   //console.log(n, i, rmin0, rmin1, rmax0, rmax1, width);
   return width;
 }
+
+//console.log click latlng + pixel points
+map.on("click", function(e) {
+  var coord = e.latlng;
+  var lat = coord.lat;
+  var lng = coord.lng;
+  var xy = map.latLngToLayerPoint(e.latlng);
+  console.log(
+    "You clicked the map at latitude: " +
+      lat +
+      " and longitude: " +
+      lng +
+      " xy:" +
+      xy
+  );
+});
