@@ -282,25 +282,42 @@ function positionSvgContainer() {
     .split(",");
   var tx = -1 * tr[0].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
   var ty = -1 * tr[1].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
-  var height = svgContainer.attr("height");
-  var width = svgContainer.attr("width");
-  svgContainer.style(
-    "transform",
-    "scale(" +
+
+  svgContainer.style("transform", function(d) {
+    var height = d3.select(this).attr("height");
+    var width = d3.select(this).attr("width");
+    var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
+    console.log(
+      getSvgOffsetToCenterPoint(
+        map.latLngToLayerPoint(sensorLL).x,
+        width,
+        getScale()
+      )
+    );
+
+    return (
+      "translate3d(" +
+      map.latLngToLayerPoint(sensorLL).x +
+      "px, " +
+      map.latLngToLayerPoint(sensorLL).y +
+      "px, 0px) scale(" +
       getScale() +
       ") translate3d(" +
-      getSvgOffsetToCenterPoint(tx, width, getScale()) +
+      (width / 2) * -1 +
       "px, " +
-      getSvgOffsetToCenterPoint(ty, height, getScale()) +
+      (width / 2) * -1 +
       "px, 0px)"
-  );
+    );
+  });
   svgContainer.attr("transform-origin", function(d) {
     var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
-    return (
-      map.latLngToLayerPoint(sensorLL).x +
-      " " +
-      map.latLngToLayerPoint(sensorLL).y
-    );
+    console.log(map.latLngToLayerPoint(sensorLL));
+    return "0 0";
+    // return (
+    //   map.latLngToLayerPoint(sensorLL).x +
+    //   " " +
+    //   map.latLngToLayerPoint(sensorLL).y
+    // );
   });
 }
 
@@ -319,7 +336,7 @@ function getSensorPath(domain, n, i) {
   var angMax0 = domain.fi.max0;
   var angMax1 = domain.fi.max1;
 
-  element = elemikorcikk(
+  element1 = elemikorcikk(
     interpol(rmin0, rmin1, n, i),
     interpol(rmax0, rmax1, n, i),
     interpol(angMin0, angMin1, n, i),
@@ -327,7 +344,7 @@ function getSensorPath(domain, n, i) {
     0,
     0
   );
-  return element.d;
+  return element1.d;
 }
 
 //Calculate MR SVG path width
@@ -355,3 +372,5 @@ map.on("click", function(e) {
       xy
   );
 });
+
+positionSvgContainer();
