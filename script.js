@@ -24,8 +24,8 @@ let sensorIcon = L.icon({
 // set server request interval
 setInterval(() => {
   getMarkerData();
+  getSensorSVGData();
 }, 100);
-
 getSensorData();
 
 //set maps layer
@@ -150,8 +150,6 @@ function getSensorData() {
       sensor3 = L.marker(sensorsLatLon[2], {
         icon: sensorIcon
       }).addTo(map);
-
-      getSensorSvgPath(sensorData, 10);
     } else {
       let e = new Error("HTTP Request");
       error(e, xml.status);
@@ -165,6 +163,17 @@ function getSensorData() {
   for (var k = 0; k < llMarkers.length; k++) {
     llMarkers[k].classList.add("droneMarkerIcon");
   }
+}
+
+function getSensorSVGData() {
+  let url = "http://localhost:8080/UAVServerPOC/rest/sensor/all";
+  let xml = new XMLHttpRequest();
+  xml.open("GET", url);
+  xml.onload = () => {
+    let sensorData = JSON.parse(xml.responseText).sensors;
+    getSensorSvgPath(sensorData, 10);
+  };
+  xml.send();
 }
 
 //create circular sector svg from sensor data
