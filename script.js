@@ -10,10 +10,6 @@ map.on("zoom", function() {
 let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
 let marker2 = L.marker([47.52936, 19.03276]).addTo(map);
 
-//sensor markers
-let sensor1;
-let sensor2;
-let sensor3;
 //sensor icon
 let sensorIcon = L.icon({
   iconUrl: "./img/sensor-icon.png",
@@ -132,24 +128,15 @@ function getSensorData() {
   xml.onload = () => {
     if (xml.status === 200) {
       let sensorData = JSON.parse(xml.responseText).sensors;
-      let sensorsLatLon = [];
-      let coords = sensorData.map(data => Object(data.domain.cordinate));
 
-      for (let i = 0; i < coords.length; i++) {
-        sensorsLatLon.push([coords[i].latitude, coords[i].longitude]);
-      }
-
-      sensor1 = L.marker(sensorsLatLon[0], {
-        icon: sensorIcon
-      }).addTo(map);
-
-      sensor2 = L.marker(sensorsLatLon[1], {
-        icon: sensorIcon
-      }).addTo(map);
-
-      sensor3 = L.marker(sensorsLatLon[2], {
-        icon: sensorIcon
-      }).addTo(map);
+      sensorData.forEach(sensor =>
+        L.marker(
+          [sensor.domain.cordinate.latitude, sensor.domain.cordinate.longitude],
+          {
+            icon: sensorIcon
+          }
+        ).addTo(map)
+      );
     } else {
       let e = new Error("HTTP Request");
       error(e, xml.status);
