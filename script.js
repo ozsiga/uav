@@ -168,7 +168,6 @@ function getSensorData() {
 }
 
 //create circular sector svg from sensor data
-
 function elemikorcikk(rmin, rmax, minAng, maxAng, x, y) {
   x = 0;
   y = 0;
@@ -198,12 +197,7 @@ function elemikorcikk(rmin, rmax, minAng, maxAng, x, y) {
   return element;
 }
 
-function interpol(min, max, n, i) {
-  return min + (i * (max - min)) / n;
-}
-
-//Create all mrSvgs->groups->paths
-
+//Calculate scale for MR SVG
 function getScale() {
   var pB = map.getPixelBounds();
   var b = map.getBounds();
@@ -214,6 +208,7 @@ function getScale() {
   return atloinPixel / map.distance(b._southWest, b._northEast);
 }
 
+//Create all mrSvgs->groups->paths
 function getSensorSvgPath(sensorData, n) {
   var svgContainer = d3.select(map.getPanes().overlayPane);
 
@@ -300,8 +295,11 @@ function positionSvgContainer() {
   });
 }
 
-//calculate svg paths from sensor data
+function interpol(min, max, n, i) {
+  return min + (i * (max - min)) / n;
+}
 
+//calculate svg paths from sensor data
 function getSensorPath(domain, n, i) {
   var rmin0 = domain.r.min0 * Math.cos(domain.theta.min0);
   var rmin1 = domain.r.min1 * Math.cos(domain.theta.min0);
@@ -322,6 +320,8 @@ function getSensorPath(domain, n, i) {
   );
   return element.d;
 }
+
+//Calculate MR SVG path width
 function getSensorPathWidth(domain, n, i) {
   var rmin0 = domain.r.min0 * Math.cos(domain.theta.min0);
   var rmin1 = domain.r.min1 * Math.cos(domain.theta.min0);
