@@ -3,8 +3,6 @@ let map = L.map("map").setView([47.529349, 19.032751], 11);
 
 // if zoom repositioning svg
 map.on("zoom", function() {
-  var svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
-  var svg = svgContainer.selectAll("svg");
   positionSvgContainer();
 });
 
@@ -27,6 +25,7 @@ let sensorIcon = L.icon({
 setInterval(() => {
   getMarkerData();
 }, 100);
+
 getSensorData();
 
 //set maps layer
@@ -152,7 +151,7 @@ function getSensorData() {
         icon: sensorIcon
       }).addTo(map);
 
-      igazi(sensorData, 10);
+      getSensorSvgPath(sensorData, 10);
     } else {
       let e = new Error("HTTP Request");
       error(e, xml.status);
@@ -215,7 +214,7 @@ function getScale() {
   return atloinPixel / map.distance(b._southWest, b._northEast);
 }
 
-function igazi(sensorData, n) {
+function getSensorSvgPath(sensorData, n) {
   var svgContainer = d3.select(map.getPanes().overlayPane);
 
   var svg = svgContainer.selectAll("svg").data(sensorData, d => {
@@ -245,7 +244,7 @@ function igazi(sensorData, n) {
     var path = d3
       .select(this)
       .selectAll("path")
-      .data(new Array(n + 1));
+      .data(new Array(n));
     path.exit().remove();
     let newPath = path.enter().append("path");
     path = newPath.merge(path);
@@ -254,7 +253,6 @@ function igazi(sensorData, n) {
       .attr("stroke", "red")
       .attr("opacity", "0.1")
       .attr("stroke-width", function(d2, i) {
-        //console.log(sensorData);
         return getSensorPathWidth(d.domain, n, i);
       })
       .attr("d", function(d2, i) {
@@ -263,6 +261,7 @@ function igazi(sensorData, n) {
   });
 }
 
+//get offset for measure range svg
 function getSvgOffsetToCenterPoint(pointX, svgWidth, svgScale) {
   //return ( ( svgWidth / 2 ) - pointX ) / svgScale;
   var initialPositionScaled = svgScale * pointX;
@@ -291,20 +290,14 @@ function positionSvgContainer() {
       getSvgOffsetToCenterPoint(ty, height, getScale()) +
       "px, 0px)"
   );
-  svgContainer
-    //.attr("class", "svgSVG")
-    .attr("transform-origin", function(d) {
-      var sensorLL = [
-        d.domain.cordinate.latitude,
-        d.domain.cordinate.longitude
-      ];
-      //console.log(map.latLngToLayerPoint(sensorLL));
-      return (
-        map.latLngToLayerPoint(sensorLL).x +
-        " " +
-        map.latLngToLayerPoint(sensorLL).y
-      );
-    });
+  svgContainer.attr("transform-origin", function(d) {
+    var sensorLL = [d.domain.cordinate.latitude, d.domain.cordinate.longitude];
+    return (
+      map.latLngToLayerPoint(sensorLL).x +
+      " " +
+      map.latLngToLayerPoint(sensorLL).y
+    );
+  });
 }
 
 //calculate svg paths from sensor data
@@ -319,8 +312,7 @@ function getSensorPath(domain, n, i) {
   var angMax0 = domain.fi.max0;
   var angMax1 = domain.fi.max1;
 
-  //var pathArr = [];
-  element1 = elemikorcikk(
+  element = elemikorcikk(
     interpol(rmin0, rmin1, n, i),
     interpol(rmax0, rmax1, n, i),
     interpol(angMin0, angMin1, n, i),
@@ -328,8 +320,7 @@ function getSensorPath(domain, n, i) {
     0,
     0
   );
-  //console.log(element1.d);
-  return element1.d;
+  return element.d;
 }
 function getSensorPathWidth(domain, n, i) {
   var rmin0 = domain.r.min0 * Math.cos(domain.theta.min0);
@@ -337,7 +328,6 @@ function getSensorPathWidth(domain, n, i) {
   var rmax0 = domain.r.max0 * Math.cos(domain.theta.min0);
   var rmax1 = domain.r.max1 * Math.cos(domain.theta.min0);
   var width = interpol(rmax0, rmax1, n, i) - interpol(rmin0, rmin1, n, i);
-  //console.log(n, i, rmin0, rmin1, rmax0, rmax1, width);
   return width;
 }
 
