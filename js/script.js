@@ -1,5 +1,5 @@
-import * as marker from './marker.js';
 import * as sensor from './sensor.js';
+import * as marker from './marker.js';
 
 // Set map view
 let map = L.map("map").setView([47.529349, 19.032751], 11);
@@ -9,17 +9,12 @@ map.on("zoom", function () {
     sensor.positionSvgContainer();
 });
 
-//Set markers default value
-let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
-let marker2 = L.marker([47.52936, 19.03276]).addTo(map);
-
 // set server request interval
 setInterval(() => {
-    marker.getMarkerData(marker1, marker2);
+    marker.getMarkerData();
     sensor.getSensorSVGData();
 }, 100);
 sensor.getSensorData();
-
 //set maps layer
 L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

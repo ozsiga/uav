@@ -33,13 +33,6 @@ function getSensorData() {
         }
     };
     xml.send();
-
-    //add droneMarkerIcon class to uavs
-
-    let llMarkers = document.getElementsByClassName("leaflet-marker-icon");
-    for (let k = 0; k < llMarkers.length; k++) {
-        llMarkers[k].classList.add("droneMarkerIcon");
-    }
 }
 
 function getSensorSVGData() {
