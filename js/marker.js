@@ -48,10 +48,9 @@ function getMarkerData() {
                     }
                 }
                 if (matchedMarker == undefined) {
-                    let marker = L.marker(markerLatLon[k], {
+                    L.marker(markerLatLon[k], {
                         customId: markerData[k].id
-                    });
-                    marker.addTo(map)
+                    }).addTo(map)
 
 
                 } else {
