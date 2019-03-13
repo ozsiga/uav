@@ -1,6 +1,9 @@
 import {
     map
 } from './script.js';
+import * as sensor from './sensor.js';
+
+sensor.sensorData();
 
 //Get marker data from server
 function getMarkerData() {

@@ -11,10 +11,16 @@ let sensorIcon = L.icon({
 
 let zoomLevel = -1;
 
+function sensorData() {
+    console.log(this.responseText);
+    return this.responseText;
+}
+
 // Get sensor data from server
 function getSensorData() {
     let url = "http://192.168.8.149:8080/UAVServerPOC/rest/sensor/all";
     let xml = new XMLHttpRequest();
+    xml.addEventListener("load", sensorData);
     xml.open("GET", url);
     xml.onload = () => {
         if (xml.status === 200) {
@@ -223,5 +229,6 @@ function getScale() {
 export {
     getSensorData,
     getSensorSVGData,
-    positionSvgContainer
+    positionSvgContainer,
+    sensorData
 }
