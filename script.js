@@ -7,9 +7,9 @@ map.on("zoom", function() {
 });
 
 //Set markers default value
-let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
-let marker2 = L.marker([47.52936, 19.03276]).addTo(map);
-
+// let marker1 = L.marker([47.529349, 19.032751]).addTo(map);
+// let marker2 = L.marker([47.52936, 19.03276]).addTo(map);
+let zoomLevel = -1;
 //sensor icon
 let sensorIcon = L.icon({
   iconUrl: "./img/sensor-icon.png",
@@ -32,14 +32,16 @@ L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
 
 //Get marker data from server
 function getMarkerData() {
-  let url = "http://localhost:8080/UAVServerPOC/rest/fake"; //url of service
+  let url = "http://192.168.8.149:8080/UAVServerPOC/rest/fake"; //url of service
   let xhr = new XMLHttpRequest();
   xhr.open("GET", url);
   xhr.onload = () => {
     if (xhr.status === 200) {
       let markerData = JSON.parse(xhr.responseText).data;
+      //console.log(markerData);
       let markerLatLon = [];
       let coords = markerData.map(data => Object(data.position));
+      //console.log(coords);
 
       for (let i = 0; i < coords.length; i++) {
         if (isNumeric(coords[i].latitude) && isNumeric(coords[i].longitude)) {
@@ -49,8 +51,17 @@ function getMarkerData() {
 
       setMarkerSvg(markerData);
 
-      marker1.setLatLng(markerLatLon[0]);
-      marker2.setLatLng(markerLatLon[1]);
+      for (let i = 0; i < markerData.length; i++) {
+        if (markerData[i].id) {
+          for (let i = 0; i < markerLatLon.length; i++) {
+            let markers = L.marker(markerLatLon[i], {
+              customId: markerData[i].id
+            }).addTo(map);
+          }
+        }
+      }
+      // marker1.setLatLng(markerLatLon[0]);
+      // marker2.setLatLng(markerLatLon[1]);
     } else {
       let e = new Error("HTTP Request");
       error(e, xhr.status);
@@ -58,7 +69,21 @@ function getMarkerData() {
   };
   xhr.send();
 }
+function getMarkerByCustomId(id) {}
 
+getFeaturesInView();
+function getFeaturesInView() {
+  var features = [];
+  map.eachLayer(function(layer) {
+    if (layer instanceof L.Marker) {
+      console.log(layer.options.customId);
+      if (layer.options.customId) {
+        features.push(layer);
+      }
+    }
+  });
+  return features;
+}
 // Set SVG arrow to markers
 function setMarkerSvg(input) {
   //initialize svg
@@ -120,11 +145,9 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-var zoomLevel = -1;
-
 // Get sensor data from server
 function getSensorData() {
-  let url = "http://localhost:8080/UAVServerPOC/rest/sensor/all";
+  let url = "http://192.168.8.149:8080/UAVServerPOC/rest/sensor/all";
   let xml = new XMLHttpRequest();
   xml.open("GET", url);
   xml.onload = () => {
@@ -155,7 +178,7 @@ function getSensorData() {
 }
 
 function getSensorSVGData() {
-  let url = "http://localhost:8080/UAVServerPOC/rest/sensor/all";
+  let url = "http://192.168.8.149:8080/UAVServerPOC/rest/sensor/all";
   let xml = new XMLHttpRequest();
   xml.open("GET", url);
   xml.onload = () => {
