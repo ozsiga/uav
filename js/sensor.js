@@ -166,7 +166,6 @@ function elemikorcikk(rmin, rmax, minAng, maxAng, x, y) {
 
 // set svg container position to leaflet-map-pane position
 function positionSvgContainer() {
-    //console.log(zoomLevel, map.getZoom());
     if (zoomLevel !== map.getZoom()) {
         zoomLevel = map.getZoom();
 
@@ -205,7 +204,6 @@ function positionSvgContainer() {
                 d.domain.cordinate.latitude,
                 d.domain.cordinate.longitude
             ];
-            //console.log(map.latLngToLayerPoint(sensorLL));
             return "0 0";
         });
     }
