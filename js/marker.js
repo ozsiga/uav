@@ -1,9 +1,24 @@
 import {
     map
 } from './script.js';
-import * as sensor from './sensor.js';
 
-sensor.sensorData();
+let url = "http://192.168.8.149:8080/UAVServerPOC/rest/sensor/all";
+
+let sensorDetections = [];
+
+fetch(url)
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        let sensorData = data.sensors;
+        sensorData.forEach(sensor => sensorDetections.push(sensor.detections));
+    })
+    .catch(err => {
+        console.log(err);
+    });
+
+console.log(sensorDetections);
 
 //Get marker data from server
 function getMarkerData() {
@@ -50,16 +65,15 @@ function getMarkerData() {
                         break;
                     }
                 }
-                if (matchedMarker == undefined) {
-                    let marker = L.marker(markerLatLon[k], {
-                        customId: markerData[k].id
-                    });
-                    marker.addTo(map)
-
-
-                } else {
-                    matchedMarker.setLatLng(markerLatLon[k]);
-                }
+                sensorDetections.filter(detection => {
+                    if (matchedMarker == undefined && detection.length != 0) {
+                        L.marker(markerLatLon[k], {
+                            customId: markerData[k].id
+                        }).addTo(map)
+                    } else {
+                        // matchedMarker.setLatLng(markerLatLon[k]);
+                    }
+                })
             }
 
             //A meglévő markerek pozicionálása, nyíl kirajzolása
