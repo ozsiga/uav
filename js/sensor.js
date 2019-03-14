@@ -11,21 +11,15 @@ let sensorIcon = L.icon({
 
 let zoomLevel = -1;
 
-function sensorData() {
-    console.log(this.responseText);
-    return this.responseText;
-}
+let url = "http://192.168.8.149:8080/UAVServerPOC/rest/sensor/all";
 
-// Get sensor data from server
 function getSensorData() {
-    let url = "http://192.168.8.149:8080/UAVServerPOC/rest/sensor/all";
-    let xml = new XMLHttpRequest();
-    xml.addEventListener("load", sensorData);
-    xml.open("GET", url);
-    xml.onload = () => {
-        if (xml.status === 200) {
-            let sensorData = JSON.parse(xml.responseText).sensors;
-
+    fetch(url)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            let sensorData = data.sensors;
             sensorData.forEach(sensor =>
                 L.marker(
                     [sensor.domain.cordinate.latitude, sensor.domain.cordinate.longitude], {
@@ -33,23 +27,24 @@ function getSensorData() {
                     }
                 ).addTo(map)
             );
-        } else {
-            let e = new Error("HTTP Request");
-            error(e, xml.status);
-        }
-    };
-    xml.send();
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }
 
 function getSensorSVGData() {
-    let url = "http://192.168.8.149:8080/UAVServerPOC/rest/sensor/all";
-    let xml = new XMLHttpRequest();
-    xml.open("GET", url);
-    xml.onload = () => {
-        let sensorData = JSON.parse(xml.responseText).sensors;
-        getSensorSvgPath(sensorData, 10);
-    };
-    xml.send();
+    fetch(url)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            let sensorData = data.sensors;
+            getSensorSvgPath(sensorData, 10);
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }
 
 //Create all mrSvgs->groups->paths
@@ -229,6 +224,5 @@ function getScale() {
 export {
     getSensorData,
     getSensorSVGData,
-    positionSvgContainer,
-    sensorData
+    positionSvgContainer
 }
