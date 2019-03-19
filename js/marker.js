@@ -207,7 +207,15 @@ function makeMarkerSvg(input) {
         .attr("cx", 25)
         .attr("cy", 25)
         .attr("r", 9)
-        .attr('fill', 'yellow')
+        .attr('fill', function (d) {
+            if (Math.round(d.domain.height) <= 25) {
+                return 'Aquamarine'
+            } else if (Math.round(d.domain.height) <= 60 && Math.round(d.domain.height) > 25) {
+                return 'yellow'
+            } else {
+                return 'DarkViolet'
+            }
+        })
         .attr('opacity', 1)
         .attr('stroke', '#000000')
         .style("z-index", 1500)
