@@ -2,23 +2,6 @@ import {
     map
 } from './script.js';
 
-
-let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all";
-let sensorDetection;
-fetch(url)
-    .then(response => {
-        return response.json();
-    })
-    .then(data => {
-        sensorDetection = data;
-        console.log(sensorDetection);
-
-    })
-    .catch(err => {
-        console.log(err);
-    });
-
-
 //Get marker data from server
 function getMarkerData() {
     let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
@@ -40,7 +23,7 @@ function getMarkerData() {
 
             // Meglévő markerek kigyűjtése
             //markersInMap a tömb a fentlévő markerekkel
-            var markersInMap = getMarkersOnMap(map)
+            var markersInMap = getMarkersOnMap(map);
             // Meglévő markerekből a nem megkapottak levétele
             for (let i = 0; i < markersInMap.length; i++) {
                 var found = false;
@@ -55,7 +38,7 @@ function getMarkerData() {
                 }
             }
 
-            // Megkapott, de fent nem lévő markerek létrehozása, térkééhez adása
+            // Megkapott, de fent nem lévő markerek létrehozása, térképhez adása
             for (let k = 0; k < markerData.length; k++) {
                 var matchedMarker = undefined;
                 for (let i = 0; i < markersInMap.length; i++) {
@@ -64,17 +47,10 @@ function getMarkerData() {
                         break;
                     }
                 }
-                // sensorDetections.filter(detection => {
-                if (matchedMarker == undefined && sensorDetection.length > 0) {
-                    makeMarkerSvg(markerData)
-                    // L.marker(markerLatLon[k], {
-                    //     customId: markerData[k].id
-                    // }).addTo(map)
-                } else {
-                    //matchedMarker.setLatLng(markerLatLon[k]);
 
+                if (matchedMarker == undefined) {
+                    makeMarkerSvg(markerData)
                 }
-                // })
             }
 
             //A meglévő markerek pozicionálása, nyíl kirajzolása
@@ -87,6 +63,7 @@ function getMarkerData() {
     };
     xhr.send();
 }
+
 // Set SVG arrow to markers
 function setMarkerSvg(input) {
     //initialize svg
@@ -138,14 +115,11 @@ function setMarkerSvg(input) {
                 "px, 0px)"
             );
         })
-    // .style("margin-top", -20.5)
-    // .style("margin-left", 9)
 }
 
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
-
 
 // get all marker from layer
 
