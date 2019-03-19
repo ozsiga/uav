@@ -11,7 +11,7 @@ let sensorIcon = L.icon({
 
 let zoomLevel = -1;
 
-let url = "http://192.168.8.149:8080/UAVServerPOC/rest/sensor/all";
+let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/sensor/all";
 
 function getSensorData() {
     fetch(url)
@@ -22,7 +22,7 @@ function getSensorData() {
             let sensorData = data.sensors;
             sensorData.forEach(sensor =>
                 L.marker(
-                    [sensor.domain.cordinate.latitude, sensor.domain.cordinate.longitude], {
+                    [sensor.domain.coordinate.latitude, sensor.domain.coordinate.longitude], {
                         icon: sensorIcon
                     }
                 ).addTo(map)
@@ -183,8 +183,8 @@ function positionSvgContainer() {
             // let height = d3.select(this).attr("height");
             let width = d3.select(this).attr("width");
             let sensorLL = [
-                d.domain.cordinate.latitude,
-                d.domain.cordinate.longitude
+                d.domain.coordinate.latitude,
+                d.domain.coordinate.longitude
             ];
 
             return (
@@ -203,8 +203,8 @@ function positionSvgContainer() {
         });
         svgContainer.attr("transform-origin", function (d) {
             let sensorLL = [
-                d.domain.cordinate.latitude,
-                d.domain.cordinate.longitude
+                d.domain.coordinate.latitude,
+                d.domain.coordinate.longitude
             ];
             return "0 0";
         });

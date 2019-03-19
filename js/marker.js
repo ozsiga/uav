@@ -199,7 +199,7 @@ function makeMarkerSvg(input) {
     svgContainer.selectAll('text')
         .text(function (d) {
             let height = Math.round(d.domain.height)
-            console.log(height);
+            //console.log(height);
             return `${height}`
         })
 
