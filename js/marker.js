@@ -171,7 +171,7 @@ function makeMarkerSvg(input) {
                 "px, 0px)"
             );
         })
-        .style("margin-top", -28)
+        .style("margin-top", -25)
         .style("margin-left", -25)
     let circle = newSvg.append('g')
         .attr('class', 'circle')
@@ -180,7 +180,7 @@ function makeMarkerSvg(input) {
     circle.append("circle")
         .attr("cx", 25)
         .attr("cy", 25)
-        .attr("r", 9)
+        .attr("r", 6)
         .attr('fill', function (d) {
             if (Math.round(d.domain.height) <= 25) {
                 return 'Aquamarine'
@@ -193,15 +193,19 @@ function makeMarkerSvg(input) {
         .attr('opacity', 1)
         .attr('stroke', '#000000')
         .style("z-index", 1500)
-    circle.append('text')
-        .attr('x', 18.5)
-        .attr('y', 30)
-    svgContainer.selectAll('text')
+        .append("svg:title")
         .text(function (d) {
-            let height = Math.round(d.domain.height)
-            //console.log(height);
-            return `${height}`
-        })
+            return "My height is " + d.domain.height;
+        });
+    // circle.append('text')
+    //     .attr('x', 16)
+    //     .attr('y', 30)
+    // svgContainer.selectAll('text')
+    //     .text(function (d) {
+    //         let height = Math.round(d.domain.height)
+    //         //console.log(height);
+    //         return `${height}`
+    //     })
 
 }
 

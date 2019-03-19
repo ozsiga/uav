@@ -20,6 +20,10 @@ function getSensorData() {
         })
         .then(data => {
             let sensorData = data.sensors;
+            sensorData.forEach(sensor => {
+                let time = sensor.timestamp
+                console.log(time);
+            })
             sensorData.forEach(sensor =>
                 L.marker(
                     [sensor.domain.coordinate.latitude, sensor.domain.coordinate.longitude], {
