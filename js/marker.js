@@ -76,8 +76,8 @@ function setMarkerSvg(input) {
 
     svg.exit().remove();
 
-    let offsetX = 200;
-    let offsetY = 200;
+    let offsetX = 400;
+    let offsetY = 400;
 
     let newSvg = svg.enter().append("svg");
     newSvg.attr("class", "lineSvg");
@@ -93,10 +93,10 @@ function setMarkerSvg(input) {
         .attr("x1", offsetX)
         .attr("y1", offsetY)
         .attr("x2", d => {
-            return offsetX + 2 * d.speed.x;
+            return offsetX + d.speed.x;
         })
         .attr("y2", d => {
-            return offsetY - 2 * d.speed.y;
+            return offsetY - d.speed.y;
         })
         .attr("stroke", "black")
         .attr("stroke-width", 2)
@@ -109,9 +109,9 @@ function setMarkerSvg(input) {
             ];
             return (
                 "translate3d(" +
-                (map.latLngToLayerPoint(droneLL).x - 200) +
+                (map.latLngToLayerPoint(droneLL).x - 400) +
                 "px, " +
-                (map.latLngToLayerPoint(droneLL).y - 200) +
+                (map.latLngToLayerPoint(droneLL).y - 400) +
                 "px, 0px)"
             );
         })
@@ -187,7 +187,6 @@ function makeMarkerSvg(input) {
             }
         })
         .attr('opacity', 1)
-        .attr('stroke', '#000000')
         .style("z-index", 1500)
         .append("svg:title")
         .text(function (d) {
