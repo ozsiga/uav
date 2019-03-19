@@ -49,13 +49,8 @@ function getMarkerData() {
                 }
 
                 if (matchedMarker == undefined) {
-                    L.marker(markerLatLon[k], {
-                        customId: markerData[k].id
-                    }).addTo(map)
-                } else {
-                    matchedMarker.setLatLng(markerLatLon[k]);
+                    makeMarkerSvg(markerData)
                 }
-
             }
 
             //A meglévő markerek pozicionálása, nyíl kirajzolása
@@ -89,7 +84,7 @@ function setMarkerSvg(input) {
     newSvg.style("width", 2 * offsetX);
     newSvg.style("height", 2 * offsetY);
 
-    newSvg.style("z-index", 1000);
+    newSvg.style("z-index", 900);
     newSvg.append("line");
     svg = newSvg.merge(svg);
 
@@ -98,10 +93,10 @@ function setMarkerSvg(input) {
         .attr("x1", offsetX)
         .attr("y1", offsetY)
         .attr("x2", d => {
-            return offsetX + d.speed.x;
+            return offsetX + 2 * d.speed.x;
         })
         .attr("y2", d => {
-            return offsetY - d.speed.y;
+            return offsetY - 2 * d.speed.y;
         })
         .attr("stroke", "black")
         .attr("stroke-width", 2)
@@ -120,8 +115,6 @@ function setMarkerSvg(input) {
                 "px, 0px)"
             );
         })
-        .style("margin-top", -20.5)
-        .style("margin-left", 9)
 }
 
 function isNumeric(n) {
@@ -140,6 +133,76 @@ function getMarkersOnMap(map) {
         }
     });
     return markersInMap;
+}
+
+function getDroneElevation(sensordata) {
+
+}
+
+function makeMarkerSvg(input) {
+    let svgContainer = d3
+        .select(".leaflet-pane")
+        .selectAll("svg.droneSvg")
+        .data(input, d => {
+            return d.id;
+        });
+
+    svgContainer.exit().remove();
+    let newSvg = svgContainer.enter().append("svg");
+    newSvg.attr("class", "droneSvg");
+    newSvg.attr("customId", function (d) {
+        return d.id;
+    })
+    newSvg.style("width", 50);
+    newSvg.style("height", 50);
+    newSvg.style("z-index", 1500);
+    svgContainer = newSvg.merge(svgContainer);
+    svgContainer.style("transform", function (d) {
+            let droneLL = [
+                d.domain.coordinate.latitude,
+                d.domain.coordinate.longitude
+            ];
+            //console.log(map.latLngToLayerPoint(droneLL));
+            return (
+                "translate3d(" +
+                (map.latLngToLayerPoint(droneLL).x) +
+                "px, " +
+                (map.latLngToLayerPoint(droneLL).y) +
+                "px, 0px)"
+            );
+        })
+        .style("margin-top", -28)
+        .style("margin-left", -25)
+    let circle = newSvg.append('g')
+        .attr('class', 'circle')
+        .attr("width", 50)
+        .attr("height", 50);
+    circle.append("circle")
+        .attr("cx", 25)
+        .attr("cy", 25)
+        .attr("r", 9)
+        .attr('fill', function (d) {
+            if (Math.round(d.domain.height) <= 25) {
+                return 'Aquamarine'
+            } else if (Math.round(d.domain.height) <= 60 && Math.round(d.domain.height) > 25) {
+                return 'yellow'
+            } else {
+                return 'DarkViolet'
+            }
+        })
+        .attr('opacity', 1)
+        .attr('stroke', '#000000')
+        .style("z-index", 1500)
+    circle.append('text')
+        .attr('x', 18.5)
+        .attr('y', 30)
+    svgContainer.selectAll('text')
+        .text(function (d) {
+            let height = Math.round(d.domain.height)
+            console.log(height);
+            return `${height}`
+        })
+
 }
 
 export {
