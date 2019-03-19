@@ -135,10 +135,6 @@ function getMarkersOnMap(map) {
     return markersInMap;
 }
 
-function getDroneElevation(sensordata) {
-
-}
-
 function makeMarkerSvg(input) {
     let svgContainer = d3
         .select(".leaflet-pane")
@@ -195,7 +191,7 @@ function makeMarkerSvg(input) {
         .style("z-index", 1500)
         .append("svg:title")
         .text(function (d) {
-            return "My height is " + d.domain.height;
+            return `Height: ${d.domain.height} m \nDetected by sensor #${d.detectors} \nDrone id: ${d.id}`;
         });
     // circle.append('text')
     //     .attr('x', 16)
