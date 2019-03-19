@@ -26,6 +26,7 @@ function getSensorData() {
                         icon: sensorIcon
                     }
                 ).addTo(map)
+                .bindPopup(`Szenzor: ${sensor.id} <br> Név: ${sensor.type}`)
             );
         })
         .catch(err => {

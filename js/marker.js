@@ -2,36 +2,18 @@ import {
     map
 } from './script.js';
 
-let url = "http://192.168.8.149:8080/UAVServerPOC/rest/sensor/all";
-
-let sensorDetections = [];
-
-fetch(url)
-    .then(response => {
-        return response.json();
-    })
-    .then(data => {
-        let sensorData = data.sensors;
-        sensorData.forEach(sensor => sensorDetections.push(sensor.detections));
-    })
-    .catch(err => {
-        console.log(err);
-    });
-
-console.log(sensorDetections);
-
 //Get marker data from server
 function getMarkerData() {
-    let url = "http://192.168.8.149:8080/UAVServerPOC/rest/fake"; //url of service
+    let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
     let xhr = new XMLHttpRequest();
     xhr.open("GET", url);
     xhr.onload = () => {
         if (xhr.status === 200) {
 
             // Kapott adatok feldolgozása
-            let markerData = JSON.parse(xhr.responseText).data;
+            let markerData = JSON.parse(xhr.responseText);
             let markerLatLon = [];
-            let coords = markerData.map(data => Object(data.position));
+            let coords = markerData.map(data => Object(data.domain.coordinate));
 
             for (let i = 0; i < coords.length; i++) {
                 if (isNumeric(coords[i].latitude) && isNumeric(coords[i].longitude)) {
@@ -41,7 +23,7 @@ function getMarkerData() {
 
             // Meglévő markerek kigyűjtése
             //markersInMap a tömb a fentlévő markerekkel
-            var markersInMap = getMarkersOnMap(map)
+            var markersInMap = getMarkersOnMap(map);
             // Meglévő markerekből a nem megkapottak levétele
             for (let i = 0; i < markersInMap.length; i++) {
                 var found = false;
@@ -56,7 +38,7 @@ function getMarkerData() {
                 }
             }
 
-            // Megkapott, de fent nem lévő markerek létrehozása, térkééhez adása
+            // Megkapott, de fent nem lévő markerek létrehozása, térképhez adása
             for (let k = 0; k < markerData.length; k++) {
                 var matchedMarker = undefined;
                 for (let i = 0; i < markersInMap.length; i++) {
@@ -65,15 +47,15 @@ function getMarkerData() {
                         break;
                     }
                 }
-                sensorDetections.filter(detection => {
-                    if (matchedMarker == undefined && detection.length != 0) {
-                        L.marker(markerLatLon[k], {
-                            customId: markerData[k].id
-                        }).addTo(map)
-                    } else {
-                        // matchedMarker.setLatLng(markerLatLon[k]);
-                    }
-                })
+
+                if (matchedMarker == undefined) {
+                    L.marker(markerLatLon[k], {
+                        customId: markerData[k].id
+                    }).addTo(map)
+                } else {
+                    matchedMarker.setLatLng(markerLatLon[k]);
+                }
+
             }
 
             //A meglévő markerek pozicionálása, nyíl kirajzolása
@@ -86,6 +68,7 @@ function getMarkerData() {
     };
     xhr.send();
 }
+
 // Set SVG arrow to markers
 function setMarkerSvg(input) {
     //initialize svg
@@ -120,14 +103,14 @@ function setMarkerSvg(input) {
         .attr("y2", d => {
             return offsetY - d.speed.y;
         })
-        .attr("stroke", "red")
+        .attr("stroke", "black")
         .attr("stroke-width", 2)
         .attr("marker-end", "url(#arrow)");
     svg
         .style("transform", function (d) {
             let droneLL = [
-                d.position.latitude,
-                d.position.longitude
+                d.domain.coordinate.latitude,
+                d.domain.coordinate.longitude
             ];
             return (
                 "translate3d(" +
@@ -144,7 +127,6 @@ function setMarkerSvg(input) {
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
-
 
 // get all marker from layer
 
