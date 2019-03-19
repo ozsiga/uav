@@ -12,6 +12,7 @@ function getMarkerData() {
 
             // Kapott adatok feldolgozása
             let markerData = JSON.parse(xhr.responseText);
+            //console.log(markerData);
             let markerLatLon = [];
             let coords = markerData.map(data => Object(data.domain.coordinate));
 
@@ -58,7 +59,7 @@ function getMarkerData() {
 
         } else {
             let e = new Error("HTTP Request");
-            error(e, xhr.status);
+            console.log(e, xhr.status);
         }
     };
     xhr.send();
@@ -76,8 +77,8 @@ function setMarkerSvg(input) {
 
     svg.exit().remove();
 
-    let offsetX = 200;
-    let offsetY = 200;
+    let offsetX = 400;
+    let offsetY = 400;
 
     let newSvg = svg.enter().append("svg");
     newSvg.attr("class", "lineSvg");
@@ -93,10 +94,10 @@ function setMarkerSvg(input) {
         .attr("x1", offsetX)
         .attr("y1", offsetY)
         .attr("x2", d => {
-            return offsetX + 2 * d.speed.x;
+            return offsetX + d.speed.x;
         })
         .attr("y2", d => {
-            return offsetY - 2 * d.speed.y;
+            return offsetY - d.speed.y;
         })
         .attr("stroke", "black")
         .attr("stroke-width", 2)
@@ -109,9 +110,9 @@ function setMarkerSvg(input) {
             ];
             return (
                 "translate3d(" +
-                (map.latLngToLayerPoint(droneLL).x - 200) +
+                (map.latLngToLayerPoint(droneLL).x - 400) +
                 "px, " +
-                (map.latLngToLayerPoint(droneLL).y - 200) +
+                (map.latLngToLayerPoint(droneLL).y - 400) +
                 "px, 0px)"
             );
         })
@@ -204,6 +205,7 @@ function makeMarkerSvg(input) {
     //     })
 
 }
+
 
 export {
     getMarkerData,

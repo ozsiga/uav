@@ -5,28 +5,39 @@
   <link rel="stylesheet" href="node_modules/leaflet/dist/leaflet.css" data-require="leaflet@1.4.0" data-semver="1.4.0" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script type="module" src="js/script.js"></script>
 </head>
 
 <body>
   <div id="map">
-
+    <p id="label0">show sensors measure range</p> <input type="checkbox" id="toggleMrSvg" onclick="toggleMrSvg()"
+      checked>
+    <!-- <p id="label1">show sensor icons</p><input type="checkbox" id="toggleSensorIcons" onclick="toggleSensorIcons()"> -->
   </div>
-  <!-- <svg width="0%" height="0%" class="droneSvg"></svg> -->
   <svg width="0%" height="0%" class="lineSvg">
     <defs>
       <marker id="arrow" markerUnits="strokeWidth" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="6" refY="6"
         orient="auto">
-<<<<<<< HEAD
-        <path d="M2,2 L10,6 L2,10 L6,6 L2,2" style="fill: #000;"></path>
-=======
         <path d="M2,2 L10,6 L2,10 L6,6 L2,2" style="fill: black;"></path>
->>>>>>> 9ae681a43175fd55297a98d6de9ad1f10c561b05
       </marker>
     </defs>
   </svg>
-
   <script type="text/javascript" src="node_modules/leaflet/dist/leaflet.js" data-require="leaflet@1.4.0" data-semver="1.4.0"></script>
-  <script type="module" src="js/script.js"></script>
 </body>
+
+<script>
+  let checkBox = document.getElementById("toggleMrSvg");
+
+  function toggleMrSvg() {
+    let mrSvg = document.getElementsByClassName('mrSvg')
+    for (let i = 0; i < mrSvg.length; i++) {
+      if (checkBox.checked == true) {
+        mrSvg[i].style.display = "block";
+      } else {
+        mrSvg[i].style.display = "none";
+      }
+    }
+  }
+</script>
 
 </html>

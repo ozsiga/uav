@@ -20,10 +20,6 @@ function getSensorData() {
         })
         .then(data => {
             let sensorData = data.sensors;
-            sensorData.forEach(sensor => {
-                let time = sensor.timestamp
-                console.log(time);
-            })
             sensorData.forEach(sensor =>
                 L.marker(
                     [sensor.domain.coordinate.latitude, sensor.domain.coordinate.longitude], {
@@ -77,7 +73,8 @@ function getSensorSvgPath(sensorData, n) {
             let rMax = d.domain.r.max1 * Math.cos(d.domain.theta.min0);
             return 2 * rMax;
         })
-        .attr("id", "mr");
+        .attr("id", "mr")
+        .attr("class", "mrSvg");
 
     svg.each(function (d, i) {
         let path = d3
