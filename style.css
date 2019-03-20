@@ -6,6 +6,14 @@ html,
 body,
 #map {
   height: 100%;
+  box-sizing: border-box;
+  width: 85%;
+  float: left;
+}
+
+.sidebar {
+  width: 15%;
+  float: right;
 }
 
 #toggleSensorIcons {
