@@ -20,22 +20,6 @@ function getSensorData() {
                 normalizeDomainBazmeg(sensorData[i].domain);
             }
             makeSensorIconSvg(sensorData);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-}
-
-function getSensorSVGData() {
-    fetch(url)
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            let sensorData = data.sensors;
-            for (var i = 0; i < sensorData.length; i++) {
-                normalizeDomainBazmeg(sensorData[i].domain);
-            }    
             getSensorSvgPath(sensorData, sensorLayers);
         })
         .catch(err => {
@@ -84,7 +68,7 @@ function makeSensorIconSvg(input) {
         .style("z-index", 1500)
         .append("svg:title")
         .text(function (d) {
-            return `Szenzor: ${d.id} <br> Név: ${d.type}`;
+            return `Szenzor: ${d.id} \nNév: ${d.type}`;
         });
 
 }
@@ -92,7 +76,7 @@ function makeSensorIconSvg(input) {
 //Create all mrSvgs->groups->paths
 function getSensorSvgPath(sensorData, n) {
     let svgContainer = d3.select(map.getPanes().overlayPane);
-
+    let checkbox = document.getElementById('toggleMrSvg')
     let svg = svgContainer.selectAll("svg").data(sensorData, d => {
         return d.id;
     });
@@ -114,8 +98,10 @@ function getSensorSvgPath(sensorData, n) {
             let rMax = d.domain.r.max1 * Math.cos(d.domain.theta.min0);
             return 2 * rMax / superScale;
         })
-        .attr("id", "mr")
         .attr("class", "mrSvg");
+    if (checkbox.checked == false) {
+        svg.style("display", "none")
+    }
 
     svg.each(function (d, i) {
         let path = d3
@@ -340,7 +326,6 @@ function normalizeDomainBazmeg(domain) {
 
 export {
     getSensorData,
-    getSensorSVGData,
     positionSvgContainer,
     getScale
 }

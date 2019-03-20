@@ -3,9 +3,25 @@ body {
 }
 
 html,
-body,
+body {
+  height: 100%;
+}
+
 #map {
   height: 100%;
+  box-sizing: border-box;
+  width: 85%;
+  float: left;
+}
+
+.sidebar {
+  width: 15%;
+  float: right;
+}
+
+#title {
+  text-align: center;
+  font-family: sans-serif;
 }
 
 #toggleSensorIcons {

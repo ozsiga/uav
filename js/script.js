@@ -24,8 +24,8 @@ var debug = function () {
                             var sty = this.style.transform;
                             var repl = sty.replace(/.*scale\((.*)\).*/, '$1');
                             if (repl !== "1") {
-                                console.log(sty, repl);
-                                sensor.prePositionSvgContainer(repl);                    
+                                //console.log(sty, repl);
+                                //sensor.prePositionSvgContainer(repl);                    
                             }
                         }
                 );
@@ -60,7 +60,6 @@ var debug = function () {
 // set server request interval
 setInterval(() => {
     marker.getMarkerData();
-    sensor.getSensorSVGData();
     sensor.getSensorData();
 }, 100);
 

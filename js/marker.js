@@ -56,7 +56,7 @@ function getMarkerData() {
                 }
 
                 if (matchedMarker == undefined) {
-                    makeMarkerSvg(markerData)
+                    makeMarkerSvg(markerData);
                 }
             }
 
@@ -107,8 +107,8 @@ function setMarkerSvg(input) {
             return offsetY - d.speed.y;
         })
         .attr("stroke", "#000")
-        .attr("stroke-width", 2)
-        .attr("marker-end", "url(#arrow)");
+        .attr("stroke-width", 1)
+    //.attr("marker-end", "url(#arrow)");
     svg
         .style("transform", function (d) {
             let droneLL = [
@@ -206,6 +206,7 @@ function makeMarkerSvg(input) {
             return `Height: ${height} m \nDetected by sensor #${d.detectors} \nDrone id: ${d.id}`;
         });
     circle.append('text')
+        .attr('class', 'markerText')
         .attr('x', 16)
         .attr('y', 42)
     svgContainer.selectAll('text')
@@ -213,8 +214,7 @@ function makeMarkerSvg(input) {
             let height = Math.round(d.domain.height)
             return `${height} m`
         })
-        .attr("fill", "#fff")
-
+    //.attr("fill", "#fff")
 }
 
 function positionArrowSvg() {
@@ -258,6 +258,7 @@ function positionArrowSvg() {
             ];
             return `0 0`;
         });
+
     }
 }
 
