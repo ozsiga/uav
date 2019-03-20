@@ -99,7 +99,7 @@ function setMarkerSvg(input) {
         .attr("y2", d => {
             return offsetY - d.speed.y;
         })
-        .attr("stroke", "black")
+        .attr("stroke", "#000")
         .attr("stroke-width", 2)
         .attr("marker-end", "url(#arrow)");
     svg
@@ -180,31 +180,32 @@ function makeMarkerSvg(input) {
         .attr("r", 6)
         .attr('fill', function (d) {
             if (Math.round(d.domain.height) <= 25) {
-                return 'Aquamarine'
+                return '#f00';
             } else if (Math.round(d.domain.height) <= 60 && Math.round(d.domain.height) > 25) {
-                return 'yellow'
+                return '#00FF00';
             } else {
-                return 'DarkViolet'
+                return '#1E90FF';
             }
         })
         .attr('opacity', 1)
         .style("z-index", 1500)
         .append("svg:title")
         .text(function (d) {
-            return `Height: ${d.domain.height} m \nDetected by sensor #${d.detectors} \nDrone id: ${d.id}`;
+            let height = Math.round(d.domain.height);
+            return `Height: ${height} m \nDetected by sensor #${d.detectors} \nDrone id: ${d.id}`;
         });
-    // circle.append('text')
-    //     .attr('x', 16)
-    //     .attr('y', 30)
-    // svgContainer.selectAll('text')
-    //     .text(function (d) {
-    //         let height = Math.round(d.domain.height)
-    //         //console.log(height);
-    //         return `${height}`
-    //     })
+
+    circle.append('text')
+        .attr('x', 16)
+        .attr('y', 42)
+    svgContainer.selectAll('text')
+        .text(function (d) {
+            let height = Math.round(d.domain.height)
+            return `${height} m`
+        })
+        .attr('fill', '#fff');
 
 }
-
 
 export {
     getMarkerData,
