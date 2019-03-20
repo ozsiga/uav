@@ -13,8 +13,8 @@ map.on("zoom", function () {
 setInterval(() => {
     marker.getMarkerData();
     sensor.getSensorSVGData();
+    sensor.getSensorData();
 }, 100);
-sensor.getSensorData();
 
 //set maps layer
 L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {

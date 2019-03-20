@@ -12,7 +12,8 @@
   <div id="map">
     <p id="label0">show sensors measure range</p> <input type="checkbox" id="toggleMrSvg" onclick="toggleMrSvg()"
       checked>
-    <!-- <p id="label1">show sensor icons</p><input type="checkbox" id="toggleSensorIcons" onclick="toggleSensorIcons()"> -->
+    <p id="label1">show sensor icons</p><input type="checkbox" id="toggleSensorIcons" onclick="toggleSensorIcons()"
+      checked>
   </div>
   <svg width="0%" height="0%" class="lineSvg">
     <defs>
@@ -27,14 +28,28 @@
 
 <script>
   let checkBox = document.getElementById("toggleMrSvg");
+  let checkBox1 = document.getElementById("toggleSensorIcons");
 
   function toggleMrSvg() {
     let mrSvg = document.getElementsByClassName('mrSvg')
+    console.log(mrSvg);
     for (let i = 0; i < mrSvg.length; i++) {
       if (checkBox.checked == true) {
         mrSvg[i].style.display = "block";
       } else {
         mrSvg[i].style.display = "none";
+      }
+    }
+  }
+
+  function toggleSensorIcons() {
+    let sensorIcons = document.getElementsByClassName('iconSvg')
+    console.log(sensorIcons);
+    for (let i = 0; i < sensorIcons.length; i++) {
+      if (checkBox1.checked == true) {
+        sensorIcons[i].style.display = "block";
+      } else {
+        sensorIcons[i].style.display = "none";
       }
     }
   }

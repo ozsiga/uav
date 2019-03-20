@@ -2,13 +2,6 @@ import {
     map
 } from './script.js';
 
-//sensor icon
-let sensorIcon = L.icon({
-    iconUrl: "./img/sensor-icon.png",
-    iconSize: [32, 32],
-    iconAnchor: [16, 16]
-});
-
 let zoomLevel = -1;
 
 let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/sensor/all";
@@ -20,14 +13,8 @@ function getSensorData() {
         })
         .then(data => {
             let sensorData = data.sensors;
-            sensorData.forEach(sensor =>
-                L.marker(
-                    [sensor.domain.coordinate.latitude, sensor.domain.coordinate.longitude], {
-                        icon: sensorIcon
-                    }
-                ).addTo(map)
-                .bindPopup(`Szenzor: ${sensor.id} <br> Név: ${sensor.type}`)
-            );
+
+            makeSensorIconSvg(sensorData);
         })
         .catch(err => {
             console.log(err);
@@ -46,6 +33,52 @@ function getSensorSVGData() {
         .catch(err => {
             console.log(err);
         });
+}
+
+function makeSensorIconSvg(input) {
+    let svgContainer = d3
+        .select(".leaflet-pane")
+        .selectAll("svg.iconSvg")
+        .data(input, d => {
+            return d.id;
+        });
+
+    svgContainer.exit().remove();
+    let newSvg = svgContainer.enter().append("svg");
+    newSvg.attr("class", "iconSvg");
+    newSvg.style("width", 50);
+    newSvg.style("height", 50);
+    newSvg.style("z-index", 1500);
+    svgContainer = newSvg.merge(svgContainer);
+    svgContainer.style("transform", function (d) {
+        let sensorLL = [
+            d.domain.coordinate.latitude,
+            d.domain.coordinate.longitude
+        ];
+        return (
+            "translate3d(" +
+            (map.latLngToLayerPoint(sensorLL).x - 25) +
+            "px, " +
+            (map.latLngToLayerPoint(sensorLL).y - 25) +
+            "px, 0px)"
+        );
+    })
+    let circle = newSvg.append('g')
+        .attr('class', 'circle')
+        .attr("width", 50)
+        .attr("height", 50);
+    circle.append("circle")
+        .attr("cx", 25)
+        .attr("cy", 25)
+        .attr("r", 6)
+        .attr('fill', 'black')
+        .attr('opacity', 1)
+        .style("z-index", 1500)
+        .append("svg:title")
+        .text(function (d) {
+            return `Szenzor: ${d.id} <br> Név: ${d.type}`;
+        });
+
 }
 
 //Create all mrSvgs->groups->paths

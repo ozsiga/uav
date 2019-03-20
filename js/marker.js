@@ -188,7 +188,6 @@ function makeMarkerSvg(input) {
             }
         })
         .attr('opacity', 1)
-        .attr('stroke', '#000000')
         .style("z-index", 1500)
         .append("svg:title")
         .text(function (d) {
