@@ -119,7 +119,13 @@ function getSensorSvgPath(sensorData, n) {
         path = newPath.merge(path);
         path
             .attr("fill", "none")
-            .attr("stroke", "red")
+            .attr("stroke", () => {
+                if (d.type == "dynamic") {
+                    return '#FF0000';
+                } else {
+                    return '#2f4f4f';
+                }
+            })
             .attr("opacity", "0.1")
             .attr("stroke-width", function (d2, i) {
                 return getSensorPathWidth(d.domain, n, i);
