@@ -84,7 +84,7 @@ function makeSensorIconSvg(input) {
 //Create all mrSvgs->groups->paths
 function getSensorSvgPath(sensorData, n) {
     let svgContainer = d3.select(map.getPanes().overlayPane);
-
+    let checkbox = document.getElementById('toggleMrSvg')
     let svg = svgContainer.selectAll("svg").data(sensorData, d => {
         return d.id;
     });
@@ -107,7 +107,9 @@ function getSensorSvgPath(sensorData, n) {
             return 2 * rMax;
         })
         .attr("class", "mrSvg");
-
+    if (checkbox.checked == false) {
+        svg.style("display", "none")
+    }
 
     svg.each(function (d, i) {
         let path = d3
