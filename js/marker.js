@@ -1,6 +1,11 @@
 import {
     map
 } from './script.js';
+import {
+    getScale
+} from './sensor.js';
+
+let zoomLevel = -1;
 
 //Get marker data from server
 function getMarkerData() {
@@ -67,6 +72,7 @@ function getMarkerData() {
 
 // Set SVG arrow to markers
 function setMarkerSvg(input) {
+
     //initialize svg
     let svg = d3
         .select(".leaflet-pane")
@@ -82,8 +88,8 @@ function setMarkerSvg(input) {
 
     let newSvg = svg.enter().append("svg");
     newSvg.attr("class", "lineSvg");
-    newSvg.style("width", 2 * offsetX);
-    newSvg.style("height", 2 * offsetY);
+    newSvg.attr("width", 2 * offsetX);
+    newSvg.attr("height", 2 * offsetY);
 
     newSvg.style("z-index", 900);
     newSvg.append("line");
@@ -116,6 +122,10 @@ function setMarkerSvg(input) {
                 "px, 0px)"
             );
         })
+    if (newSvg !== null) {
+        positionArrowSvg();
+        zoomLevel = -1;
+    }
 }
 
 function isNumeric(n) {
@@ -193,16 +203,60 @@ function makeMarkerSvg(input) {
         .text(function (d) {
             return `Height: ${d.domain.height} m \nDetected by sensor #${d.detectors} \nDrone id: ${d.id}`;
         });
-    // circle.append('text')
-    //     .attr('x', 16)
-    //     .attr('y', 30)
-    // svgContainer.selectAll('text')
-    //     .text(function (d) {
-    //         let height = Math.round(d.domain.height)
-    //         //console.log(height);
-    //         return `${height}`
-    //     })
+    circle.append('text')
+        .attr('x', 16)
+        .attr('y', 42)
+    svgContainer.selectAll('text')
+        .text(function (d) {
+            let height = Math.round(d.domain.height)
+            //console.log(height);
+            return `${height} m`
+        })
 
+}
+
+function positionArrowSvg() {
+    if (zoomLevel !== map.getZoom()) {
+        zoomLevel = map.getZoom();
+
+        let svgContainer = d3.select(map.getPanes().mapPane).selectAll(".lineSvg");
+        console.log(svgContainer);
+        let tr = d3
+            .selectAll(".leaflet-map-pane")
+            .style("transform")
+            .split(",");
+
+        svgContainer.style("transform", function (d) {
+            // let height = d3.select(this).attr("height");
+            let width = d3.select(this).attr("width");
+            console.log(this);
+            let droneLL = [
+                d.domain.coordinate.latitude,
+                d.domain.coordinate.longitude
+            ];
+
+            return (
+                "translate3d(" +
+                map.latLngToLayerPoint(droneLL).x +
+                "px, " +
+                map.latLngToLayerPoint(droneLL).y +
+                "px, 0px) scale(" +
+                getScale() * 20 +
+                ") translate3d(" +
+                (width / 2) * -1 +
+                "px, " +
+                (width / 2) * -1 +
+                "px, 0px)"
+            );
+        });
+        svgContainer.attr("transform-origin", function (d) {
+            let droneLL = [
+                d.domain.coordinate.latitude,
+                d.domain.coordinate.longitude
+            ];
+            return `0 0`;
+        });
+    }
 }
 
 

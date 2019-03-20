@@ -210,8 +210,6 @@ function positionSvgContainer() {
             .selectAll(".leaflet-map-pane")
             .style("transform")
             .split(",");
-        // let tx = -1 * tr[0].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
-        // let ty = -1 * tr[1].match(/-*\d+\.*\d*px/)[0].match(/-*\d+\.*\d*/)[0];
 
         svgContainer.style("transform", function (d) {
             // let height = d3.select(this).attr("height");
@@ -259,5 +257,6 @@ function getScale() {
 export {
     getSensorData,
     getSensorSVGData,
-    positionSvgContainer
+    positionSvgContainer,
+    getScale
 }
