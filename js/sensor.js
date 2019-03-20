@@ -15,19 +15,6 @@ function getSensorData() {
             let sensorData = data.sensors;
 
             makeSensorIconSvg(sensorData);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-}
-
-function getSensorSVGData() {
-    fetch(url)
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            let sensorData = data.sensors;
             getSensorSvgPath(sensorData, 10);
         })
         .catch(err => {
@@ -264,7 +251,6 @@ function getScale() {
 
 export {
     getSensorData,
-    getSensorSVGData,
     positionSvgContainer,
     getScale
 }

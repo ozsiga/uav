@@ -55,9 +55,13 @@ function getMarkerData() {
                 }
 
                 if (matchedMarker == undefined) {
+<<<<<<< HEAD
                     makeMarkerSvg(markerData)
                     //makeSidebarData(markerData);
 
+=======
+                    makeMarkerSvg(markerData);
+>>>>>>> 294be2b5c4b6409e817d73da4d1da2cd625f3fa4
                 }
             }
 
@@ -245,7 +249,6 @@ function makeMarkerSvg(input) {
             return `${height} m`
         })
     //.attr("fill", "#fff")
-
 }
 
 function positionArrowSvg() {
