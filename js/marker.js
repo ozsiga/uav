@@ -56,6 +56,8 @@ function getMarkerData() {
 
                 if (matchedMarker == undefined) {
                     makeMarkerSvg(markerData)
+                    //makeSidebarData(markerData);
+
                 }
             }
 
@@ -145,6 +147,35 @@ function getMarkersOnMap(map) {
     });
     return markersInMap;
 }
+
+function makeSidebarData(input) {
+    let uavData = document.querySelector('.uavData');
+    let listArray = []
+    let list;
+    let text;
+    for (let i = 0; i < input.length; i++) {
+        list = document.createElement('li');
+        text = document.createTextNode(input[i].id);
+        list.appendChild(text);
+        uavData.appendChild(list);
+        listArray.push(list.innerHTML)
+        removeDuplicates(listArray)
+    }
+    console.log(listArray);
+
+}
+
+function removeDuplicates(arr) {
+    let unique_array = []
+    for (let i = 0; i < arr.length; i++) {
+        if (unique_array.indexOf(arr[i]) == -1) {
+            unique_array.push(arr[i])
+        }
+    }
+    return unique_array
+}
+//makeSidebarData(markerData)
+
 
 function makeMarkerSvg(input) {
     let svgContainer = d3
@@ -260,6 +291,7 @@ function positionArrowSvg() {
         });
 
     }
+
 }
 
 
