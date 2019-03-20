@@ -106,8 +106,8 @@ function setMarkerSvg(input) {
             return offsetY - d.speed.y;
         })
         .attr("stroke", "#000")
-        .attr("stroke-width", 2)
-        .attr("marker-end", "url(#arrow)");
+        .attr("stroke-width", 1)
+    //.attr("marker-end", "url(#arrow)");
     svg
         .style("transform", function (d) {
             let droneLL = [
@@ -205,6 +205,7 @@ function makeMarkerSvg(input) {
             return `Height: ${height} m \nDetected by sensor #${d.detectors} \nDrone id: ${d.id}`;
         });
     circle.append('text')
+        .attr('class', 'markerText')
         .attr('x', 16)
         .attr('y', 42)
     svgContainer.selectAll('text')
@@ -212,7 +213,7 @@ function makeMarkerSvg(input) {
             let height = Math.round(d.domain.height)
             return `${height} m`
         })
-        .attr("fill", "#fff")
+    //.attr("fill", "#fff")
 
 }
 
@@ -221,7 +222,7 @@ function positionArrowSvg() {
         zoomLevel = map.getZoom();
 
         let svgContainer = d3.select(map.getPanes().mapPane).selectAll(".lineSvg");
-        console.log(svgContainer);
+        //console.log(svgContainer);
         let tr = d3
             .selectAll(".leaflet-map-pane")
             .style("transform")
@@ -230,7 +231,7 @@ function positionArrowSvg() {
         svgContainer.style("transform", function (d) {
             // let height = d3.select(this).attr("height");
             let width = d3.select(this).attr("width");
-            console.log(this);
+            //console.log(this);
             let droneLL = [
                 d.domain.coordinate.latitude,
                 d.domain.coordinate.longitude
@@ -242,7 +243,7 @@ function positionArrowSvg() {
                 "px, " +
                 map.latLngToLayerPoint(droneLL).y +
                 "px, 0px) scale(" +
-                getScale() * 20 +
+                getScale() +
                 ") translate3d(" +
                 (width / 2) * -1 +
                 "px, " +
@@ -257,6 +258,7 @@ function positionArrowSvg() {
             ];
             return `0 0`;
         });
+
     }
 }
 

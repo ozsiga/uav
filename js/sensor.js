@@ -106,8 +106,8 @@ function getSensorSvgPath(sensorData, n) {
             let rMax = d.domain.r.max1 * Math.cos(d.domain.theta.min0);
             return 2 * rMax;
         })
-        .attr("id", "mr")
         .attr("class", "mrSvg");
+
 
     svg.each(function (d, i) {
         let path = d3
@@ -126,7 +126,7 @@ function getSensorSvgPath(sensorData, n) {
                     return '#2f4f4f';
                 }
             })
-            .attr("opacity", "0.1")
+            .attr("opacity", "0.05")
             .attr("stroke-width", function (d2, i) {
                 return getSensorPathWidth(d.domain, n, i);
             })
@@ -134,9 +134,9 @@ function getSensorSvgPath(sensorData, n) {
                 return getSensorPath(d.domain, n, i);
             });
     });
-    if (newSvg !== null) {
-        positionSvgContainer();
+    if (!newSvg.empty()) {
         zoomLevel = -1;
+        positionSvgContainer();
     }
 }
 
