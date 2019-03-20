@@ -15,6 +15,7 @@ function getMarkerData() {
     xhr.onload = () => {
         if (xhr.status === 200) {
 
+//            console.log("Adat jött")
             // Kapott adatok feldolgozása
             let markerData = JSON.parse(xhr.responseText);
             //console.log(markerData);
@@ -221,7 +222,7 @@ function positionArrowSvg() {
         zoomLevel = map.getZoom();
 
         let svgContainer = d3.select(map.getPanes().mapPane).selectAll(".lineSvg");
-        console.log(svgContainer);
+//        console.log(svgContainer);
         let tr = d3
             .selectAll(".leaflet-map-pane")
             .style("transform")
@@ -230,7 +231,7 @@ function positionArrowSvg() {
         svgContainer.style("transform", function (d) {
             // let height = d3.select(this).attr("height");
             let width = d3.select(this).attr("width");
-            console.log(this);
+            //console.log(this);
             let droneLL = [
                 d.domain.coordinate.latitude,
                 d.domain.coordinate.longitude
@@ -242,7 +243,7 @@ function positionArrowSvg() {
                 "px, " +
                 map.latLngToLayerPoint(droneLL).y +
                 "px, 0px) scale(" +
-                getScale() * 20 +
+                getScale() +
                 ") translate3d(" +
                 (width / 2) * -1 +
                 "px, " +
