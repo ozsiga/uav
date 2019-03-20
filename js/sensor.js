@@ -76,7 +76,7 @@ function makeSensorIconSvg(input) {
         .style("z-index", 1500)
         .append("svg:title")
         .text(function (d) {
-            return `Szenzor: ${d.id} <br> Név: ${d.type}`;
+            return `Szenzor: ${d.id} \nNév: ${d.type}`;
         });
 
 }
