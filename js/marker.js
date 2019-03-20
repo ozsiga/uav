@@ -55,7 +55,7 @@ function getMarkerData() {
                 }
 
                 if (matchedMarker == undefined) {
-                    makeMarkerSvg(markerData)
+                    makeMarkerSvg(markerData);
                 }
             }
 
@@ -214,7 +214,6 @@ function makeMarkerSvg(input) {
             return `${height} m`
         })
     //.attr("fill", "#fff")
-
 }
 
 function positionArrowSvg() {

@@ -12,7 +12,6 @@ map.on("zoom", function () {
 // set server request interval
 setInterval(() => {
     marker.getMarkerData();
-    sensor.getSensorSVGData();
     sensor.getSensorData();
 }, 100);
 
