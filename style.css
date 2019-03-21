@@ -71,3 +71,16 @@ body {
   left: 50px;
   font-weight: bold;
 }
+
+@keyframes blinking {
+    0% {color: black;}
+    50% {color: red;}
+    100% {color: black;}
+}
+
+li {
+    color: black;
+    animation-name: blinking;
+    animation-duration: 0.833s;
+    animation-iteration-count: 3;
+}
