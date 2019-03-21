@@ -161,23 +161,28 @@ function makeMarkerSvg(input) {
     newSvg1.append("line");
     svg = newSvg1.merge(svg);
 
-    var www = 1.5;
-    if (map.getZoom() == 18) {
-        www = .5;
-    }
+    // if (map.getZoom() == 18) {
+    //     width = .5;
+    // }
+    let strokeW = [9, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5]
+    var zoom = map.getZoom();
+    let width;
+    width = strokeW[zoom - 1];
+
+
 
     svg
         .select("line")
         .attr("x1", offsetX)
         .attr("y1", offsetY)
         .attr("x2", d => {
-            return offsetX + d.speed.x;
+            return offsetX + d.speed.x * 2;
         })
         .attr("y2", d => {
-            return offsetY - d.speed.y;
+            return offsetY - d.speed.y * 2;
         })
         .attr("stroke", "#000")
-        .attr("stroke-width", www);
+        .attr("stroke-width", width);
     svg
         .style("transform", function (d) {
             let droneLL = [
