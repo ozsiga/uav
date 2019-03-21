@@ -32,8 +32,8 @@ function makeSidebarData(input) {
             return d.type;
         }
 
-        return `ID: ${d.id} </br>          
-                Magasság: ${Math.round(d.domain.height)} m, </br>
+        return `ID: ${d.id} <br>
+                Magasság: ${Math.round(d.domain.height)} m <br>
                 Típus: ${type}`;
     })
 
