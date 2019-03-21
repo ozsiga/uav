@@ -158,7 +158,7 @@ function makeMarkerSvg(input) {
             return offsetY - d.speed.y;
         })
         .attr("stroke", "#000")
-        .attr("stroke-width", 1);
+        .attr("stroke-width", 1.5);
     //.attr("marker-end", "url(#arrow)");
     svg
         .style("transform", function (d) {
