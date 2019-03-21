@@ -57,6 +57,7 @@ body {
   position: absolute;
   top: 100px;
   left: 50px;
+  font-weight: bold;
 }
 
 #label1 {
@@ -68,4 +69,5 @@ body {
   position: absolute;
   top: 70px;
   left: 50px;
+  font-weight: bold;
 }

@@ -6,20 +6,20 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script type="module" src="js/script.js"></script>
+  <script type="text/javascript" src="node_modules/leaflet/dist/leaflet.js" data-require="leaflet@1.4.0" data-semver="1.4.0"></script>
 </head>
 
 <body>
   <div id="map"></div>
-  <p id="label0">show sensors measure range</p> <input type="checkbox" id="toggleMrSvg" class="checkbox" onclick="toggleMrSvg()"
+  <p id="label0">Szenzor érzékelési tartományok</p> <input type="checkbox" id="toggleMrSvg" class="checkbox" onclick="toggleMrSvg()"
     checked>
-  <p id="label1">show sensor icons</p><input type="checkbox" id="toggleSensorIcons" class="checkbox" onclick="toggleSensorIcons()"
+  <p id="label1">Szenzor ikonok</p><input type="checkbox" id="toggleSensorIcons" class="checkbox" onclick="toggleSensorIcons()"
     checked>
   </div>
   <div class="sidebar">
     <p id="title">UAV adatok:</p>
     <div class="uavData"></div>
   </div>
-  <script type="text/javascript" src="node_modules/leaflet/dist/leaflet.js" data-require="leaflet@1.4.0" data-semver="1.4.0"></script>
 </body>
 
 <script>

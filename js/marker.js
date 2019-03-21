@@ -5,7 +5,27 @@ import {
     getScale
 } from './sensor.js';
 
+
 let zoomLevel = -1;
+
+function makeSidebarData(input) {
+
+    let item = d3
+        .select(".uavData")
+        .selectAll("li")
+        .data(input, d => {
+            return d.id;
+        });
+
+    item.exit().remove();
+
+    let newItem = item.enter().append("li");
+    item = newItem.merge(item);
+    item.text(function (d) {
+        return d.id
+    })
+
+}
 
 //Get marker data from server
 function getMarkerData() {
@@ -55,13 +75,9 @@ function getMarkerData() {
                 }
 
                 if (matchedMarker == undefined) {
-<<<<<<< HEAD
                     makeMarkerSvg(markerData)
-                    //makeSidebarData(markerData);
+                    makeSidebarData(markerData);
 
-=======
-                    makeMarkerSvg(markerData);
->>>>>>> 294be2b5c4b6409e817d73da4d1da2cd625f3fa4
                 }
             }
 
@@ -151,35 +167,6 @@ function getMarkersOnMap(map) {
     });
     return markersInMap;
 }
-
-function makeSidebarData(input) {
-    let uavData = document.querySelector('.uavData');
-    let listArray = []
-    let list;
-    let text;
-    for (let i = 0; i < input.length; i++) {
-        list = document.createElement('li');
-        text = document.createTextNode(input[i].id);
-        list.appendChild(text);
-        uavData.appendChild(list);
-        listArray.push(list.innerHTML)
-        removeDuplicates(listArray)
-    }
-    console.log(listArray);
-
-}
-
-function removeDuplicates(arr) {
-    let unique_array = []
-    for (let i = 0; i < arr.length; i++) {
-        if (unique_array.indexOf(arr[i]) == -1) {
-            unique_array.push(arr[i])
-        }
-    }
-    return unique_array
-}
-//makeSidebarData(markerData)
-
 
 function makeMarkerSvg(input) {
     let svgContainer = d3
@@ -294,6 +281,29 @@ function positionArrowSvg() {
         });
 
     }
+    // let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all";
+
+    // function getSidebarData() {
+    //     fetch(url)
+    //         .then(response => {
+    //             return response.json();
+    //         })
+    //         .then(data => {
+    //             let uavData = document.querySelector('.uavData');
+    //             let sidebarData;
+    //             for (let i = 0; i < data.length; i++) {
+    //                 sidebarData = data[i].id
+    //             }
+    //             let list = document.createElement('li');
+    //             let text = document.createTextNode(sidebarData);
+    //             list.appendChild(text);
+    //             uavData.appendChild(list);
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //         });
+    // }
+
 
 }
 
