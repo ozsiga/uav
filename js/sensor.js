@@ -6,7 +6,7 @@ let zoomLevel = -1;
 
 let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/sensor/all";
 
-var superScale = 1000;
+var superScale = 100;
 var sensorLayers = 20;
 
 function getSensorData() {
@@ -99,7 +99,7 @@ function getSensorSvgPath(sensorData, n) {
             return 2 * rMax / superScale;
         })
         .attr("class", "mrSvg");
-    if (checkbox.checked == false) {
+    if (checkbox.checked === false) {
         svg.style("display", "none")
     }
 
@@ -114,8 +114,8 @@ function getSensorSvgPath(sensorData, n) {
         path
             .attr("fill", "none")
             .attr("stroke", () => {
-                if (d.type == "dynamic") {
-                    return '#FF0000';
+                if (d.type === "dynamic") {
+                    return '#2f4f4f';
                 } else {
                     return '#2f4f4f';
                 }

@@ -147,6 +147,12 @@ function getMarkersOnMap(map) {
     return markersInMap;
 }
 
+
+var colorScale = d3.scaleLinear()
+    .domain([0, 150])
+    .range(["red", "white"]);
+
+
 function makeMarkerSvg(input) {
     let svgContainer = d3
         .select(".leaflet-pane")
@@ -190,15 +196,18 @@ function makeMarkerSvg(input) {
         .attr("cy", 25)
         .attr("r", 6)
         .attr('fill', function (d) {
-            if (Math.round(d.domain.height) <= 25) {
-                return '#f00';
-            } else if (Math.round(d.domain.height) <= 60 && Math.round(d.domain.height) > 25) {
-                return '#00FF00';
-            } else {
-                return '#1E90FF';
-            }
+            return colorScale(d.domain.height);
+//            if (Math.round(d.domain.height) <= 25) {
+//                return '#f00';
+//            } else if (Math.round(d.domain.height) <= 60 && Math.round(d.domain.height) > 25) {
+//                return '#00FF00';
+//            } else {
+//                return '#1E90FF';
+//            }
         })
         .attr('opacity', 1)
+        .attr('stroke', 'white')
+        .attr('stroke-width', '1')
         .style("z-index", 1500)
         .append("svg:title")
         .text(function (d) {
