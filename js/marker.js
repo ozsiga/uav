@@ -22,8 +22,8 @@ function makeSidebarData(input) {
     let newItem = item.enter().append("li");
     item = newItem.merge(item);
     item.text(function (d) {
-        return d.id
-    })
+        return d.id;
+    });
 
 }
 
