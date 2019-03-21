@@ -76,6 +76,14 @@ function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+
+
+function zoom() {
+    let strokeW = [9, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5]
+    var zoom = map.getZoom();
+    let width = strokeW[zoom - 1];
+    return width
+}
 var colorScale = d3.scaleLinear()
     .domain([0, 150])
     .range(["red", "white"]);
@@ -147,11 +155,25 @@ function makeMarkerSvg(input) {
         .attr('class', 'markerText')
         .attr('x', 16)
         .attr('y', 42)
-    svgContainer.selectAll('text')
-        .text(function (d) {
+        .html(function (d) {
             let height = Math.round(d.domain.height)
             return `${height} m`
         })
+    // circle.append('text')
+    //     .attr('class', 'markerText1')
+    //     .attr('x', 18)
+    //     .attr('y', 15)
+    // svgContainer.selectAll('text')
+    //     .html(function (d) {
+    //         let height = Math.round(d.domain.height)
+    //         return `${height} m`
+    //     })
+    // svgContainer.selectAll('.markerText1')
+    //     .text(function (d) {
+    //         let id = d.id
+    //         return `${id}`
+    //     })
+
     let newSvg1 = svg.enter().append("svg");
     newSvg1.attr("class", "lineSvg");
     newSvg1.attr("width", 2 * offsetX);
@@ -161,28 +183,18 @@ function makeMarkerSvg(input) {
     newSvg1.append("line");
     svg = newSvg1.merge(svg);
 
-    // if (map.getZoom() == 18) {
-    //     width = .5;
-    // }
-    let strokeW = [9, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5]
-    var zoom = map.getZoom();
-    let width;
-    width = strokeW[zoom - 1];
-
-
-
     svg
         .select("line")
         .attr("x1", offsetX)
         .attr("y1", offsetY)
         .attr("x2", d => {
-            return offsetX + d.speed.x * 2;
+            return offsetX + d.speed.x;
         })
         .attr("y2", d => {
-            return offsetY - d.speed.y * 2;
+            return offsetY - d.speed.y;
         })
         .attr("stroke", "#000")
-        .attr("stroke-width", width);
+        .attr("stroke-width", zoom());
     svg
         .style("transform", function (d) {
             let droneLL = [
@@ -235,12 +247,14 @@ function positionArrowSvg() {
             );
         });
         svgContainer.attr("transform-origin", (d) => {
-            return `0 0`;
+            return `
+                0 0 `;
         });
     }
 }
 
 
 export {
-    getMarkerData
+    getMarkerData,
+    zoom
 }
