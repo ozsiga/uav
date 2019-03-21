@@ -130,7 +130,7 @@ function getSensorSvgPath(sensorData, n) {
     });
     if (!newSvg.empty()) {
         zoomLevel = -1;
-        positionSvgContainer();        
+        positionSvgContainer();
     }
 }
 
@@ -171,7 +171,7 @@ function getSensorPathWidth(domain, n, i) {
 }
 
 //create circular sector svg from sensor data
-function elemikorcikk(rmin, rmax, minAng, maxAng, x, y) {        
+function elemikorcikk(rmin, rmax, minAng, maxAng, x, y) {
     x = 0;
     y = 0;
     let element = {};
@@ -202,7 +202,7 @@ function elemikorcikk(rmin, rmax, minAng, maxAng, x, y) {
 
 function easy(t) {
     var prelay = 0.2;
-    return t >= 1 - prelay ? 1 : t + prelay;  
+    return t >= 1 - prelay ? 1 : t + prelay;
 }
 
 
@@ -210,9 +210,9 @@ function prePositionSvgContainer(prescale) {
     var duration = 0;
     duration = 250;
     if (prescale !== undefined) {
-        duration = 220;                
+        duration = 220;
     }
-    
+
     if (zoomLevel !== map.getZoom() || prescale !== undefined) {
         console.log(zoomLevel, map.getZoom(), prescale)
         zoomLevel = map.getZoom();
@@ -224,8 +224,7 @@ function prePositionSvgContainer(prescale) {
             .split(",");
 
         svgContainer.transition().duration(duration).ease(easy).
-                style("transform", function (d) {
-            // let height = d3.select(this).attr("height");
+        style("transform", function (d) {
             let width = d3.select(this).attr("width");
             let sensorLL = [
                 d.domain.coordinate.latitude,
@@ -247,10 +246,6 @@ function prePositionSvgContainer(prescale) {
             );
         });
         svgContainer.attr("transform-origin", function (d) {
-//            let sensorLL = [
-//                d.domain.coordinate.latitude,
-//                d.domain.coordinate.longitude
-//            ];
             return "0 0";
         });
     }
@@ -270,8 +265,7 @@ function positionSvgContainer(prescale) {
             .split(",");
 
         svgContainer.
-                style("transform", function (d) {
-            // let height = d3.select(this).attr("height");
+        style("transform", function (d) {
             let width = d3.select(this).attr("width");
             let sensorLL = [
                 d.domain.coordinate.latitude,
@@ -312,15 +306,15 @@ function getScale(multiplier) {
 }
 
 function normalizeDomainBazmeg(domain) {
-        while (domain.fi.min1 < domain.fi.min0) {
-            domain.fi.min1 = domain.fi.min1 + 2 * Math.PI;
-        }
-        while (domain.fi.max1 < domain.fi.min1) {
-            domain.fi.max1 = domain.fi.max1 + 2 * Math.PI;
-        }
-        while (domain.fi.max0 < domain.fi.max1) {
-            domain.fi.max0 = domain.fi.max0 + 2 * Math.PI;
-        }   
+    while (domain.fi.min1 < domain.fi.min0) {
+        domain.fi.min1 = domain.fi.min1 + 2 * Math.PI;
+    }
+    while (domain.fi.max1 < domain.fi.min1) {
+        domain.fi.max1 = domain.fi.max1 + 2 * Math.PI;
+    }
+    while (domain.fi.max0 < domain.fi.max1) {
+        domain.fi.max0 = domain.fi.max0 + 2 * Math.PI;
+    }
 }
 
 

@@ -35,10 +35,8 @@ function getMarkerData() {
     xhr.onload = () => {
         if (xhr.status === 200) {
 
-//            console.log("Adat jött")
             // Kapott adatok feldolgozása
             let markerData = JSON.parse(xhr.responseText);
-            //console.log(markerData);
             let markerLatLon = [];
             let coords = markerData.map(data => Object(data.domain.coordinate));
 
@@ -198,7 +196,6 @@ function makeMarkerSvg(input) {
                 d.domain.coordinate.latitude,
                 d.domain.coordinate.longitude
             ];
-            //console.log(map.latLngToLayerPoint(droneLL));
             return (
                 "translate3d(" +
                 (map.latLngToLayerPoint(droneLL).x) +
@@ -219,13 +216,6 @@ function makeMarkerSvg(input) {
         .attr("r", 6)
         .attr('fill', function (d) {
             return colorScale(d.domain.height);
-//            if (Math.round(d.domain.height) <= 25) {
-//                return '#f00';
-//            } else if (Math.round(d.domain.height) <= 60 && Math.round(d.domain.height) > 25) {
-//                return '#00FF00';
-//            } else {
-//                return '#1E90FF';
-//            }
         })
         .attr('opacity', 1)
         .attr('stroke', 'white')
@@ -245,7 +235,6 @@ function makeMarkerSvg(input) {
             let height = Math.round(d.domain.height)
             return `${height} m`
         })
-    //.attr("fill", "#fff")
 }
 
 function positionArrowSvg() {
@@ -253,16 +242,13 @@ function positionArrowSvg() {
         zoomLevel = map.getZoom();
 
         let svgContainer = d3.select(map.getPanes().mapPane).selectAll(".lineSvg");
-//        console.log(svgContainer);
         let tr = d3
             .selectAll(".leaflet-map-pane")
             .style("transform")
             .split(",");
 
         svgContainer.style("transform", function (d) {
-            // let height = d3.select(this).attr("height");
             let width = d3.select(this).attr("width");
-            //console.log(this);
             let droneLL = [
                 d.domain.coordinate.latitude,
                 d.domain.coordinate.longitude
@@ -291,28 +277,6 @@ function positionArrowSvg() {
         });
 
     }
-    // let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all";
-
-    // function getSidebarData() {
-    //     fetch(url)
-    //         .then(response => {
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             let uavData = document.querySelector('.uavData');
-    //             let sidebarData;
-    //             for (let i = 0; i < data.length; i++) {
-    //                 sidebarData = data[i].id
-    //             }
-    //             let list = document.createElement('li');
-    //             let text = document.createTextNode(sidebarData);
-    //             list.appendChild(text);
-    //             uavData.appendChild(list);
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //         });
-    // }
 
 
 }
