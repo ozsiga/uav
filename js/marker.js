@@ -12,20 +12,34 @@ function makeSidebarData(input) {
 
     let item = d3
         .select(".uavData")
-        .selectAll("li")
+        .selectAll("p")
         .data(input, d => {
             return d.id;
         });
 
     item.exit().remove();
 
-    let newItem = item.enter().append("li");
+    let newItem = item.enter().append("p");
     item = newItem.merge(item);
     item.text(function (d) {
-        return d.id;
-    });
+
+        let type = checkType(d);
+
+        function checkType(d) {
+            if (d.type == null) {
+                return 'ismeretlen';
+            }
+            return d.type;
+        }
+
+        return `ID: ${d.id} 
+                Magasság: ${Math.round(d.domain.height)} m 
+                Típus: ${type}`;
+    })
 
 }
+
+
 
 //Get marker data from server
 function getMarkerData() {
@@ -35,7 +49,7 @@ function getMarkerData() {
     xhr.onload = () => {
         if (xhr.status === 200) {
 
-//            console.log("Adat jött")
+            //            console.log("Adat jött")
             // Kapott adatok feldolgozása
             let markerData = JSON.parse(xhr.responseText);
             //console.log(markerData);
@@ -78,7 +92,6 @@ function getMarkerData() {
                 if (matchedMarker == undefined) {
                     makeMarkerSvg(markerData)
                     makeSidebarData(markerData);
-
                 }
             }
 
@@ -219,13 +232,13 @@ function makeMarkerSvg(input) {
         .attr("r", 6)
         .attr('fill', function (d) {
             return colorScale(d.domain.height);
-//            if (Math.round(d.domain.height) <= 25) {
-//                return '#f00';
-//            } else if (Math.round(d.domain.height) <= 60 && Math.round(d.domain.height) > 25) {
-//                return '#00FF00';
-//            } else {
-//                return '#1E90FF';
-//            }
+            //            if (Math.round(d.domain.height) <= 25) {
+            //                return '#f00';
+            //            } else if (Math.round(d.domain.height) <= 60 && Math.round(d.domain.height) > 25) {
+            //                return '#00FF00';
+            //            } else {
+            //                return '#1E90FF';
+            //            }
         })
         .attr('opacity', 1)
         .attr('stroke', 'white')
@@ -253,7 +266,7 @@ function positionArrowSvg() {
         zoomLevel = map.getZoom();
 
         let svgContainer = d3.select(map.getPanes().mapPane).selectAll(".lineSvg");
-//        console.log(svgContainer);
+        //        console.log(svgContainer);
         let tr = d3
             .selectAll(".leaflet-map-pane")
             .style("transform")
