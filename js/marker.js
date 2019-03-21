@@ -49,7 +49,6 @@ function getMarkerData() {
             //A meglévő markerek pozicionálása, nyíl kirajzolása
             makeMarkerSvg(markerData)
             makeSidebarData(markerData);
-            setMarkerSvg(markerData);
 
         } else {
             let e = new Error("HTTP Request");
@@ -59,82 +58,9 @@ function getMarkerData() {
     xhr.send();
 }
 
-// Set SVG arrow to markers
-function setMarkerSvg(input) {
-
-    //initialize svg
-    let svg = d3
-        .select(".leaflet-pane")
-        .selectAll("svg.lineSvg")
-        .data(input, d => {
-            return d.id;
-        });
-
-    svg.exit().remove();
-
-    let offsetX = 400;
-    let offsetY = 400;
-
-    let newSvg = svg.enter().append("svg");
-    newSvg.attr("class", "lineSvg");
-    newSvg.attr("width", 2 * offsetX);
-    newSvg.attr("height", 2 * offsetY);
-
-    newSvg.style("z-index", 900);
-    newSvg.append("line");
-    svg = newSvg.merge(svg);
-
-    svg
-        .select("line")
-        .attr("x1", offsetX)
-        .attr("y1", offsetY)
-        .attr("x2", d => {
-            return offsetX + d.speed.x;
-        })
-        .attr("y2", d => {
-            return offsetY - d.speed.y;
-        })
-        .attr("stroke", "#000")
-        .attr("stroke-width", 1);
-    //.attr("marker-end", "url(#arrow)");
-    svg
-        .style("transform", function (d) {
-            let droneLL = [
-                d.domain.coordinate.latitude,
-                d.domain.coordinate.longitude
-            ];
-            return (
-                "translate3d(" +
-                (map.latLngToLayerPoint(droneLL).x - 400) +
-                "px, " +
-                (map.latLngToLayerPoint(droneLL).y - 400) +
-                "px, 0px)"
-            );
-        })
-    if (newSvg !== null) {
-        positionArrowSvg();
-        zoomLevel = -1;
-    }
-}
-
 function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
-
-// get all marker from layer
-
-function getMarkersOnMap(map) {
-    var markersInMap = [];
-    map.eachLayer(function (layer) {
-        if (layer instanceof L.Marker) {
-            if (layer.options.customId) {
-                markersInMap.push(layer);
-            }
-        }
-    });
-    return markersInMap;
-}
-
 
 var colorScale = d3.scaleLinear()
     .domain([0, 150])
@@ -142,14 +68,23 @@ var colorScale = d3.scaleLinear()
 
 
 function makeMarkerSvg(input) {
+    let svg = d3
+        .select(".leaflet-pane")
+        .selectAll("svg.lineSvg")
+        .data(input, d => {
+            return d.id;
+        });
+
     let svgContainer = d3
         .select(".leaflet-pane")
         .selectAll("svg.droneSvg")
         .data(input, d => {
             return d.id;
         });
-
+    svg.exit().remove();
     svgContainer.exit().remove();
+    let offsetX = 400;
+    let offsetY = 400;
     let newSvg = svgContainer.enter().append("svg");
     newSvg.attr("class", "droneSvg");
     newSvg.attr("customId", function (d) {
@@ -203,6 +138,46 @@ function makeMarkerSvg(input) {
             let height = Math.round(d.domain.height)
             return `${height} m`
         })
+    let newSvg1 = svg.enter().append("svg");
+    newSvg1.attr("class", "lineSvg");
+    newSvg1.attr("width", 2 * offsetX);
+    newSvg1.attr("height", 2 * offsetY);
+
+    newSvg1.style("z-index", 900);
+    newSvg1.append("line");
+    svg = newSvg1.merge(svg);
+
+    svg
+        .select("line")
+        .attr("x1", offsetX)
+        .attr("y1", offsetY)
+        .attr("x2", d => {
+            return offsetX + d.speed.x;
+        })
+        .attr("y2", d => {
+            return offsetY - d.speed.y;
+        })
+        .attr("stroke", "#000")
+        .attr("stroke-width", 1);
+    //.attr("marker-end", "url(#arrow)");
+    svg
+        .style("transform", function (d) {
+            let droneLL = [
+                d.domain.coordinate.latitude,
+                d.domain.coordinate.longitude
+            ];
+            return (
+                "translate3d(" +
+                (map.latLngToLayerPoint(droneLL).x - 400) +
+                "px, " +
+                (map.latLngToLayerPoint(droneLL).y - 400) +
+                "px, 0px)"
+            );
+        })
+    if (newSvg1 !== null) {
+        positionArrowSvg();
+        zoomLevel = -1;
+    }
 }
 
 function positionArrowSvg() {
@@ -251,6 +226,5 @@ function positionArrowSvg() {
 
 
 export {
-    getMarkerData,
-    getMarkersOnMap
+    getMarkerData
 }
