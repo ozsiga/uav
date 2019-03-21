@@ -81,13 +81,7 @@ body {
   padding: 0 50px;
   color: black;
   animation-name: blinking;
-  animation-duration: 0.5s;
-  animation-iteration-count: 10;
-}
-
-.uavData {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+  animation-duration: 2s;
 }
 
 @keyframes blinking {
@@ -102,11 +96,4 @@ body {
   100% {
     color: black;
   }
-}
-
-li {
-  color: black;
-  animation-name: blinking;
-  animation-duration: 0.833s;
-  animation-iteration-count: 3;
 }

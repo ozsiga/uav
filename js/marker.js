@@ -148,9 +148,9 @@ function makeMarkerSvg(input) {
         .attr('x', 16)
         .attr('y', 42)
     svgContainer.selectAll('text')
-        .text(function (d) {
-            let height = Math.round(d.domain.height)
-            return `${height} m`
+        .html(function (d) {
+            let height = Math.round(d.domain.height);
+            return `${height} m`;
         })
     let newSvg1 = svg.enter().append("svg");
     newSvg1.attr("class", "lineSvg");
