@@ -12,20 +12,34 @@ function makeSidebarData(input) {
 
     let item = d3
         .select(".uavData")
-        .selectAll("li")
+        .selectAll("p")
         .data(input, d => {
             return d.id;
         });
 
     item.exit().remove();
 
-    let newItem = item.enter().append("li");
+    let newItem = item.enter().append("p");
     item = newItem.merge(item);
     item.text(function (d) {
-        return d.id;
-    });
+
+        let type = checkType(d);
+
+        function checkType(d) {
+            if (d.type == null) {
+                return 'ismeretlen';
+            }
+            return d.type;
+        }
+
+        return `ID: ${d.id} 
+                Magasság: ${Math.round(d.domain.height)} m 
+                Típus: ${type}`;
+    })
 
 }
+
+
 
 //Get marker data from server
 function getMarkerData() {
@@ -159,7 +173,6 @@ function makeMarkerSvg(input) {
         })
         .attr("stroke", "#000")
         .attr("stroke-width", 1.5);
-    //.attr("marker-end", "url(#arrow)");
     svg
         .style("transform", function (d) {
             let droneLL = [
@@ -185,7 +198,7 @@ function positionArrowSvg() {
         zoomLevel = map.getZoom();
 
         let svgContainer = d3.select(map.getPanes().mapPane).selectAll(".lineSvg");
-        let tr = d3
+        d3
             .selectAll(".leaflet-map-pane")
             .style("transform")
             .split(",");
@@ -211,17 +224,10 @@ function positionArrowSvg() {
                 "px, 0px)"
             );
         });
-        svgContainer.attr("transform-origin", function (d) {
-            let droneLL = [
-                d.domain.coordinate.latitude,
-                d.domain.coordinate.longitude
-            ];
+        svgContainer.attr("transform-origin", (d) => {
             return `0 0`;
         });
-
     }
-
-
 }
 
 

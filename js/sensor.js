@@ -218,7 +218,7 @@ function prePositionSvgContainer(prescale) {
         zoomLevel = map.getZoom();
 
         let svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
-        let tr = d3
+        d3
             .selectAll(".leaflet-map-pane")
             .style("transform")
             .split(",");
@@ -259,7 +259,7 @@ function positionSvgContainer(prescale) {
         zoomLevel = map.getZoom();
 
         let svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
-        let tr = d3
+        d3
             .selectAll(".leaflet-map-pane")
             .style("transform")
             .split(",");
