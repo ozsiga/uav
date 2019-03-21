@@ -21,7 +21,7 @@ function makeSidebarData(input) {
 
     let newItem = item.enter().append("p");
     item = newItem.merge(item);
-    item.text(function (d) {
+    item.html(function (d) {
 
         let type = checkType(d);
 
@@ -32,8 +32,8 @@ function makeSidebarData(input) {
             return d.type;
         }
 
-        return `ID: ${d.id} 
-                Magasság: ${Math.round(d.domain.height)} m 
+        return `ID: ${d.id} </br>          
+                Magasság: ${Math.round(d.domain.height)} m, </br>
                 Típus: ${type}`;
     })
 
@@ -161,6 +161,11 @@ function makeMarkerSvg(input) {
     newSvg1.append("line");
     svg = newSvg1.merge(svg);
 
+    var www = 1.5;
+    if (map.getZoom() == 18) {
+        www = .5;
+    }
+
     svg
         .select("line")
         .attr("x1", offsetX)
@@ -172,7 +177,7 @@ function makeMarkerSvg(input) {
             return offsetY - d.speed.y;
         })
         .attr("stroke", "#000")
-        .attr("stroke-width", 1.5);
+        .attr("stroke-width", www);
     svg
         .style("transform", function (d) {
             let droneLL = [

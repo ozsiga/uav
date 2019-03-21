@@ -2,7 +2,9 @@ import * as sensor from './sensor.js';
 import * as marker from './marker.js';
 
 // Set map view
-let map = L.map("map").setView([47.529349, 19.032751], 11);
+let map = L.map("map", {
+    zoomAnimation: false
+}).setView([47.529349, 19.032751], 11);
 
 // if zoom repositioning svg
 map.on("zoom", function () {
@@ -61,7 +63,7 @@ var debug = function () {
 setInterval(() => {
     marker.getMarkerData();
     sensor.getSensorData();
-}, 100);
+}, 50);
 
 //set maps layer
 L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {

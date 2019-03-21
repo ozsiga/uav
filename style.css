@@ -17,6 +17,8 @@ body {
 .sidebar {
   width: 15%;
   float: right;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 #title {
@@ -76,6 +78,15 @@ body {
 
 .uavData p {
   padding: 0 50px;
+  color: black;
+  animation-name: blinking;
+  animation-duration: 0.5s;
+  animation-iteration-count: 10;
+}
+
+.uavData {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes blinking {
