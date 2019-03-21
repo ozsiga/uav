@@ -48,41 +48,9 @@ function getMarkerData() {
                 }
             }
 
-            // Meglévő markerek kigyűjtése
-            //markersInMap a tömb a fentlévő markerekkel
-            var markersInMap = getMarkersOnMap(map);
-            // Meglévő markerekből a nem megkapottak levétele
-            for (let i = 0; i < markersInMap.length; i++) {
-                var found = false;
-                for (let k = 0; k < markerData.length; k++) {
-                    if (markersInMap[i].options.customId == markerData[k].id) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    map.removeLayer(markersInMap[i])
-                }
-            }
-
-            // Megkapott, de fent nem lévő markerek létrehozása, térképhez adása
-            for (let k = 0; k < markerData.length; k++) {
-                var matchedMarker = undefined;
-                for (let i = 0; i < markersInMap.length; i++) {
-                    if (markersInMap[i].options.customId == markerData[k].id) {
-                        matchedMarker = markersInMap[i];
-                        break;
-                    }
-                }
-
-                if (matchedMarker == undefined) {
-                    makeMarkerSvg(markerData)
-                    makeSidebarData(markerData);
-
-                }
-            }
-
             //A meglévő markerek pozicionálása, nyíl kirajzolása
+            makeMarkerSvg(markerData)
+            makeSidebarData(markerData);
             setMarkerSvg(markerData);
 
         } else {
@@ -129,7 +97,7 @@ function setMarkerSvg(input) {
             return offsetY - d.speed.y;
         })
         .attr("stroke", "#000")
-        .attr("stroke-width", 1)
+        .attr("stroke-width", 1);
     //.attr("marker-end", "url(#arrow)");
     svg
         .style("transform", function (d) {
