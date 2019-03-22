@@ -3,9 +3,8 @@ import {
 } from './script.js';
 
 let zoomLevel = -1;
-
-var superScale = 200;
-var sensorLayers = 15;
+let superScale = 200;
+let sensorLayers = 15;
 
 function getSensorData() {
     let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/sensor/all";
@@ -15,7 +14,7 @@ function getSensorData() {
         })
         .then(data => {
             let sensorData = data.sensors;
-            for (var i = 0; i < sensorData.length; i++) {
+            for (let i = 0; i < sensorData.length; i++) {
                 normalizeDomainBazmeg(sensorData[i].domain);
             }
             makeSensorIconSvg(sensorData);
@@ -200,13 +199,13 @@ function elemikorcikk(rmin, rmax, minAng, maxAng, x, y) {
 }
 
 function easy(t) {
-    var prelay = 0.2;
+    let prelay = 0.2;
     return t >= 1 - prelay ? 1 : t + prelay;
 }
 
 
 function prePositionSvgContainer(prescale) {
-    var duration = 0;
+    let duration = 0;
     duration = 250;
     if (prescale !== undefined) {
         duration = 220;
@@ -252,7 +251,7 @@ function prePositionSvgContainer(prescale) {
 
 
 // set svg container position to leaflet-map-pane position
-function positionSvgContainer(prescale) {
+function positionSvgContainer() {
     if (zoomLevel !== map.getZoom()) {
 
         zoomLevel = map.getZoom();

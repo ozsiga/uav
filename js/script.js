@@ -8,7 +8,9 @@ let map = L.map("map", {
 
 // if zoom repositioning svg
 map.on("zoom", function () {
-    marker.zoom();
+    console.log(map.getZoom());
+    marker.zoomWidth();
+    marker.lineLength();
     sensor.positionSvgContainer();
 });
 
