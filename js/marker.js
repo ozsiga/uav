@@ -5,89 +5,20 @@ import {
     getScale
 } from './sensor.js';
 
-
 let zoomLevel = -1;
-
-function makeSidebarData(input) {
-
-    let item = d3
-        .select(".uavData")
-        .selectAll("p")
-        .data(input, d => {
-            return d.id;
-        });
-
-    item.exit().remove();
-
-    let newItem = item.enter().append("p");
-    item = newItem.merge(item);
-    item.html(function (d) {
-
-        let type = checkType(d);
-
-        function checkType(d) {
-            if (d.type == null) {
-                return 'ismeretlen';
-            }
-            return d.type;
-        }
-
-        return `ID: ${d.id} <br>
-                Magasság: ${Math.round(d.domain.height)} m <br>
-                Típus: ${type}`;
-    })
-
-}
-
-
 
 //Get marker data from server
 function getMarkerData() {
     let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    xhr.onload = () => {
-        if (xhr.status === 200) {
 
-            // Kapott adatok feldolgozása
-            let markerData = JSON.parse(xhr.responseText);
-            let markerLatLon = [];
-            let coords = markerData.map(data => Object(data.domain.coordinate));
-
-            for (let i = 0; i < coords.length; i++) {
-                if (isNumeric(coords[i].latitude) && isNumeric(coords[i].longitude)) {
-                    markerLatLon.push([coords[i].latitude, coords[i].longitude]);
-                }
-            }
-
-            //A meglévő markerek pozicionálása, nyíl kirajzolása
-            makeMarkerSvg(markerData)
-            makeSidebarData(markerData);
-
-        } else {
-            let e = new Error("HTTP Request");
-            console.log(e, xhr.status);
-        }
-    };
-    xhr.send();
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            makeMarkerSvg(data);
+            makeSidebarData(data);
+        })
+        .catch(err => console.log(err));
 }
-
-function isNumeric(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
-
-
-function zoom() {
-    let strokeW = [9, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5]
-    var zoom = map.getZoom();
-    let width = strokeW[zoom - 1];
-    return width
-}
-var colorScale = d3.scaleLinear()
-    .domain([0, 150])
-    .range(["red", "white"]);
-
 
 function makeMarkerSvg(input) {
     let svg = d3
@@ -253,6 +184,47 @@ function positionArrowSvg() {
     }
 }
 
+function zoom() {
+    let strokeW = [9, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5]
+    var zoom = map.getZoom();
+    let width = strokeW[zoom - 1];
+    return width;
+}
+
+var colorScale = d3.scaleLinear()
+    .domain([0, 150])
+    .range(["red", "white"]);
+
+function makeSidebarData(input) {
+
+    let item = d3
+        .select(".uavData")
+        .selectAll("p")
+        .data(input, d => {
+            return d.id;
+        });
+
+    item.exit().remove();
+
+    let newItem = item.enter().append("p");
+    item = newItem.merge(item);
+    item.html(function (d) {
+
+        let type = checkType(d);
+
+        function checkType(d) {
+            if (d.type == null) {
+                return 'ismeretlen';
+            }
+            return d.type;
+        }
+
+        return `ID: ${d.id} <br>
+                    Magasság: ${Math.round(d.domain.height)} m <br>
+                    Típus: ${type}`;
+    })
+
+}
 
 export {
     getMarkerData,

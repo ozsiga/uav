@@ -4,12 +4,11 @@ import {
 
 let zoomLevel = -1;
 
-let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/sensor/all";
-
 var superScale = 200;
 var sensorLayers = 15;
 
 function getSensorData() {
+    let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/sensor/all";
     fetch(url)
         .then(response => {
             return response.json();
