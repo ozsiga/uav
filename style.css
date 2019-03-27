@@ -25,6 +25,7 @@ body {
 #title {
   text-align: center;
   font-family: sans-serif;
+  text-decoration: underline
 }
 
 #toggleSensorIcons {

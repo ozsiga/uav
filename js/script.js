@@ -9,58 +9,10 @@ let map = L.map("map", {
 // if zoom repositioning svg
 map.on("zoom", function () {
     console.log(map.getZoom());
-    marker.zoomWidth();
-    marker.lineLength();
+    marker.setLinezoomWidth();
+    marker.setLineLength();
     sensor.positionSvgContainer();
 });
-
-map.on("zoomstart", function () {
-    debug();
-});
-
-var debug = function () {
-    var count = 0;
-
-    setTimeout(
-        function () {
-
-            d3.selectAll('.leaflet-tile-container').each(
-                function (d, i) {
-                    var sty = this.style.transform;
-                    var repl = sty.replace(/.*scale\((.*)\).*/, '$1');
-                    if (repl !== "1") {
-                        //console.log(sty, repl);
-                        //sensor.prePositionSvgContainer(repl);                    
-                    }
-                }
-            );
-
-
-
-        }
-
-        , 1)
-
-    //
-    //    var deb = setInterval(
-    //            function () {
-    //                count++;
-    //                if (count > 100) {
-    //                    clearInterval(deb);
-    //                }
-    //                d3.selectAll('.leaflet-tile-container').each(
-    //                        function (d, i) {
-    //                            console.log(this, d, i)
-    //                        }
-    //                );
-    //
-    //
-    //
-    //            }
-    //
-    //    , 10)
-
-}
 
 // set server request interval
 setInterval(() => {

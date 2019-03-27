@@ -6,20 +6,22 @@ import {
 } from "./sensor.js";
 
 let zoomLevel = -1;
-//Get marker data from server
+
+// fetch request for marker datas
 function getMarkerData() {
     let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
 
     fetch(url)
         .then(res => res.json())
         .then(data => {
-            makeMarkerSvg(data);
+            makeMarkerandLineSvg(data);
             makeSidebarData(data);
         })
         .catch(err => console.log(err));
 }
 
-function makeMarkerSvg(input) {
+//Create marker and line svg 
+function makeMarkerandLineSvg(input) {
     let lineSvgContainer = d3
         .select(".leaflet-pane")
         .selectAll("svg.lineSvg")
@@ -86,7 +88,6 @@ function makeMarkerSvg(input) {
         .attr("y", 42)
     droneSvgContainer.select('g.circle').select('text').text(function (d) {
         let height = Math.round(d.domain.height);
-        console.log(height);
         return `${height} m`;
     });
     droneSvgContainer.select('g.circle').select('circle')
@@ -108,13 +109,13 @@ function makeMarkerSvg(input) {
         .attr("x1", offsetX)
         .attr("y1", offsetY)
         .attr("x2", d => {
-            return offsetX + d.speed.x * lineLength();
+            return offsetX + d.speed.x * setLineLength();
         })
         .attr("y2", d => {
-            return offsetY - d.speed.y;
+            return offsetY - d.speed.y * setLineLength();
         })
         .attr("stroke", "#000")
-        .attr("stroke-width", zoomWidth());
+        .attr("stroke-width", setLinezoomWidth());
     lineSvgContainer.style("transform", function (d) {
         let droneLL = [d.domain.coordinate.latitude, d.domain.coordinate.longitude];
         return (
@@ -126,12 +127,12 @@ function makeMarkerSvg(input) {
         );
     });
     if (newSvg1 !== null) {
-        positionArrowSvg();
+        positionLineSvg();
         zoomLevel = -1;
     }
 }
-
-function positionArrowSvg() {
+//Position line svg to leaflet-map-pane
+function positionLineSvg() {
     if (zoomLevel !== map.getZoom()) {
         zoomLevel = map.getZoom();
 
@@ -167,10 +168,10 @@ function positionArrowSvg() {
         });
     }
 }
-
-function zoomWidth() {
+//Change line svg width with zoom
+function setLinezoomWidth() {
     let strokeW = [
-        9,
+        15,
         8.5,
         8,
         7.5,
@@ -187,25 +188,28 @@ function zoomWidth() {
         2,
         1.9,
         1.8,
-        1.3
+        1.1
     ];
     let zoom = map.getZoom();
     let width = strokeW[zoom - 1];
     return width;
 }
 
-function lineLength() {
-    let speed = [14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 3, 3, 3, 3, 3, 3];
+//Change line svg length with zoom
+function setLineLength() {
+    let speed = [14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 3, 3, 3, 3, 2, 2];
     let zoom = map.getZoom();
     let length = speed[zoom - 1];
     return length;
 }
-
+//Drone marker svg color scale
 let colorScale = d3
     .scaleLinear()
     .domain([0, 150])
     .range(["red", "white"]);
 
+
+//Create sidebar to log drone's data
 function makeSidebarData(input) {
     let item = d3
         .select(".uavData")
@@ -237,6 +241,6 @@ function makeSidebarData(input) {
 
 export {
     getMarkerData,
-    zoomWidth,
-    lineLength
+    setLinezoomWidth,
+    setLineLength
 };
