@@ -6,7 +6,7 @@ import {
 } from "./sensor.js";
 
 let zoomLevel = -1;
-
+var tooltip;
 // fetch request for marker datas
 function getMarkerData() {
     let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
@@ -16,6 +16,9 @@ function getMarkerData() {
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
+            //getTooltipText(data)
+            //bindText();
+            //console.log(tooltipText);;
         })
         .catch(err => console.log(err));
 }
@@ -79,10 +82,23 @@ function makeMarkerandLineSvg(input) {
         .attr("stroke-width", "1")
         .style("z-index", 1000)
         .append("svg:title")
-        .text(function (d) {
-            let height = Math.round(d.domain.height);
-            return `Height: ${height} m \nDetected by sensor #${d.detectors} \nDrone id: ${d.id}`;
+    newCircleGroup
+        .on("mouseover", function (d) {
+            createTooltip(d)
+            return tooltip.style("visibility", "visible");
+        })
+        .on("mousemove", function () {
+            return tooltip
+                .style("top", (d3.event.pageY + 10) + "px")
+                .style("left", (d3.event.pageX + 10) + "px");
+        })
+        .on("mouseout", function () {
+            return tooltip.style("visibility", "hidden");
         });
+    // .text(function (d) {
+    //     let height = Math.round(d.domain.height);
+    //     return `Height: ${height} m \nDetected by sensor #${d.detectors} \nDrone id: ${d.id}`;
+    // });
     newCircleGroup.append("text").attr("class", "markerText")
         .attr("x", 16)
         .attr("y", 42)
@@ -131,6 +147,7 @@ function makeMarkerandLineSvg(input) {
         zoomLevel = -1;
     }
 }
+
 //Position line svg to leaflet-map-pane
 function positionLineSvg() {
     if (zoomLevel !== map.getZoom()) {
@@ -238,6 +255,15 @@ function makeSidebarData(input) {
                     Típus: ${type}`;
     });
 }
+
+//Create tooltip for drone svg
+function createTooltip(data) {
+
+    var tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
+    tooltip = d3.select('.tooltip').html(tooltipString)
+}
+
+
 
 export {
     getMarkerData,
