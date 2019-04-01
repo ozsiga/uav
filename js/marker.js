@@ -6,8 +6,9 @@ import {
 } from "./sensor.js";
 
 let zoomLevel = -1;
-var tooltip;
-// fetch request for marker datas
+let tooltip;
+
+// fetch request for marker data
 function getMarkerData() {
     let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
 
@@ -16,9 +17,6 @@ function getMarkerData() {
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
-            //getTooltipText(data)
-            //bindText();
-            //console.log(tooltipText);;
         })
         .catch(err => console.log(err));
 }
@@ -84,7 +82,7 @@ function makeMarkerandLineSvg(input) {
         .append("svg:title")
     newCircleGroup
         .on("mouseover", function (d) {
-            createTooltip(d)
+            createTooltip(d);
             return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function () {
@@ -95,10 +93,6 @@ function makeMarkerandLineSvg(input) {
         .on("mouseout", function () {
             return tooltip.style("visibility", "hidden");
         });
-    // .text(function (d) {
-    //     let height = Math.round(d.domain.height);
-    //     return `Height: ${height} m \nDetected by sensor #${d.detectors} \nDrone id: ${d.id}`;
-    // });
     newCircleGroup.append("text").attr("class", "markerText")
         .attr("x", 16)
         .attr("y", 42)
@@ -179,7 +173,7 @@ function positionLineSvg() {
                 "px, 0px)"
             );
         });
-        droneSvgContainer.attr("transform-origin", d => {
+        droneSvgContainer.attr("transform-origin", () => {
             return `
                 0 0 `;
         });
@@ -239,7 +233,6 @@ function makeSidebarData(input) {
 
     let newItem = item.enter().append("p");
     item = newItem.merge(item);
-    //console.log(item);
     item.html(function (d) {
         let type = checkType(d);
 
@@ -258,12 +251,13 @@ function makeSidebarData(input) {
 
 //Create tooltip for drone svg
 function createTooltip(data) {
+    let circleSensor = d3.selectAll(".sensorCircle");
 
-    var tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
-    tooltip = d3.select('.tooltip').html(tooltipString)
+    let tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
+    tooltip = d3.select('.tooltip').html(tooltipString);
+
+    circleSensor.attr("fill", "yellow");
 }
-
-
 
 export {
     getMarkerData,

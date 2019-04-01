@@ -15,6 +15,10 @@ body {
   position: fixed;
 }
 
+.circle:hover {
+  cursor: pointer;
+}
+
 .tooltip {
   font-family: Arial;
   font-size: 12px;

@@ -1,4 +1,6 @@
-import { map } from "./script.js";
+import {
+  map
+} from "./script.js";
 
 let zoomLevel = -1;
 let superScale = 500;
@@ -17,7 +19,7 @@ function getSensorData() {
         normalizeDomain(sensorData[i].domain);
       }
       makeSensorIconSvg(sensorData);
-      makeSensorMesasureRangeSvg(sensorData, sensorLayers);
+      makeSensorMeasureRangeSvg(sensorData, sensorLayers);
     })
     .catch(err => {
       console.log(err);
@@ -40,7 +42,7 @@ function makeSensorIconSvg(input) {
   newSvg.style("height", 50);
   newSvg.style("z-index", 1500);
   svgContainer = newSvg.merge(svgContainer);
-  svgContainer.style("transform", function(d) {
+  svgContainer.style("transform", function (d) {
     let sensorLL = [
       d.domain.coordinate.latitude,
       d.domain.coordinate.longitude
@@ -60,6 +62,7 @@ function makeSensorIconSvg(input) {
     .attr("height", 50);
   circle
     .append("circle")
+    .attr("class", "sensorCircle")
     .attr("cx", 25)
     .attr("cy", 25)
     .attr("r", 6)
@@ -67,13 +70,15 @@ function makeSensorIconSvg(input) {
     .attr("opacity", 1)
     .style("z-index", 1500)
     .append("svg:title")
-    .text(function(d) {
+    .text(function (d) {
       return `Szenzor: ${d.id} \nNév: ${d.type}`;
     });
+
+
 }
 
 //Create all sensor measure range svg
-function makeSensorMesasureRangeSvg(sensorData, n) {
+function makeSensorMeasureRangeSvg(sensorData, n) {
   let svgContainer = d3.select(map.getPanes().overlayPane);
   let checkbox = document.getElementById("toggleMrSvg");
   let svg = svgContainer.selectAll("svg").data(sensorData, d => {
@@ -83,17 +88,17 @@ function makeSensorMesasureRangeSvg(sensorData, n) {
   svg.exit().remove();
   let newSvg = svg.enter().append("svg");
   svg = newSvg.merge(svg);
-  svg.attr("viewBox", function(d) {
+  svg.attr("viewBox", function (d) {
     let rMax = d.domain.r.max0 * Math.cos(d.domain.theta.min0);
     return " " + -rMax + " " + -rMax + " " + 2 * rMax + " " + 2 * rMax;
   });
   svg
     .attr("z-index", 1000)
-    .attr("height", function(d) {
+    .attr("height", function (d) {
       let rMax = d.domain.r.max1 * Math.cos(d.domain.theta.min0);
       return (2 * rMax) / superScale;
     })
-    .attr("width", function(d) {
+    .attr("width", function (d) {
       let rMax = d.domain.r.max1 * Math.cos(d.domain.theta.min0);
       return (2 * rMax) / superScale;
     })
@@ -102,7 +107,7 @@ function makeSensorMesasureRangeSvg(sensorData, n) {
     svg.style("display", "none");
   }
 
-  svg.each(function(d, i) {
+  svg.each(function (d, i) {
     let path = d3
       .select(this)
       .selectAll("path")
@@ -120,10 +125,10 @@ function makeSensorMesasureRangeSvg(sensorData, n) {
         }
       })
       .attr("opacity", 0.5 / sensorLayers)
-      .attr("stroke-width", function(d2, i) {
+      .attr("stroke-width", function (d2, i) {
         return getSensorPathWidth(d.domain, n, i);
       })
-      .attr("d", function(d2, i) {
+      .attr("d", function (d2, i) {
         return getSensorPath(d.domain, n, i);
       });
   });
@@ -209,7 +214,7 @@ function positionSvgContainer() {
       .style("transform")
       .split(",");
 
-    svgContainer.style("transform", function(d) {
+    svgContainer.style("transform", function (d) {
       let width = d3.select(this).attr("width");
       let sensorLL = [
         d.domain.coordinate.latitude,
@@ -229,7 +234,7 @@ function positionSvgContainer() {
         "px, 0px)"
       );
     });
-    svgContainer.attr("transform-origin", function(d) {
+    svgContainer.attr("transform-origin", function (d) {
       return "0 0";
     });
   }
@@ -244,7 +249,7 @@ function getScale(multiplier) {
   let b = map.getBounds();
   let atloinPixel = Math.sqrt(
     (pB.max.x - pB.min.x) * (pB.max.x - pB.min.x) +
-      (pB.max.y - pB.min.y) * (pB.max.y - pB.min.y)
+    (pB.max.y - pB.min.y) * (pB.max.y - pB.min.y)
   );
   return (multiplier * atloinPixel) / map.distance(b._southWest, b._northEast);
 }
@@ -261,4 +266,8 @@ function normalizeDomain(domain) {
   }
 }
 
-export { getSensorData, positionSvgContainer, getScale };
+export {
+  getSensorData,
+  positionSvgContainer,
+  getScale
+};
