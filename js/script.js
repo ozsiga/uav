@@ -25,20 +25,20 @@ L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 //console.log click latlng + pixel points
-map.on("click", function (e) {
-    let coord = e.latlng;
-    let lat = coord.lat;
-    let lng = coord.lng;
-    let xy = map.latLngToLayerPoint(e.latlng);
-    console.log(
-        "You clicked the map at latitude: " +
-        lat +
-        " and longitude: " +
-        lng +
-        " xy:" +
-        xy
-    );
-});
+// map.on("click", function (e) {
+//     let coord = e.latlng;
+//     let lat = coord.lat;
+//     let lng = coord.lng;
+//     let xy = map.latLngToLayerPoint(e.latlng);
+//     console.log(
+//         "You clicked the map at latitude: " +
+//         lat +
+//         " and longitude: " +
+//         lng +
+//         " xy:" +
+//         xy
+//     );
+// });
 
 export {
     map

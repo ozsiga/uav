@@ -7,8 +7,9 @@ import {
 
 let zoomLevel = -1;
 let tooltip;
+let toggleTooltip = false;
 
-// fetch request for marker data
+// fetch request for marker datas
 function getMarkerData() {
     let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
 
@@ -17,6 +18,11 @@ function getMarkerData() {
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
+            for (let i = 0; i < data.length; i++) {
+                if (tooltip !== undefined && data[i].id === tooltip.id) {
+                    positionTooltipSvg(data[i], tooltip.html)
+                }
+            }
         })
         .catch(err => console.log(err));
 }
@@ -81,18 +87,15 @@ function makeMarkerandLineSvg(input) {
         .style("z-index", 1000)
         .append("svg:title")
     newCircleGroup
-        .on("mouseover", function (d) {
-            createTooltip(d);
-            return tooltip.style("visibility", "visible");
+        .on("click", function (d) {
+            createTooltip(d)
+            if (!toggleTooltip) {
+                tooltip.html.style("visibility", "visible");
+            } else {
+                tooltip.html.style("visibility", "hidden")
+            }
+            toggleTooltip = !toggleTooltip;
         })
-        .on("mousemove", function () {
-            return tooltip
-                .style("top", (d3.event.pageY + 10) + "px")
-                .style("left", (d3.event.pageX + 10) + "px");
-        })
-        .on("mouseout", function () {
-            return tooltip.style("visibility", "hidden");
-        });
     newCircleGroup.append("text").attr("class", "markerText")
         .attr("x", 16)
         .attr("y", 42)
@@ -179,6 +182,24 @@ function positionLineSvg() {
         });
     }
 }
+
+function positionTooltipSvg(d, tooltip) {
+
+    tooltip.style("transform", function () {
+        let droneLL = [
+            d.domain.coordinate.latitude,
+            d.domain.coordinate.longitude
+        ];
+        return (
+            "translate3d(" +
+            map.latLngToLayerPoint(droneLL).x +
+            "px, " +
+            map.latLngToLayerPoint(droneLL).y +
+            "px, 0px)"
+        );
+    });
+}
+
 //Change line svg width with zoom
 function setLinezoomWidth() {
     let strokeW = [
@@ -251,11 +272,14 @@ function makeSidebarData(input) {
 
 //Create tooltip for drone svg
 function createTooltip(data) {
-    let circleSensor = d3.selectAll(".sensorCircle");
-
+    let circleSensor = d3.select(".sensorCircle");
+    console.log(circleSensor);
     let tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
-    tooltip = d3.select('.tooltip').html(tooltipString);
+    tooltip = {};
+    tooltip.html = d3.select('.tooltip').html(tooltipString);
+    tooltip.id = data.id;
 
+    console.log(data.detectors);
     circleSensor.attr("fill", "yellow");
 }
 

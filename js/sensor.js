@@ -73,8 +73,6 @@ function makeSensorIconSvg(input) {
     .text(function (d) {
       return `Szenzor: ${d.id} \nNév: ${d.type}`;
     });
-
-
 }
 
 //Create all sensor measure range svg
