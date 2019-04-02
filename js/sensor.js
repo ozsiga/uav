@@ -66,7 +66,10 @@ function makeSensorIconSvg(input) {
     .attr("cx", 25)
     .attr("cy", 25)
     .attr("r", 6)
-    .attr("fill", "black")
+    .attr("id", function (d) {
+      return d.id;
+    })
+    .style("fill", "black")
     .attr("opacity", 1)
     .style("z-index", 1500)
     .append("svg:title")
