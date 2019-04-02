@@ -91,16 +91,21 @@ function makeMarkerandLineSvg(input) {
     newCircleGroup
         .on("click", function (d) {
             createTooltip(d);
-            if (!toggleTooltip) {
-                tooltip.html.style("visibility", "visible");
-            } else {
-                tooltip.html.style("visibility", "hidden");
-            }
-            toggleTooltip = !toggleTooltip;
         })
         .append("text").attr("class", "markerText")
         .attr("x", 16)
-        .attr("y", 42)
+        .attr("y", 42);
+
+    let mapDiv = d3.select('#map');
+    mapDiv.on("click", () => {
+        if (!toggleTooltip) {
+            tooltip.html.style("visibility", "visible");
+        } else {
+            tooltip.html.style("visibility", "hidden");
+        }
+        toggleTooltip = !toggleTooltip;
+    });
+
     droneSvgContainer.select('g.circle').select('text').text(function (d) {
         let height = Math.round(d.domain.height);
         return `${height} m`;
@@ -183,14 +188,7 @@ function positionLineSvg() {
         });
     }
 }
-// map.on("click", function () {
-//     let tooltipPane = d3.select(map.getPanes().tooltipPane)
-//     if (tooltipPane.style("visibility", "hidden")) {
-//         tooltipPane.style("visibility", "visible")
-//     } else {
-//         tooltipPane.style("visibility", "hidden")
-//     }
-// });
+
 //Create tooltip for drone svg
 function createTooltip(data) {
     let tooltipPane = d3.select(map.getPanes().tooltipPane)
@@ -198,18 +196,6 @@ function createTooltip(data) {
     tooltip = {};
     tooltip.html = tooltipPane.html(`<div class="tooltip" data-toggle="tooltip">${tooltipString}</div>`)
     tooltip.id = data.id;
-    map.on("click", function () {
-        let tooltipPane = d3.select(map.getPanes().tooltipPane)
-        let tooltipDiv;
-        for (let i = 0; i < tooltipPane._groups.length; i++) {
-            tooltipDiv = tooltipPane._groups[i][0];
-            if (tooltipDiv.style.visibility == "visible") {
-                tooltipDiv.style.visibility == "hidden"
-                console.log(tooltipDiv.style.visibility);
-            }
-        }
-    });
-
 }
 //position tooltip to the drone
 function positionTooltipSvg(d, tooltip) {
