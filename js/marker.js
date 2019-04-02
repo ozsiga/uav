@@ -17,8 +17,11 @@ function getMarkerData() {
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
+            let map = d3.selectAll(".leaflet-map-pane")
+                .style("transform")
             for (let i = 0; i < data.length; i++) {
                 if (tooltip !== undefined && data[i].id === tooltip.id) {
+
                     positionTooltipSvg(data[i], tooltip.html)
                 }
             }
@@ -151,9 +154,9 @@ function positionLineSvg() {
         zoomLevel = map.getZoom();
 
         let droneSvgContainer = d3.select(map.getPanes().mapPane).selectAll(".lineSvg");
-        d3.selectAll(".leaflet-map-pane")
-            .style("transform")
-            .split(",");
+        // d3.selectAll(".leaflet-map-pane")
+        //     .style("transform")
+        //     .split(",");
 
         droneSvgContainer.style("transform", function (d) {
             let width = d3.select(this).attr("width");
@@ -161,7 +164,6 @@ function positionLineSvg() {
                 d.domain.coordinate.latitude,
                 d.domain.coordinate.longitude
             ];
-
             return (
                 "translate3d(" +
                 map.latLngToLayerPoint(droneLL).x +
@@ -182,9 +184,42 @@ function positionLineSvg() {
         });
     }
 }
+// map.on("click", function () {
+//     let tooltipPane = d3.select(map.getPanes().tooltipPane)
+//     if (tooltipPane.style("visibility", "hidden")) {
+//         tooltipPane.style("visibility", "visible")
+//     } else {
+//         tooltipPane.style("visibility", "hidden")
+//     }
+// });
+//Create tooltip for drone svg
+function createTooltip(data) {
+    let tooltipPane = d3.select(map.getPanes().tooltipPane)
+    var tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
+    tooltip = {};
+    tooltip.html = tooltipPane.html(`<div class="tooltip" data-toggle="tooltip">${tooltipString}</div>`)
+    tooltip.id = data.id;
+    map.on("click", function () {
+        let tooltipPane = d3.select(map.getPanes().tooltipPane)
+        let tooltipDiv;
+        for (let i = 0; i < tooltipPane._groups.length; i++) {
+            tooltipDiv = tooltipPane._groups[i][0];
+            if (tooltipDiv.style.visibility == "visible") {
+                tooltipDiv.style.visibility == "hidden"
+                console.log(tooltipDiv.style.visibility);
+            }
+        }
+    });
 
+}
+//position tooltip to the drone
 function positionTooltipSvg(d, tooltip) {
-
+    let mapTransform = d3.selectAll(".leaflet-map-pane")
+        .style("transform")
+        .split(",")
+    for (let i = 0; i < mapTransform.length; i++) {
+        //console.log(mapTransform[0]);
+    }
     tooltip.style("transform", function () {
         let droneLL = [
             d.domain.coordinate.latitude,
@@ -192,12 +227,12 @@ function positionTooltipSvg(d, tooltip) {
         ];
         return (
             "translate3d(" +
-            map.latLngToLayerPoint(droneLL).x +
+            (map.latLngToLayerPoint(droneLL).x - 80) +
             "px, " +
-            map.latLngToLayerPoint(droneLL).y +
+            (map.latLngToLayerPoint(droneLL).y - 52) +
             "px, 0px)"
-        );
-    });
+        )
+    })
 }
 
 //Change line svg width with zoom
@@ -269,17 +304,6 @@ function makeSidebarData(input) {
                     Típus: ${type}`;
     });
 }
-
-//Create tooltip for drone svg
-function createTooltip(data) {
-
-    var tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
-    tooltip = {};
-    tooltip.html = d3.select('.tooltip').html(tooltipString);
-    tooltip.id = data.id;
-}
-
-
 
 export {
     getMarkerData,
