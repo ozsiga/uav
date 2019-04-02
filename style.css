@@ -20,16 +20,14 @@ body {
 }
 
 .tooltip {
-  font-family: Arial;
-  font-size: 12px;
-  padding: 10px;
-  width: fit-content;
-  height: fit-content;
-  border: 1px solid black;
-  border-radius: 10px;
-  position: absolute;
-  visibility: hidden;
-  background: white;
+  background-color: aliceblue;
+  box-sizing: border-box;
+  border-style: double;
+  border-radius: 7px;
+  text-align: center;
+  font-size: 10px;
+  height: 50px;
+  width: 70px
 }
 
 .sidebar {

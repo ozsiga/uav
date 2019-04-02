@@ -202,9 +202,9 @@ function positionSvgContainer() {
     zoomLevel = map.getZoom();
 
     let svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
-    d3.selectAll(".leaflet-map-pane")
-      .style("transform")
-      .split(",");
+    // d3.selectAll(".leaflet-map-pane")
+    //   .style("transform")
+    //   .split(",");
 
     svgContainer.style("transform", function (d) {
       let width = d3.select(this).attr("width");
