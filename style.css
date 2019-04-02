@@ -40,7 +40,7 @@ body {
 #title {
   text-align: center;
   font-family: sans-serif;
-  text-decoration: underline
+  text-decoration: underline;
 }
 
 #toggleSensorIcons {
@@ -93,8 +93,12 @@ body {
   font-family: sans-serif;
 }
 
+.uavData {
+  text-align: center;
+  font-family: sans-serif;
+}
+
 .uavData p {
-  padding: 0 50px;
   color: black;
   animation-name: blinking;
   animation-duration: 2s;

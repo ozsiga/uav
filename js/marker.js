@@ -11,7 +11,7 @@ let toggleTooltip = false;
 
 // fetch request for marker datas
 function getMarkerData() {
-    let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
+    const url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
 
     fetch(url)
         .then(res => res.json())
@@ -20,7 +20,6 @@ function getMarkerData() {
             makeSidebarData(data);
             for (let i = 0; i < data.length; i++) {
                 if (tooltip !== undefined && data[i].id === tooltip.id) {
-
                     positionTooltipSvg(data[i], tooltip.html)
                 }
             }
@@ -96,9 +95,9 @@ function makeMarkerandLineSvg(input) {
 
     let mapDiv = d3.select('#map');
     mapDiv.on("click", () => {
-        if (!toggleTooltip) {
+        if (!toggleTooltip && tooltip !== undefined) {
             tooltip.html.style("visibility", "visible");
-        } else {
+        } else if (tooltip !== undefined) {
             tooltip.html.style("visibility", "hidden");
         }
         toggleTooltip = !toggleTooltip;
@@ -156,9 +155,6 @@ function positionLineSvg() {
         zoomLevel = map.getZoom();
 
         let droneSvgContainer = d3.select(map.getPanes().mapPane).selectAll(".lineSvg");
-        // d3.selectAll(".leaflet-map-pane")
-        //     .style("transform")
-        //     .split(",");
 
         droneSvgContainer.style("transform", function (d) {
             let width = d3.select(this).attr("width");

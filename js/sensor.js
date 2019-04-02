@@ -8,7 +8,7 @@ let sensorLayers = 15;
 
 // fetch request for sensor datas
 function getSensorData() {
-  let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/sensor/all";
+  const url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/sensor/all";
   fetch(url)
     .then(response => {
       return response.json();
