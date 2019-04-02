@@ -19,7 +19,7 @@ function getSensorData() {
         normalizeDomain(sensorData[i].domain);
       }
       makeSensorIconSvg(sensorData);
-      makeSensorMesasureRangeSvg(sensorData, sensorLayers);
+      makeSensorMeasureRangeSvg(sensorData, sensorLayers);
     })
     .catch(err => {
       console.log(err);
@@ -62,7 +62,7 @@ function makeSensorIconSvg(input) {
     .attr("height", 50);
   circle
     .append("circle")
-    .attr("class", "innerCirle")
+    .attr("class", "sensorCircle")
     .attr("cx", 25)
     .attr("cy", 25)
     .attr("r", 6)
@@ -76,7 +76,7 @@ function makeSensorIconSvg(input) {
 }
 
 //Create all sensor measure range svg
-function makeSensorMesasureRangeSvg(sensorData, n) {
+function makeSensorMeasureRangeSvg(sensorData, n) {
   let svgContainer = d3.select(map.getPanes().overlayPane);
   let checkbox = document.getElementById("toggleMrSvg");
   let svg = svgContainer.selectAll("svg").data(sensorData, d => {

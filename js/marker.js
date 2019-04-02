@@ -6,8 +6,9 @@ import {
 } from "./sensor.js";
 
 let zoomLevel = -1;
-var tooltip;
+let tooltip;
 let toggleTooltip = false;
+
 // fetch request for marker datas
 function getMarkerData() {
     let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
@@ -89,7 +90,6 @@ function makeMarkerandLineSvg(input) {
         .style("z-index", 1000)
         .append("svg:title")
     newCircleGroup
-        .style("cursor", "pointer")
         .on("click", function (d) {
             createTooltip(d)
             if (!toggleTooltip) {
@@ -97,7 +97,7 @@ function makeMarkerandLineSvg(input) {
             } else {
                 tooltip.html.style("visibility", "hidden")
             }
-            toggleTooltip = !toggleTooltip
+            toggleTooltip = !toggleTooltip;
         })
     newCircleGroup.append("text").attr("class", "markerText")
         .attr("x", 16)
@@ -178,7 +178,7 @@ function positionLineSvg() {
                 "px, 0px)"
             );
         });
-        droneSvgContainer.attr("transform-origin", d => {
+        droneSvgContainer.attr("transform-origin", () => {
             return `
                 0 0 `;
         });
