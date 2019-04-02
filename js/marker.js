@@ -12,7 +12,7 @@ let toggleTooltip = false;
 
 // fetch request for marker datas
 function getMarkerData() {
-    let url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
+    const url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
 
     fetch(url)
         .then(res => res.json())
@@ -21,8 +21,12 @@ function getMarkerData() {
             makeSidebarData(data);
             for (let i = 0; i < data.length; i++) {
                 if (tooltip !== undefined && data[i].id === tooltip.id) {
+<<<<<<< HEAD
 
                     positionTooltipSvg(data[i], tooltiphtml)
+=======
+                    positionTooltipSvg(data[i], tooltip.html)
+>>>>>>> 042fc97275344f2e9ad11177e75b62a638e654f1
                 }
             }
         })
@@ -114,8 +118,15 @@ function makeMarkerandLineSvg(input) {
 
     let mapDiv = d3.select('#map');
     mapDiv.on("click", () => {
+<<<<<<< HEAD
         if (!toggleTooltip) {
             tooltiphtml.style("display", "none");
+=======
+        if (!toggleTooltip && tooltip !== undefined) {
+            tooltip.html.style("visibility", "visible");
+        } else if (tooltip !== undefined) {
+            tooltip.html.style("visibility", "hidden");
+>>>>>>> 042fc97275344f2e9ad11177e75b62a638e654f1
         }
         toggleTooltip = !toggleTooltip;
         //d3.event.stopImmediatePropagation()
