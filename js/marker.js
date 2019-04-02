@@ -85,18 +85,17 @@ function makeMarkerandLineSvg(input) {
         .attr("stroke", "white")
         .attr("stroke-width", "1")
         .style("z-index", 1000)
-        .append("svg:title")
     newCircleGroup
         .on("click", function (d) {
-            createTooltip(d)
+            createTooltip(d);
             if (!toggleTooltip) {
                 tooltip.html.style("visibility", "visible");
             } else {
-                tooltip.html.style("visibility", "hidden")
+                tooltip.html.style("visibility", "hidden");
             }
             toggleTooltip = !toggleTooltip;
         })
-    newCircleGroup.append("text").attr("class", "markerText")
+        .append("text").attr("class", "markerText")
         .attr("x", 16)
         .attr("y", 42)
     droneSvgContainer.select('g.circle').select('text').text(function (d) {
@@ -240,7 +239,6 @@ let colorScale = d3
     .domain([0, 150])
     .range(["red", "white"]);
 
-
 //Create sidebar to log drone's data
 function makeSidebarData(input) {
     let item = d3
@@ -265,22 +263,19 @@ function makeSidebarData(input) {
         }
 
         return `ID: ${d.id} <br>
-                    Magasság: ${Math.round(d.domain.height)} m <br>
-                    Típus: ${type}`;
+                Magasság: ${Math.round(d.domain.height)} m <br>
+                Típus: ${type}`;
     });
 }
 
 //Create tooltip for drone svg
 function createTooltip(data) {
-    let circleSensor = d3.select(".sensorCircle");
-    console.log(circleSensor);
+    //let circleSensor = d3.selectAll(".sensorCircle");
     let tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
     tooltip = {};
     tooltip.html = d3.select('.tooltip').html(tooltipString);
     tooltip.id = data.id;
-
-    console.log(data.detectors);
-    circleSensor.attr("fill", "yellow");
+    //circleSensor.attr("fill", "yellow");
 }
 
 export {
