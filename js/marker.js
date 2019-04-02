@@ -18,8 +18,6 @@ function getMarkerData() {
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
-            let map = d3.selectAll(".leaflet-map-pane")
-                .style("transform")
             for (let i = 0; i < data.length; i++) {
                 if (tooltip !== undefined && data[i].id === tooltip.id) {
 
@@ -194,7 +192,9 @@ function createTooltip(data) {
     let tooltipPane = d3.select(map.getPanes().tooltipPane)
     var tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
     tooltip = {};
-    tooltip.html = tooltipPane.html(`<div class="tooltip" data-toggle="tooltip">${tooltipString}</div>`)
+    tooltip.html = tooltipPane
+        .style("z-index", 10000)
+        .html(`<div class="tooltip" data-toggle="tooltip">${tooltipString}</div>`)
     tooltip.id = data.id;
 }
 //position tooltip to the drone
