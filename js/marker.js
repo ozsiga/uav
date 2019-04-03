@@ -89,7 +89,7 @@ function makeMarkerandLineSvg(input) {
         .style("z-index", 1000)
     newCircleGroup
         .on("click", function (d) {
-            if (tooltiphtml === undefined || tooltiphtml._groups[0][0].style.display == "none") {
+            if (tooltiphtml === undefined || tooltiphtml._groups[0][0].style.display == "none" || tooltiphtml._groups.length !== 0) {
                 createTooltip(d);
             }
             let sensors = d3.selectAll(".sensorCircle")
@@ -114,11 +114,7 @@ function makeMarkerandLineSvg(input) {
 
     let mapDiv = d3.select('#map');
     mapDiv.on("click", () => {
-        if (!toggleTooltip) {
-            tooltiphtml.style("display", "none");
-        }
-        toggleTooltip = !toggleTooltip;
-        //d3.event.stopImmediatePropagation()
+        tooltiphtml.style("display", "none");
     });
 
     droneSvgContainer.select('g.circle').select('text').text(function (d) {
@@ -204,14 +200,13 @@ function positionLineSvg() {
 //Create tooltip for drone svg
 function createTooltip(data) {
     let tooltipPane = d3.select(map.getPanes().tooltipPane)
-    var tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
+    var tooltipString = `id: ${data.id} <br> detector(s) : ${data.detectors}`;
     tooltip = {};
     tooltiphtml = tooltipPane
         .style("z-index", 10000)
         .style("display", "block")
         .html(`<div class="tooltip">${tooltipString}</div>`)
     tooltip.id = data.id;
-    console.log(tooltiphtml);
 }
 //position tooltip to the drone
 function positionTooltipSvg(d, tooltip) {
