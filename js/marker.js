@@ -8,7 +8,6 @@ import {
 let zoomLevel = -1;
 let tooltip;
 let tooltiphtml;
-let toggleTooltip = false;
 
 // fetch request for marker datas
 function getMarkerData() {
@@ -113,9 +112,7 @@ function makeMarkerandLineSvg(input) {
         .attr("y", 42);
 
     let mapDiv = d3.select('#map');
-    mapDiv.on("click", () => {
-        tooltiphtml.style("display", "none");
-    });
+    mapDiv.on("click", () => tooltiphtml.style("display", "none"));
 
     droneSvgContainer.select('g.circle').select('text').text(function (d) {
         let height = Math.round(d.domain.height);
