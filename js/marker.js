@@ -93,28 +93,37 @@ function makeMarkerandLineSvg(input) {
                 tooltiphtml._groups.length !== 0) {
                 createTooltip(d);
             }
-            let sensors = d3.selectAll(".sensorCircle")
-            for (let i = 0; i < sensors._groups[0].length; i++) {
-                let sensorIds = sensors._groups[0][i].id
-                let sensorSvg = sensors._groups[0][i]
-                let detectorsInTooltip = d.detectors
+            let detectorsInTooltip = d.detectors
+            let mrPath = d3.selectAll(".path")
+            for (let i = 0; i < mrPath._groups[0].length; i++) {
+                let mrPathSvg = mrPath._groups[0][i]
                 for (let k = 0; k < detectorsInTooltip.length; k++) {
+                    if (detectorsInTooltip[k] == mrPathSvg.id) {
+                        mrPathSvg.color = "yellow"
+                        d3.select(mrPathSvg).style("stroke", "blue");
 
-                    if (sensorIds === detectorsInTooltip[k].toString()) {
-                        d3.select(sensorSvg).style("fill", "yellow")
+                        break;
                     } else {
-                        d3.select(sensorSvg).style("fill", "black")
+                        d3.select(mrPathSvg).style("stroke", "#2f4f4f");
+                        mrPathSvg.color = undefined
                     }
                 }
+                d3.event.stopImmediatePropagation()
             }
-            d3.event.stopImmediatePropagation();
         })
         .append("text").attr("class", "markerText")
         .attr("x", 16)
         .attr("y", 42);
 
     let mapDiv = d3.select('#map');
-    mapDiv.on("click", () => tooltiphtml.style("display", "none"));
+    mapDiv.on("click", function () {
+        tooltiphtml.style("display", "none");
+        let mrPath = d3.selectAll(".path");
+        for (let i = 0; i < mrPath._groups[0].length; i++) {
+            let mrPathSvg = mrPath._groups[0][i];
+            d3.select(mrPathSvg).style("stroke", "#2f4f4f")
+        }
+    });
 
     droneSvgContainer.select('g.circle').select('text').text(function (d) {
         let height = Math.round(d.domain.height);
