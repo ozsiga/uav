@@ -88,7 +88,9 @@ function makeMarkerandLineSvg(input) {
         .style("z-index", 1000)
     newCircleGroup
         .on("click", function (d) {
-            if (tooltiphtml === undefined || tooltiphtml._groups[0][0].style.display == "none" || tooltiphtml._groups.length !== 0) {
+            if (tooltiphtml === undefined ||
+                tooltiphtml._groups[0][0].style.display == "none" ||
+                tooltiphtml._groups.length !== 0) {
                 createTooltip(d);
             }
             let sensors = d3.selectAll(".sensorCircle")
@@ -105,7 +107,7 @@ function makeMarkerandLineSvg(input) {
                     }
                 }
             }
-            d3.event.stopImmediatePropagation()
+            d3.event.stopImmediatePropagation();
         })
         .append("text").attr("class", "markerText")
         .attr("x", 16)

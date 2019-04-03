@@ -9,10 +9,6 @@ body {
 
 #map {
   height: 100%;
-  box-sizing: border-box;
-  width: 85%;
-  float: left;
-  position: fixed;
 }
 
 .circle:hover {
@@ -31,19 +27,6 @@ body {
   font-size: 10px;
   height: 50px;
   width: 70px
-}
-
-.sidebar {
-  width: 15%;
-  float: right;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-#title {
-  text-align: center;
-  font-family: sans-serif;
-  text-decoration: underline;
 }
 
 #toggleSensorIcons {
@@ -96,12 +79,24 @@ body {
   font-family: sans-serif;
 }
 
-.uavData {
+#uav-panel {
+  background: rgba(255, 255, 255, 0.7);
+  margin: 20px;
+  height: 94%;
+  width: 15%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
   text-align: center;
+  overflow: auto;
+}
+
+#title {
   font-family: sans-serif;
+  text-decoration: underline;
 }
 
 .uavData p {
+  font-family: sans-serif;
   color: black;
   animation-name: blinking;
   animation-duration: 2s;
