@@ -117,8 +117,16 @@ function makeSensorMeasureRangeSvg(sensorData, n) {
     let newPath = path.enter().append("path");
     path = newPath.merge(path);
     path
+      .attr("class", "path")
+      .attr("id", d.id)
       .attr("fill", "none")
-      .attr("stroke", "#2f4f4f")
+      .style("stroke", function () {
+        var oldStroke = path.style("stroke");
+        if (oldStroke === "none") {
+          oldStroke = "#2f4f4f"
+        }
+        return oldStroke;
+      })
       .attr("opacity", 0.5 / sensorLayers)
       .attr("stroke-width", function (d2, i) {
         return getSensorPathWidth(d.domain, n, i);
