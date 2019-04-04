@@ -18,14 +18,20 @@ function getMarkerData() {
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
+            var removeNecessary = true;
             for (let i = 0; i < data.length; i++) {
                 if (data[i].id == showTooltip) {
                     createTooltipValueandPosition(data[i]);
+                    removeNecessary = false;
                     break
-                } else if (tooltiphtml) {
-                    tooltiphtml.style("display", "none");
                 }
             }
+            if (removeNecessary && tooltiphtml) {
+                tooltiphtml.style("display", "none");
+                showTooltip = undefined
+            }
+
+
         })
         .catch(err => console.log(err));
 }
