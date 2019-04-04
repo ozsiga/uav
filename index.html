@@ -17,14 +17,20 @@
 <body>
   <div id="map"></div>
 
-  <p id="label1">Szenzor ikonok</p>
-  <input type="checkbox" id="toggleSensorIcons" class="checkbox" onclick="toggleSensorIcons()" checked>
-
-  <p id="label0">Szenzor érzékelési tartományok</p>
-  <input type="checkbox" id="toggleMrSvg" class="checkbox" onclick="toggleMrSvg()" checked>
-
-  <p id="label2">UAV adatok</p>
-  <input type="checkbox" id="toggleUavPanel" class="checkbox" onclick="toggleUavPanel()" checked>
+  <div id="control-panel" class="leaflet-top leaflet-left">
+    <div>
+      <input type="checkbox" id="toggleSensorIcons" class="checkbox" onclick="toggleSensorIcons()" checked>
+      <p id="label1">Szenzor ikonok</p>
+    </div>
+    <div>
+      <input type="checkbox" id="toggleMrSvg" class="checkbox" onclick="toggleMrSvg()" checked>
+      <p id="label0">Szenzor érzékelési tartományok</p>
+    </div>
+    <div>
+      <input type="checkbox" id="toggleUavPanel" class="checkbox" onclick="toggleUavPanel()" checked>
+      <p id="label2">UAV adatok</p>
+    </div>
+  </div>
 
   <div id="uav-panel" class="leaflet-top leaflet-right fadeIn">
     <p id="title">UAV adatok</p>
