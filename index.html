@@ -16,11 +16,17 @@
 
 <body>
   <div id="map"></div>
-  <p id="label0">Szenzor érzékelési tartományok</p>
-  <input type="checkbox" id="toggleMrSvg" class="checkbox" onclick="toggleMrSvg()" checked>
+
   <p id="label1">Szenzor ikonok</p>
   <input type="checkbox" id="toggleSensorIcons" class="checkbox" onclick="toggleSensorIcons()" checked>
-  <div id="uav-panel" class="leaflet-top leaflet-right">
+
+  <p id="label0">Szenzor érzékelési tartományok</p>
+  <input type="checkbox" id="toggleMrSvg" class="checkbox" onclick="toggleMrSvg()" checked>
+
+  <p id="label2">UAV adatok</p>
+  <input type="checkbox" id="toggleUavPanel" class="checkbox" onclick="toggleUavPanel()" checked>
+
+  <div id="uav-panel" class="leaflet-top leaflet-right fadeIn">
     <p id="title">UAV adatok</p>
     <div class="uavData"></div>
   </div>
@@ -29,11 +35,12 @@
 <script>
   let checkBox = document.getElementById("toggleMrSvg");
   let checkBox1 = document.getElementById("toggleSensorIcons");
+  let checkBox2 = document.getElementById("toggleUavPanel");
 
   function toggleMrSvg() {
     let mrSvg = document.getElementsByClassName('mrSvg')
     for (let i = 0; i < mrSvg.length; i++) {
-      if (checkBox.checked == true) {
+      if (checkBox.checked) {
         mrSvg[i].style.display = "block";
       } else {
         mrSvg[i].style.display = "none";
@@ -44,11 +51,26 @@
   function toggleSensorIcons() {
     let sensorIcons = document.getElementsByClassName('iconSvg')
     for (let i = 0; i < sensorIcons.length; i++) {
-      if (checkBox1.checked == true) {
+      if (checkBox1.checked) {
         sensorIcons[i].style.display = "block";
       } else {
         sensorIcons[i].style.display = "none";
       }
+    }
+  }
+
+  function toggleUavPanel() {
+    let uavPanel = document.querySelector('#uav-panel');
+
+    uavPanel.classList.toggle('fadeIn');
+    uavPanel.classList.toggle('fadeOut');
+
+    if (uavPanel.classList.contains('fadeOut')) {
+      setTimeout(() => {
+        uavPanel.style.display = 'none';
+      }, 1000);
+    } else if (uavPanel.classList.contains('fadeIn')) {
+      uavPanel.style.display = 'block';
     }
   }
 </script>

@@ -85,7 +85,7 @@ function makeMarkerandLineSvg(input) {
         .attr("opacity", 1)
         .attr("stroke", "white")
         .attr("stroke-width", "1")
-        .style("z-index", 1000)
+        .style("z-index", 1000);
     newCircleGroup
         .on("click", function (d) {
             if (tooltiphtml === undefined ||
@@ -93,22 +93,20 @@ function makeMarkerandLineSvg(input) {
                 tooltiphtml._groups.length !== 0) {
                 createTooltip(d);
             }
-            let detectorsInTooltip = d.detectors
-            let mrPath = d3.selectAll(".path")
+            let detectorsInTooltip = d.detectors;
+            let mrPath = d3.selectAll(".path");
             for (let i = 0; i < mrPath._groups[0].length; i++) {
-                let mrPathSvg = mrPath._groups[0][i]
+                let mrPathSvg = mrPath._groups[0][i];
                 for (let k = 0; k < detectorsInTooltip.length; k++) {
                     if (detectorsInTooltip[k] == mrPathSvg.id) {
-                        mrPathSvg.color = "yellow"
                         d3.select(mrPathSvg).style("stroke", "blue");
-
                         break;
                     } else {
                         d3.select(mrPathSvg).style("stroke", "#2f4f4f");
-                        mrPathSvg.color = undefined
+                        mrPathSvg.color = undefined;
                     }
                 }
-                d3.event.stopImmediatePropagation()
+                d3.event.stopImmediatePropagation();
             }
         })
         .append("text").attr("class", "markerText")
@@ -121,7 +119,7 @@ function makeMarkerandLineSvg(input) {
         let mrPath = d3.selectAll(".path");
         for (let i = 0; i < mrPath._groups[0].length; i++) {
             let mrPathSvg = mrPath._groups[0][i];
-            d3.select(mrPathSvg).style("stroke", "#2f4f4f")
+            d3.select(mrPathSvg).style("stroke", "#2f4f4f");
         }
     });
 
