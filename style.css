@@ -104,6 +104,10 @@ body {
   font-family: sans-serif;
 }
 
+.leaflet-top {
+  pointer-events: unset;
+}
+
 #uav-panel {
   background: rgba(255, 255, 255, 0.7);
   margin: 20px;

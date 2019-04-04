@@ -115,7 +115,9 @@ function makeMarkerandLineSvg(input) {
 
     let mapDiv = d3.select('#map');
     mapDiv.on("click", function () {
-        tooltiphtml.style("display", "none");
+        if (tooltip !== undefined) {
+            tooltiphtml.style("display", "none");
+        }
         let mrPath = d3.selectAll(".path");
         for (let i = 0; i < mrPath._groups[0].length; i++) {
             let mrPathSvg = mrPath._groups[0][i];

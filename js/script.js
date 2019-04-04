@@ -13,6 +13,8 @@ map.on("zoom", function () {
     sensor.positionSvgContainer();
 });
 
+map.doubleClickZoom.disable();
+
 // set server request interval
 setInterval(() => {
     marker.getMarkerData();
