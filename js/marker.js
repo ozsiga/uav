@@ -8,20 +8,22 @@ import {
 let zoomLevel = -1;
 let tooltip;
 let tooltiphtml;
+let showTooltip;
 
 // fetch request for marker datas
 function getMarkerData() {
     const url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
-
     fetch(url)
         .then(res => res.json())
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
             for (let i = 0; i < data.length; i++) {
-                if (tooltip !== undefined && data[i].id === tooltip.id) {
-
-                    positionTooltipSvg(data[i], tooltiphtml)
+                if (data[i].id == showTooltip) {
+                    createTooltipValueandPosition(data[i]);
+                    break
+                } else if (tooltiphtml) {
+                    tooltiphtml.style("display", "none");
                 }
             }
         })
@@ -88,13 +90,10 @@ function makeMarkerandLineSvg(input) {
         .style("z-index", 1000);
     newCircleGroup
         .on("click", function (d) {
-            if (tooltiphtml === undefined ||
-                tooltiphtml._groups[0][0].style.display == "none" ||
-                tooltiphtml._groups.length !== 0) {
-                createTooltip(d);
-            }
-            let detectorsInTooltip = d.detectors;
-            let mrPath = d3.selectAll(".path");
+            createTooltipValueandPosition(d)
+
+            let detectorsInTooltip = d.detectors
+            let mrPath = d3.selectAll(".path")
             for (let i = 0; i < mrPath._groups[0].length; i++) {
                 let mrPathSvg = mrPath._groups[0][i];
                 for (let k = 0; k < detectorsInTooltip.length; k++) {
@@ -103,7 +102,6 @@ function makeMarkerandLineSvg(input) {
                         break;
                     } else {
                         d3.select(mrPathSvg).style("stroke", "#2f4f4f");
-                        mrPathSvg.color = undefined;
                     }
                 }
                 d3.event.stopImmediatePropagation();
@@ -112,9 +110,9 @@ function makeMarkerandLineSvg(input) {
         .append("text").attr("class", "markerText")
         .attr("x", 16)
         .attr("y", 42);
-
     let mapDiv = d3.select('#map');
     mapDiv.on("click", function () {
+        showTooltip = undefined;
         if (tooltip !== undefined) {
             tooltiphtml.style("display", "none");
         }
@@ -205,34 +203,32 @@ function positionLineSvg() {
     }
 }
 
-//Create tooltip for drone svg
-function createTooltip(data) {
-    let tooltipPane = d3.select(map.getPanes().tooltipPane)
-    var tooltipString = `id: ${data.id} <br> detector(s) : ${data.detectors}`;
-    tooltip = {};
-    tooltiphtml = tooltipPane
-        .style("z-index", 10000)
-        .style("display", "block")
-        .html(`<div class="tooltip">${tooltipString}</div>`)
-    tooltip.id = data.id;
-}
-//position tooltip to the drone
-function positionTooltipSvg(d, tooltip) {
 
-    tooltip.style("transform", function () {
-        let droneLL = [
-            d.domain.coordinate.latitude,
-            d.domain.coordinate.longitude
+function createTooltipValueandPosition(data) {
+    let tooltipPane = d3.select(map.getPanes().tooltipPane)
+    let tooltipDiv = d3.select('.tooltip')
+    showTooltip = data.id
+    var tooltipString = `id: ${data.id} <br> detector(s) : ${data.detectors}`;
+    tooltiphtml = tooltipDiv.html(`${tooltipString}`).style("display", "block")
+    tooltipPane.style("display", "block")
+    tooltipDiv.style("transform", function () {
+        let droneLL;
+        droneLL = [
+            data.domain.coordinate.latitude,
+            data.domain.coordinate.longitude
         ];
         return (
             "translate3d(" +
-            (map.latLngToLayerPoint(droneLL).x - 80) +
+            (map.latLngToLayerPoint(droneLL).x - 85) +
             "px, " +
-            (map.latLngToLayerPoint(droneLL).y - 52) +
+            (map.latLngToLayerPoint(droneLL).y - 57) +
             "px, 0px)"
         )
     })
 }
+
+
+
 
 //Change line svg width with zoom
 function setLinezoomWidth() {
