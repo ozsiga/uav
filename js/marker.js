@@ -22,11 +22,10 @@ function getMarkerData() {
                 if (data[i].id == showTooltip) {
                     createTooltipValueandPosition(data[i]);
                     break
-                } else {
+                } else if (tooltiphtml) {
                     tooltiphtml.style("display", "none");
                 }
             }
-            //removeTooltip(data)
         })
         .catch(err => console.log(err));
 }
