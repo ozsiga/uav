@@ -18,10 +18,10 @@ function getMarkerData() {
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
+            removeTooltip(data)
             for (let i = 0; i < data.length; i++) {
                 if (tooltip !== undefined && data[i].id === tooltip.id) {
-
-                    positionTooltipSvg(data[i], tooltiphtml)
+                    positionTooltipSvg(data[i], tooltiphtml);
                 }
             }
         })
@@ -92,7 +92,10 @@ function makeMarkerandLineSvg(input) {
                 tooltiphtml._groups[0][0].style.display == "none" ||
                 tooltiphtml._groups.length !== 0) {
                 createTooltip(d);
+                //console.log(JSON.stringify(d));
+
             }
+
             let detectorsInTooltip = d.detectors
             let mrPath = d3.selectAll(".path")
             for (let i = 0; i < mrPath._groups[0].length; i++) {
@@ -101,11 +104,9 @@ function makeMarkerandLineSvg(input) {
                     if (detectorsInTooltip[k] == mrPathSvg.id) {
                         mrPathSvg.color = "yellow"
                         d3.select(mrPathSvg).style("stroke", "blue");
-
                         break;
                     } else {
                         d3.select(mrPathSvg).style("stroke", "#2f4f4f");
-                        mrPathSvg.color = undefined
                     }
                 }
                 d3.event.stopImmediatePropagation()
@@ -114,7 +115,6 @@ function makeMarkerandLineSvg(input) {
         .append("text").attr("class", "markerText")
         .attr("x", 16)
         .attr("y", 42);
-
     let mapDiv = d3.select('#map');
     mapDiv.on("click", function () {
         tooltiphtml.style("display", "none");
@@ -214,11 +214,37 @@ function createTooltip(data) {
         .style("z-index", 10000)
         .style("display", "block")
         .html(`<div class="tooltip">${tooltipString}</div>`)
+    let tooltips = d3.selectAll('.tooltip')
     tooltip.id = data.id;
+    tooltips._groups[0][0].id = tooltip.id
+
+
+}
+
+function removeTooltip(data) {
+    let tooltips = d3.selectAll('.tooltip')
+    let dataIds = [];
+    for (let i = 0; i < data.length; i++) {
+        dataIds.push(data[i].id)
+        // if (dataIds.contains(parseInt(tooltips._groups[0][0].id))) {
+        //     tooltiphtml.style("display", "block");
+        // } else {
+        //     tooltiphtml.style("display", "none");
+        // }
+    }
+    for (let k = 0; k < dataIds.length; k++) {
+        if (parseInt(tooltips._groups[0][0].id) == dataIds[k]) {
+            tooltiphtml.style("display", "block");
+            console.log(tooltips._groups[0][0].id, dataIds);
+
+        } else {
+            tooltiphtml.style("display", "none");
+            console.log(tooltiphtml);
+        }
+    }
 }
 //position tooltip to the drone
 function positionTooltipSvg(d, tooltip) {
-
     tooltip.style("transform", function () {
         let droneLL = [
             d.domain.coordinate.latitude,
@@ -226,13 +252,14 @@ function positionTooltipSvg(d, tooltip) {
         ];
         return (
             "translate3d(" +
-            (map.latLngToLayerPoint(droneLL).x - 80) +
+            (map.latLngToLayerPoint(droneLL).x - 85) +
             "px, " +
-            (map.latLngToLayerPoint(droneLL).y - 52) +
+            (map.latLngToLayerPoint(droneLL).y - 57) +
             "px, 0px)"
         )
     })
 }
+
 
 //Change line svg width with zoom
 function setLinezoomWidth() {
