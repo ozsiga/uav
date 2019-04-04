@@ -28,6 +28,11 @@ function getMarkerData() {
             }
             if (removeNecessary && tooltiphtml) {
                 tooltiphtml.style("display", "none");
+                let mrPath = d3.selectAll(".path")
+                for (let i = 0; i < mrPath._groups[0].length; i++) {
+                    let mrPathSvg = mrPath._groups[0][i];
+                    d3.select(mrPathSvg).style("stroke", "#2f4f4f");
+                }
                 showTooltip = undefined
             }
 
@@ -104,7 +109,7 @@ function makeMarkerandLineSvg(input) {
                 let mrPathSvg = mrPath._groups[0][i];
                 for (let k = 0; k < detectorsInTooltip.length; k++) {
                     if (detectorsInTooltip[k] == mrPathSvg.id) {
-                        d3.select(mrPathSvg).style("stroke", "blue");
+                        d3.select(mrPathSvg).style("stroke", " blue");
                         break;
                     } else {
                         d3.select(mrPathSvg).style("stroke", "#2f4f4f");
