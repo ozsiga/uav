@@ -8,22 +8,25 @@ import {
 let zoomLevel = -1;
 let tooltip;
 let tooltiphtml;
+let showTooltip;
 
 // fetch request for marker datas
 function getMarkerData() {
     const url = "http://192.168.8.149:8080/UAVFusionPOC/rest/fusion/detection/all"; //url of service
-
     fetch(url)
         .then(res => res.json())
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
-            removeTooltip(data)
             for (let i = 0; i < data.length; i++) {
-                if (tooltip !== undefined && data[i].id === tooltip.id) {
-                    positionTooltipSvg(data[i], tooltiphtml);
+                if (data[i].id == showTooltip) {
+                    createTooltipValueandPosition(data[i]);
+                    break
+                } else {
+                    tooltiphtml.style("display", "none");
                 }
             }
+            //removeTooltip(data)
         })
         .catch(err => console.log(err));
 }
@@ -88,13 +91,7 @@ function makeMarkerandLineSvg(input) {
         .style("z-index", 1000);
     newCircleGroup
         .on("click", function (d) {
-            if (tooltiphtml === undefined ||
-                tooltiphtml._groups[0][0].style.display == "none" ||
-                tooltiphtml._groups.length !== 0) {
-                createTooltip(d);
-                //console.log(JSON.stringify(d));
-
-            }
+            createTooltipValueandPosition(d)
 
             let detectorsInTooltip = d.detectors
             let mrPath = d3.selectAll(".path")
@@ -116,6 +113,7 @@ function makeMarkerandLineSvg(input) {
         .attr("y", 42);
     let mapDiv = d3.select('#map');
     mapDiv.on("click", function () {
+        showTooltip = undefined;
         tooltiphtml.style("display", "none");
         let mrPath = d3.selectAll(".path");
         for (let i = 0; i < mrPath._groups[0].length; i++) {
@@ -204,50 +202,19 @@ function positionLineSvg() {
     }
 }
 
-//Create tooltip for drone svg
-function createTooltip(data) {
+
+function createTooltipValueandPosition(data) {
     let tooltipPane = d3.select(map.getPanes().tooltipPane)
+    let tooltipDiv = d3.select('.tooltip')
+    showTooltip = data.id
     var tooltipString = `id: ${data.id} <br> detector(s) : ${data.detectors}`;
-    tooltip = {};
-    tooltiphtml = tooltipPane
-        .style("z-index", 10000)
-        .style("display", "block")
-        .html(`<div class="tooltip">${tooltipString}</div>`)
-    let tooltips = d3.selectAll('.tooltip')
-    tooltip.id = data.id;
-    tooltips._groups[0][0].id = tooltip.id
-
-
-}
-
-function removeTooltip(data) {
-    let tooltips = d3.selectAll('.tooltip')
-    let dataIds = [];
-    for (let i = 0; i < data.length; i++) {
-        dataIds.push(data[i].id)
-        // if (dataIds.contains(parseInt(tooltips._groups[0][0].id))) {
-        //     tooltiphtml.style("display", "block");
-        // } else {
-        //     tooltiphtml.style("display", "none");
-        // }
-    }
-    for (let k = 0; k < dataIds.length; k++) {
-        if (parseInt(tooltips._groups[0][0].id) == dataIds[k]) {
-            tooltiphtml.style("display", "block");
-            console.log(tooltips._groups[0][0].id, dataIds);
-
-        } else {
-            tooltiphtml.style("display", "none");
-            console.log(tooltiphtml);
-        }
-    }
-}
-//position tooltip to the drone
-function positionTooltipSvg(d, tooltip) {
-    tooltip.style("transform", function () {
-        let droneLL = [
-            d.domain.coordinate.latitude,
-            d.domain.coordinate.longitude
+    tooltiphtml = tooltipDiv.html(`${tooltipString}`).style("display", "block")
+    tooltipPane.style("display", "block")
+    tooltipDiv.style("transform", function () {
+        let droneLL;
+        droneLL = [
+            data.domain.coordinate.latitude,
+            data.domain.coordinate.longitude
         ];
         return (
             "translate3d(" +
@@ -258,6 +225,8 @@ function positionTooltipSvg(d, tooltip) {
         )
     })
 }
+
+
 
 
 //Change line svg width with zoom

@@ -5,6 +5,12 @@ import * as marker from './marker.js';
 let map = L.map("map", {
     zoomAnimation: false
 }).setView([47.529349, 19.032751], 11);
+//create tooltip div
+let tooltipPane = d3.select(map.getPanes().tooltipPane)
+tooltipPane
+    .style("z-index", 10000)
+    .style("display", "none")
+    .html(`<div class="tooltip"></div>`)
 
 // if zoom repositioning svg
 map.on("zoom", function () {
