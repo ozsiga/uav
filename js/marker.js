@@ -28,6 +28,7 @@ function getMarkerData() {
             }
             if (removeNecessary && tooltiphtml) {
                 tooltiphtml.style("display", "none");
+
                 let mrPath = d3.selectAll(".path")
                 for (let i = 0; i < mrPath._groups[0].length; i++) {
                     let mrPathSvg = mrPath._groups[0][i];
