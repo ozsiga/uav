@@ -249,6 +249,7 @@ function changeMrSvgPathColorDynamically(data) {
         //console.log(mrPathSvg);
         for (let k = 0; k < detectorsInTooltip.length; k++) {
             if (detectorsInTooltip[k] == mrPathSvg.id) {
+                //d3.select(mrPathSvg).attr("class", "pulse");
                 d3.select(mrPathSvg).style("stroke", " blue");
                 break
             } else {
