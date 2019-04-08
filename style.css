@@ -5,7 +5,6 @@ body {
 html,
 body {
   height: 100%;
-
   overflow: hidden;
 }
 
@@ -41,37 +40,21 @@ body {
   border-radius: 5px;
 }
 
-#toggleSensorIcons {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
 
-#toggleMrSvg {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
+#toggleSensorIcons,
+#toggleMrSvg,
 #toggleUavPanel {
   width: 20px;
   height: 20px;
   cursor: pointer;
 }
 
-#label0 {
-  font-family: sans-serif;
-  display: inline;
-}
-
-#label1 {
-  font-family: sans-serif;
-  display: inline;
-}
-
+#label0,
+#label1,
 #label2 {
   font-family: sans-serif;
-  display: inline;
+  display: inline-block;
+  margin: 0;
 }
 
 .leaflet-top {
@@ -91,15 +74,14 @@ body {
 }
 
 #title {
+  width: 200px;
   font-family: sans-serif;
   text-decoration: underline;
-  width: 200px;
 }
 
 .uavData {
   width: 200px;
   font-family: sans-serif;
-  color: black;
   animation-name: blinking;
   animation-duration: 2s;
 }
@@ -112,6 +94,11 @@ body {
 .fadeOut {
   animation-name: fadeout;
   animation-duration: 1s;
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+  /* opacity: 0; */
 }
 
 @keyframes blinking {
@@ -145,5 +132,19 @@ body {
 
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background: #2f4f4f;
+  }
+
+  50% {
+    background: blue;
+  }
+
+  100% {
+    background: #2f4f4f;
   }
 }

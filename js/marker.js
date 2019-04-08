@@ -24,18 +24,17 @@ function getMarkerData() {
                     createTooltipValueandPosition(data[i]);
                     changeMrSvgPathColorDynamically(data[i])
                     removeNecessary = false;
-                    break
+                    break;
                 }
             }
             if (removeNecessary && tooltiphtml) {
                 tooltiphtml.style("display", "none");
-
-                let mrPath = d3.selectAll(".path")
+                let mrPath = d3.selectAll(".path");
                 for (let i = 0; i < mrPath._groups[0].length; i++) {
                     let mrPathSvg = mrPath._groups[0][i];
-                    d3.select(mrPathSvg).style("stroke", "#2f4f4f");
+                    //d3.select(mrPathSvg).style("stroke", "#2f4f4f");
                 }
-                showTooltip = undefined
+                showTooltip = undefined;
             }
 
 
@@ -103,24 +102,25 @@ function makeMarkerandLineSvg(input) {
         .style("z-index", 1000);
     newCircleGroup
         .on("click", function (d) {
-            createTooltipValueandPosition(d)
+            createTooltipValueandPosition(d);
 
-            let detectorsInTooltip = d.detectors
-            let mrPath = d3.selectAll(".path")
+            let detectorsInTooltip = d.detectors;
+            let mrPath = d3.selectAll(".path");
             for (let i = 0; i < mrPath._groups[0].length; i++) {
                 let mrPathSvg = mrPath._groups[0][i];
                 for (let k = 0; k < detectorsInTooltip.length; k++) {
                     if (detectorsInTooltip[k] == mrPathSvg.id) {
-                        d3.select(mrPathSvg).style("stroke", " blue");
+                        //d3.select(mrPathSvg).style("stroke", "blue");
+                        d3.select(mrPathSvg).classed("pulse", true);
+                        //document.getElementsByTagName('path').classList.add('pulse')
                         break;
-                    } else {
-                        d3.select(mrPathSvg).style("stroke", "#2f4f4f");
                     }
                 }
                 d3.event.stopImmediatePropagation();
             }
         })
-        .append("text").attr("class", "markerText")
+        .append("text")
+        .attr("class", "markerText")
         .attr("x", 16)
         .attr("y", 42);
 
@@ -226,8 +226,7 @@ function createTooltipValueandPosition(data) {
     tooltiphtml = tooltipDiv.html(`${tooltipString}`).style("display", "block")
     tooltipPane.style("display", "block")
     tooltipDiv.style("transform", function () {
-        let droneLL;
-        droneLL = [
+        let droneLL = [
             data.domain.coordinate.latitude,
             data.domain.coordinate.longitude
         ];
