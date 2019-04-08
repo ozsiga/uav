@@ -106,7 +106,7 @@ function makeMarkerandLineSvg(input) {
     let mapDiv = d3.select('#map');
     mapDiv.on("click", function () {
         showTooltip = undefined;
-        if (tooltip == undefined) {
+        if (tooltip == undefined && tooltiphtml !== undefined) {
             tooltiphtml._groups[0][0].classList.remove("fadeIn")
             tooltiphtml._groups[0][0].classList.add("fadeOut")
             setTimeout(() => {
@@ -337,7 +337,6 @@ function makeTooltip(input) {
                 setTimeout(() => {
                     tooltiphtml.style("display", "none");
                 }, 200);
-                debugger
             } else {
                 tooltiphtml._groups[0][0].classList.add("fadeOut");
 
