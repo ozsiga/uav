@@ -29,11 +29,6 @@ function getMarkerData() {
             }
             if (removeNecessary && tooltiphtml) {
                 tooltiphtml.style("display", "none");
-                let mrPath = d3.selectAll(".path");
-                for (let i = 0; i < mrPath._groups[0].length; i++) {
-                    let mrPathSvg = mrPath._groups[0][i];
-                    //d3.select(mrPathSvg).style("stroke", "#2f4f4f");
-                }
                 showTooltip = undefined;
             }
 
@@ -110,11 +105,7 @@ function makeMarkerandLineSvg(input) {
                 let mrPathSvg = mrPath._groups[0][i];
                 for (let k = 0; k < detectorsInTooltip.length; k++) {
                     if (detectorsInTooltip[k] == mrPathSvg.id) {
-                        //d3.select(mrPathSvg).style("stroke", "blue");
                         d3.select(mrPathSvg).attr("styleClass", "pulse");
-                        //d3.select(mrPathSvg).classed("pulse", true);
-                        //debugger
-                        //document.getElementsByTagName('path').classList.add('pulse')
                         break;
                     }
                 }
@@ -135,6 +126,7 @@ function makeMarkerandLineSvg(input) {
         let mrPath = d3.selectAll(".path");
         for (let i = 0; i < mrPath._groups[0].length; i++) {
             let mrPathSvg = mrPath._groups[0][i];
+            d3.select(mrPathSvg).attr("styleClass", "pulse").remove();
             d3.select(mrPathSvg).style("stroke", "#2f4f4f");
         }
     });
@@ -250,11 +242,9 @@ function changeMrSvgPathColorDynamically(data) {
         for (let k = 0; k < detectorsInTooltip.length; k++) {
             if (detectorsInTooltip[k] == mrPathSvg.id) {
                 d3.select(mrPathSvg).attr("styleClass", "pulse");
-                //d3.select(mrPathSvg).style("stroke", " blue");
-                //d3.select(mrPathSvg).classed("pulse", true);
                 break
             } else {
-                d3.select(mrPathSvg).style("stroke", "#2f4f4f");
+                d3.select(mrPathSvg).attr("styleClass", null);
             }
         }
     }
