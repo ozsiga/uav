@@ -62,7 +62,6 @@ function makeSensorIconSvg(input) {
     .attr("height", 50);
   circle
     .append("circle")
-    .attr("class", "sensorCircle")
     .attr("class", "fadeIn")
     .attr("cx", 25)
     .attr("cy", 25)

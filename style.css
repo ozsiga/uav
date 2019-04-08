@@ -83,7 +83,12 @@ body {
   width: 200px;
   font-family: sans-serif;
   animation-name: blinking;
-  animation-duration: 2s;
+  animation-duration: 3s;
+}
+
+.uavData p:hover {
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .fadeIn {
