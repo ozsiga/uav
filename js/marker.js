@@ -18,35 +18,7 @@ function getMarkerData() {
         .then(data => {
             makeMarkerandLineSvg(data);
             makeSidebarData(data);
-            let removeNecessary = true;
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].id == showTooltip) {
-                    createTooltipValueandPosition(data[i]);
-                    changeMrSvgPathColorDynamically(data[i])
-                    removeNecessary = false;
-                    break;
-                }
-            }
-            if (removeNecessary && tooltiphtml) {
-                let mrPath = d3.selectAll(".path")
-                for (let i = 0; i < mrPath._groups[0].length; i++) {
-                    let mrPathSvg = mrPath._groups[0][i];
-                    d3.select(mrPathSvg).attr("styleClass", null);
-                    if (tooltiphtml._groups[0][0].classList.contains("fadeIn")) {
-                        tooltiphtml._groups[0][0].classList.remove("fadeIn")
-                        setTimeout(() => {
-                            tooltiphtml.style("display", "none");
-                        }, 200);
-                        debugger
-                    } else {
-                        tooltiphtml._groups[0][0].classList.add("fadeOut")
-
-                    }
-                }
-                showTooltip = undefined;
-            }
-
-
+            makeTooltip(data);
         })
         .catch(err => console.log(err));
 }
@@ -342,6 +314,36 @@ function makeSidebarData(input) {
                 Magasság: ${Math.round(d.domain.height)} m <br>
                 Típus: ${type}`;
     });
+}
+
+function makeTooltip(input) {
+    let removeNecessary = true;
+    for (let i = 0; i < input.length; i++) {
+        if (input[i].id == showTooltip) {
+            createTooltipValueandPosition(input[i]);
+            changeMrSvgPathColorDynamically(input[i])
+            removeNecessary = false;
+            break;
+        }
+    }
+    if (removeNecessary && tooltiphtml) {
+        let mrPath = d3.selectAll(".path");
+        for (let i = 0; i < mrPath._groups[0].length; i++) {
+            let mrPathSvg = mrPath._groups[0][i];
+            d3.select(mrPathSvg).attr("styleClass", null);
+            if (tooltiphtml._groups[0][0].classList.contains("fadeIn")) {
+                tooltiphtml._groups[0][0].classList.remove("fadeIn");
+                setTimeout(() => {
+                    tooltiphtml.style("display", "none");
+                }, 200);
+                debugger
+            } else {
+                tooltiphtml._groups[0][0].classList.add("fadeOut");
+
+            }
+        }
+        showTooltip = undefined;
+    }
 }
 
 export {
