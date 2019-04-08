@@ -63,6 +63,7 @@ function makeSensorIconSvg(input) {
   circle
     .append("circle")
     .attr("class", "sensorCircle")
+    .attr("class", "fadeIn")
     .attr("cx", 25)
     .attr("cy", 25)
     .attr("r", 6)
@@ -81,7 +82,6 @@ function makeSensorIconSvg(input) {
 //Create all sensor measure range svg
 function makeSensorMeasureRangeSvg(sensorData, n) {
   let svgContainer = d3.select(map.getPanes().overlayPane);
-  let checkbox = document.getElementById("toggleMrSvg");
   let svg = svgContainer.selectAll("svg").data(sensorData, d => {
     return d.id;
   });
@@ -104,9 +104,6 @@ function makeSensorMeasureRangeSvg(sensorData, n) {
       return (2 * rMax) / superScale;
     })
     .attr("class", "mrSvg");
-  if (checkbox.checked === false) {
-    svg.style("display", "none");
-  }
 
   svg.each(function (d, i) {
     let path = d3
@@ -121,9 +118,9 @@ function makeSensorMeasureRangeSvg(sensorData, n) {
       .attr("id", d.id)
       .attr("fill", "none")
       .style("stroke", function () {
-        var oldStroke = path.style("stroke");
+        let oldStroke = path.style("stroke");
         if (oldStroke === "none") {
-          oldStroke = "#2f4f4f"
+          oldStroke = "#2f4f4f";
         }
         return oldStroke;
       })
@@ -213,9 +210,6 @@ function positionSvgContainer() {
     zoomLevel = map.getZoom();
 
     let svgContainer = d3.select(map.getPanes().overlayPane).selectAll("svg");
-    // d3.selectAll(".leaflet-map-pane")
-    //   .style("transform")
-    //   .split(",");
 
     svgContainer.style("transform", function (d) {
       let width = d3.select(this).attr("width");
