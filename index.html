@@ -48,8 +48,10 @@
     for (let i = 0; i < mrSvg.length; i++) {
       if (checkBox.checked) {
         mrSvg[i].style.display = "block";
+        //mrSvg[i].attr("styleClass", "visible");
       } else {
         mrSvg[i].style.display = "none";
+        //mrSvg[i].attr("styleClass", "visible");
       }
     }
   }
@@ -74,7 +76,7 @@
     if (uavPanel.classList.contains('fadeOut')) {
       setTimeout(() => {
         uavPanel.style.display = 'none';
-      }, 1000);
+      }, 500);
     } else if (uavPanel.classList.contains('fadeIn')) {
       uavPanel.style.display = 'block';
     }

@@ -32,12 +32,18 @@ function getMarkerData() {
                 for (let i = 0; i < mrPath._groups[0].length; i++) {
                     let mrPathSvg = mrPath._groups[0][i];
                     d3.select(mrPathSvg).attr("styleClass", null);
+                    if (tooltiphtml._groups[0][0].classList.contains("fadeIn")) {
+                        tooltiphtml._groups[0][0].classList.remove("fadeIn")
+                        setTimeout(() => {
+                            tooltiphtml.style("display", "none");
+                        }, 200);
+                        debugger
+                    } else {
+                        tooltiphtml._groups[0][0].classList.add("fadeOut")
+
+                    }
                 }
-                tooltiphtml._groups[0][0].classList.remove("fadeIn")
-                tooltiphtml._groups[0][0].classList.add("fadeOut")
-                setTimeout(() => {
-                    tooltiphtml.style("display", "none");
-                }, 1000);
+
                 showTooltip = undefined;
             }
 
@@ -135,7 +141,7 @@ function makeMarkerandLineSvg(input) {
             tooltiphtml._groups[0][0].classList.add("fadeOut")
             setTimeout(() => {
                 tooltiphtml.style("display", "none");
-            }, 1000);
+            }, 200);
         }
         let mrPath = d3.selectAll(".path");
         for (let i = 0; i < mrPath._groups[0].length; i++) {
@@ -228,10 +234,17 @@ function positionLineSvg() {
 
 function createTooltipValueandPosition(data) {
     let tooltipPane = d3.select(map.getPanes().tooltipPane)
-    let tooltipDiv = d3.select('.tooltip').attr('class', 'fadeIn tooltip');
+    let tooltipDiv = d3.select('.tooltip')
+    if (tooltipDiv.classed('fadeOut')) {
+        tooltipDiv.classed('fadeOut', false);
+        tooltipDiv.classed('fadeIn', true);
+    } else {
+        tooltipDiv.classed('fadeIn', true);
+    }
     showTooltip = data.id
     var tooltipString = `id: ${data.id} <br> detector(s) : ${data.detectors}`;
-    tooltiphtml = tooltipDiv.html(`${tooltipString}`).style("display", "block")
+    tooltiphtml = tooltipDiv.html(`${tooltipString}`)
+    tooltiphtml.style("display", "block")
     tooltipPane.style("display", "block")
     tooltipDiv.style("transform", function () {
         let droneLL = [
