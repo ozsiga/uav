@@ -201,7 +201,7 @@ function positionLineSvg() {
     }
 }
 
-
+// Create tooltip value for the existing tooltip div and position to drone
 function createTooltipValueandPosition(data) {
     let tooltipPane = d3.select(map.getPanes().tooltipPane)
     let tooltipDiv = d3.select('.tooltip')
@@ -230,7 +230,7 @@ function createTooltipValueandPosition(data) {
         )
     })
 }
-
+// Measure range svg color change in fetch
 function changeMrSvgPathColorDynamically(data) {
     let detectorsInTooltip = data.detectors
     let mrPath = d3.selectAll(".path")
