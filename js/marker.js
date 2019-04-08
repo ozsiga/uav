@@ -28,7 +28,14 @@ function getMarkerData() {
                 }
             }
             if (removeNecessary && tooltiphtml) {
+                let mrPath = d3.selectAll(".path")
+                for (let i = 0; i < mrPath._groups[0].length; i++) {
+                    let mrPathSvg = mrPath._groups[0][i];
+                    d3.select(mrPathSvg).attr("styleClass", null);
+                }
                 tooltiphtml.style("display", "none");
+                d3.select('.tooltip').class('fadeIn').remove();
+                d3.select('.tooltip').classed('fadeOut', true);
                 showTooltip = undefined;
             }
 
@@ -121,12 +128,14 @@ function makeMarkerandLineSvg(input) {
     mapDiv.on("click", function () {
         showTooltip = undefined;
         if (tooltip !== undefined) {
+            d3.select('.tooltip').classed('fadeIn', false);
+            d3.select('.tooltip').classed('fadeOut', true);
             tooltiphtml.style("display", "none");
         }
         let mrPath = d3.selectAll(".path");
         for (let i = 0; i < mrPath._groups[0].length; i++) {
             let mrPathSvg = mrPath._groups[0][i];
-            d3.select(mrPathSvg).attr("styleClass", "pulse").remove();
+            d3.select(mrPathSvg).attr("styleClass", null);
             d3.select(mrPathSvg).style("stroke", "#2f4f4f");
         }
     });
