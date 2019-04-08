@@ -111,7 +111,9 @@ function makeMarkerandLineSvg(input) {
                 for (let k = 0; k < detectorsInTooltip.length; k++) {
                     if (detectorsInTooltip[k] == mrPathSvg.id) {
                         //d3.select(mrPathSvg).style("stroke", "blue");
-                        d3.select(mrPathSvg).classed("pulse", true);
+                        d3.select(mrPathSvg).attr("styleClass", "pulse");
+                        //d3.select(mrPathSvg).classed("pulse", true);
+                        //debugger
                         //document.getElementsByTagName('path').classList.add('pulse')
                         break;
                     }
@@ -245,11 +247,11 @@ function changeMrSvgPathColorDynamically(data) {
     let mrPath = d3.selectAll(".path")
     for (let i = 0; i < mrPath._groups[0].length; i++) {
         let mrPathSvg = mrPath._groups[0][i];
-        //console.log(mrPathSvg);
         for (let k = 0; k < detectorsInTooltip.length; k++) {
             if (detectorsInTooltip[k] == mrPathSvg.id) {
-                //d3.select(mrPathSvg).attr("class", "pulse");
-                d3.select(mrPathSvg).style("stroke", " blue");
+                d3.select(mrPathSvg).attr("styleClass", "pulse");
+                //d3.select(mrPathSvg).style("stroke", " blue");
+                //d3.select(mrPathSvg).classed("pulse", true);
                 break
             } else {
                 d3.select(mrPathSvg).style("stroke", "#2f4f4f");

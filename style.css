@@ -96,7 +96,7 @@ body {
   animation-duration: 1s;
 }
 
-.pulse {
+[styleClass=pulse] {
   animation: pulse 1.5s infinite;
   /* opacity: 0; */
 }
@@ -137,14 +137,14 @@ body {
 
 @keyframes pulse {
   0% {
-    background: #2f4f4f;
+    stroke: #2f4f4f;
   }
 
   50% {
-    background: blue;
+    stroke: blue;
   }
 
   100% {
-    background: #2f4f4f;
+    stroke: #2f4f4f;
   }
 }
