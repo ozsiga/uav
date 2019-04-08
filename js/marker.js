@@ -316,6 +316,7 @@ function makeSidebarData(input) {
     });
 }
 
+//Create tooltip on drone click
 function makeTooltip(input) {
     let removeNecessary = true;
     for (let i = 0; i < input.length; i++) {
