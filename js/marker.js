@@ -129,7 +129,6 @@ function makeMarkerandLineSvg(input) {
     let mapDiv = d3.select('#map');
     mapDiv.on("click", function () {
         showTooltip = undefined;
-<<<<<<< HEAD
         if (tooltip == undefined) {
             console.log(tooltiphtml);
             tooltiphtml._groups[0][0].classList.remove("fadeIn")
@@ -137,13 +136,6 @@ function makeMarkerandLineSvg(input) {
             setTimeout(() => {
                 tooltiphtml.style("display", "none");
             }, 1000);
-=======
-        let tooltipDiv = d3.select('.tooltip');
-        if (tooltip !== undefined) {
-            d3.select('.tooltip').classed('fadeIn', false);
-            d3.select('.tooltip').classed('fadeOut', true);
-            tooltiphtml.style("display", "none");
->>>>>>> 415783330e07ae2c4a6b1b65fd884a1f89fc9c93
         }
         let mrPath = d3.selectAll(".path");
         for (let i = 0; i < mrPath._groups[0].length; i++) {
