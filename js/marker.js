@@ -22,6 +22,7 @@ function getMarkerData() {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].id == showTooltip) {
                     createTooltipValueandPosition(data[i]);
+                    changeMrSvgPathColorDynamically(data[i])
                     removeNecessary = false;
                     break;
                 }
@@ -237,6 +238,23 @@ function createTooltipValueandPosition(data) {
             "px, 0px)"
         )
     })
+}
+
+function changeMrSvgPathColorDynamically(data) {
+    let detectorsInTooltip = data.detectors
+    let mrPath = d3.selectAll(".path")
+    for (let i = 0; i < mrPath._groups[0].length; i++) {
+        let mrPathSvg = mrPath._groups[0][i];
+        //console.log(mrPathSvg);
+        for (let k = 0; k < detectorsInTooltip.length; k++) {
+            if (detectorsInTooltip[k] == mrPathSvg.id) {
+                d3.select(mrPathSvg).style("stroke", " blue");
+                break
+            } else {
+                d3.select(mrPathSvg).style("stroke", "#2f4f4f");
+            }
+        }
+    }
 }
 
 //Change line svg width with zoom
