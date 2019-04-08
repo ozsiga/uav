@@ -98,7 +98,6 @@ body {
 
 [styleClass=pulse] {
   animation: pulse 1.5s infinite;
-  /* opacity: 0; */
 }
 
 @keyframes blinking {
