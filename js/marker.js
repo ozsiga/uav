@@ -33,9 +33,11 @@ function getMarkerData() {
                     let mrPathSvg = mrPath._groups[0][i];
                     d3.select(mrPathSvg).attr("styleClass", null);
                 }
-                tooltiphtml.style("display", "none");
-                d3.select('.tooltip').class('fadeIn').remove();
-                d3.select('.tooltip').classed('fadeOut', true);
+                tooltiphtml._groups[0][0].classList.remove("fadeIn")
+                tooltiphtml._groups[0][0].classList.add("fadeOut")
+                setTimeout(() => {
+                    tooltiphtml.style("display", "none");
+                }, 1000);
                 showTooltip = undefined;
             }
 
@@ -127,10 +129,13 @@ function makeMarkerandLineSvg(input) {
     let mapDiv = d3.select('#map');
     mapDiv.on("click", function () {
         showTooltip = undefined;
-        if (tooltip !== undefined) {
-            d3.select('.tooltip').classed('fadeIn', false);
-            d3.select('.tooltip').classed('fadeOut', true);
-            tooltiphtml.style("display", "none");
+        if (tooltip == undefined) {
+            console.log(tooltiphtml);
+            tooltiphtml._groups[0][0].classList.remove("fadeIn")
+            tooltiphtml._groups[0][0].classList.add("fadeOut")
+            setTimeout(() => {
+                tooltiphtml.style("display", "none");
+            }, 1000);
         }
         let mrPath = d3.selectAll(".path");
         for (let i = 0; i < mrPath._groups[0].length; i++) {
@@ -223,7 +228,7 @@ function positionLineSvg() {
 
 function createTooltipValueandPosition(data) {
     let tooltipPane = d3.select(map.getPanes().tooltipPane)
-    let tooltipDiv = d3.select('.tooltip').classed('fadeIn', true);
+    let tooltipDiv = d3.select('.tooltip').attr('class', 'fadeIn tooltip');
     showTooltip = data.id
     var tooltipString = `id: ${data.id} <br> detector(s) : ${data.detectors}`;
     tooltiphtml = tooltipDiv.html(`${tooltipString}`).style("display", "block")
