@@ -28,7 +28,14 @@ function getMarkerData() {
                 }
             }
             if (removeNecessary && tooltiphtml) {
+                let mrPath = d3.selectAll(".path")
+                for (let i = 0; i < mrPath._groups[0].length; i++) {
+                    let mrPathSvg = mrPath._groups[0][i];
+                    d3.select(mrPathSvg).attr("styleClass", null);
+                }
                 tooltiphtml.style("display", "none");
+                d3.select('.tooltip').class('fadeIn').remove();
+                d3.select('.tooltip').classed('fadeOut', true);
                 showTooltip = undefined;
             }
 
@@ -122,12 +129,9 @@ function makeMarkerandLineSvg(input) {
         showTooltip = undefined;
         let tooltipDiv = d3.select('.tooltip');
         if (tooltip !== undefined) {
-            //tooltipDiv.attr('class', 'fadeIn').remove();
-            tooltipDiv.classed('fadeIn', !tooltipDiv.classed('fadeIn'));
-            tooltipDiv.classed('fadeOut', true);
-            setTimeout(() => {
-                tooltiphtml.style("display", "none");
-            }, 1000);
+            d3.select('.tooltip').classed('fadeIn', false);
+            d3.select('.tooltip').classed('fadeOut', true);
+            tooltiphtml.style("display", "none");
         }
         let mrPath = d3.selectAll(".path");
         for (let i = 0; i < mrPath._groups[0].length; i++) {
