@@ -107,8 +107,8 @@ function makeMarkerandLineSvg(input) {
     mapDiv.on("click", function () {
         showTooltip = undefined;
         if (tooltip == undefined && tooltiphtml !== undefined) {
-            tooltiphtml._groups[0][0].classList.remove("fadeIn")
-            tooltiphtml._groups[0][0].classList.add("fadeOut")
+            tooltiphtml._groups[0][0].classList.remove("fadeIn");
+            tooltiphtml._groups[0][0].classList.add("fadeOut");
             setTimeout(() => {
                 tooltiphtml.style("display", "none");
             }, 200);
@@ -204,7 +204,7 @@ function positionLineSvg() {
 // Create tooltip value for the existing tooltip div and position to drone
 function createTooltipValueandPosition(data) {
     let tooltipPane = d3.select(map.getPanes().tooltipPane)
-    let tooltipDiv = d3.select('.tooltip')
+    let tooltipDiv = d3.select('.tooltip');
     if (tooltipDiv.classed('fadeOut')) {
         tooltipDiv.classed('fadeOut', false);
         tooltipDiv.classed('fadeIn', true);
@@ -213,9 +213,9 @@ function createTooltipValueandPosition(data) {
     }
     showTooltip = data.id
     var tooltipString = `id: ${data.id} <br> detector(s) : ${data.detectors}`;
-    tooltiphtml = tooltipDiv.html(`${tooltipString}`)
-    tooltiphtml.style("display", "block")
-    tooltipPane.style("display", "block")
+    tooltiphtml = tooltipDiv.html(`${tooltipString}`);
+    tooltiphtml.style("display", "block");
+    tooltipPane.style("display", "block");
     tooltipDiv.style("transform", function () {
         let droneLL = [
             data.domain.coordinate.latitude,
@@ -339,7 +339,6 @@ function makeTooltip(input) {
                 }, 200);
             } else {
                 tooltiphtml._groups[0][0].classList.add("fadeOut");
-
             }
         }
         showTooltip = undefined;

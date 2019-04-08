@@ -40,7 +40,6 @@ body {
   border-radius: 5px;
 }
 
-
 #toggleSensorIcons,
 #toggleMrSvg,
 #toggleUavPanel {
@@ -81,6 +80,8 @@ body {
 
 .uavData p {
   width: 200px;
+  margin: 6px 0;
+  padding: 10px 0;
   font-family: sans-serif;
   animation-name: blinking;
   animation-duration: 3s;
@@ -103,10 +104,6 @@ body {
 
 [styleClass=pulse] {
   animation: pulse 1.5s infinite;
-}
-
-[styleClass=visible] {
-  animation: visible 5s;
 }
 
 @keyframes blinking {
@@ -154,15 +151,5 @@ body {
 
   100% {
     stroke: #2f4f4f;
-  }
-}
-
-@keyframes visible {
-  0% {
-    visibility: hidden;
-  }
-
-  100% {
-    visibility: visible;
   }
 }
