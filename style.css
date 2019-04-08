@@ -63,8 +63,8 @@ body {
 
 #uav-panel {
   background: rgba(255, 255, 255, 0.7);
-  margin: 20px;
-  height: 94%;
+  margin: 11px;
+  height: 96%;
   width: 200px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
@@ -98,7 +98,6 @@ body {
 
 [styleClass=pulse] {
   animation: pulse 1.5s infinite;
-  /* opacity: 0; */
 }
 
 @keyframes blinking {
