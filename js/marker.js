@@ -122,6 +122,7 @@ function makeMarkerandLineSvg(input) {
         .append("text").attr("class", "markerText")
         .attr("x", 16)
         .attr("y", 42);
+
     let mapDiv = d3.select('#map');
     mapDiv.on("click", function () {
         showTooltip = undefined;
@@ -218,7 +219,7 @@ function positionLineSvg() {
 
 function createTooltipValueandPosition(data) {
     let tooltipPane = d3.select(map.getPanes().tooltipPane)
-    let tooltipDiv = d3.select('.tooltip')
+    let tooltipDiv = d3.select('.tooltip').classed('fadeIn', true);
     showTooltip = data.id
     var tooltipString = `id: ${data.id} <br> detector(s) : ${data.detectors}`;
     tooltiphtml = tooltipDiv.html(`${tooltipString}`).style("display", "block")
@@ -237,9 +238,7 @@ function createTooltipValueandPosition(data) {
             "px, 0px)"
         )
     })
-
 }
-
 
 //Change line svg width with zoom
 function setLinezoomWidth() {
