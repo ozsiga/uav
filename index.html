@@ -55,12 +55,18 @@
   }
 
   function toggleSensorIcons() {
-    let sensorIcons = document.getElementsByClassName('iconSvg');
+    let sensorIcons = document.getElementsByClassName('sensor');
+
     for (let i = 0; i < sensorIcons.length; i++) {
-      if (checkBox1.checked) {
-        sensorIcons[i].style.display = "block";
-      } else {
-        sensorIcons[i].style.display = "none";
+      sensorIcons[i].classList.toggle('fadeIn');
+      sensorIcons[i].classList.toggle('fadeOut');
+
+      if (sensorIcons[i].classList.contains('fadeOut')) {
+        setTimeout(() => {
+          sensorIcons[i].style.display = 'none';
+        }, 500);
+      } else if (sensorIcons[i].classList.contains('fadeIn')) {
+        sensorIcons[i].style.display = 'block';
       }
     }
   }

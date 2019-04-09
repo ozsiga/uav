@@ -211,8 +211,8 @@ function createTooltipValueandPosition(data) {
     } else {
         tooltipDiv.classed('fadeIn', true);
     }
-    showTooltip = data.id
-    var tooltipString = `id: ${data.id} <br> detector(s) : ${data.detectors}`;
+    showTooltip = data.id;
+    let tooltipString = `id: ${data.id} <br> detector(s): ${data.detectors}`;
     tooltiphtml = tooltipDiv.html(`${tooltipString}`);
     tooltiphtml.style("display", "block");
     tooltipPane.style("display", "block");
@@ -230,16 +230,17 @@ function createTooltipValueandPosition(data) {
         )
     })
 }
+
 // Measure range svg color change in fetch
 function changeMrSvgPathColorDynamically(data) {
-    let detectorsInTooltip = data.detectors
-    let mrPath = d3.selectAll(".path")
+    let detectorsInTooltip = data.detectors;
+    let mrPath = d3.selectAll(".path");
     for (let i = 0; i < mrPath._groups[0].length; i++) {
         let mrPathSvg = mrPath._groups[0][i];
         for (let k = 0; k < detectorsInTooltip.length; k++) {
             if (detectorsInTooltip[k] == mrPathSvg.id) {
                 d3.select(mrPathSvg).attr("styleClass", "pulse");
-                break
+                break;
             } else {
                 d3.select(mrPathSvg).attr("styleClass", null);
             }
