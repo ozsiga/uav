@@ -101,7 +101,8 @@ function makeSensorMeasureRangeSvg(sensorData, n) {
     .attr("width", function (d) {
       let rMax = d.domain.r.max1 * Math.cos(d.domain.theta.min0);
       return (2 * rMax) / superScale;
-    });
+    })
+    .attr("class", "mrSvg");
 
   svg.each(function (d, i) {
     let path = d3

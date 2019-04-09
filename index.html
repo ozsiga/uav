@@ -44,20 +44,18 @@
   let checkBox2 = document.getElementById("toggleUavPanel");
 
   function toggleMrSvg() {
-    let mrSvg = document.getElementsByClassName('mrSvg')
+    let mrSvg = document.getElementsByClassName('mrSvg');
     for (let i = 0; i < mrSvg.length; i++) {
       if (checkBox.checked) {
         mrSvg[i].style.display = "block";
-        //mrSvg[i].attr("styleClass", "visible");
       } else {
         mrSvg[i].style.display = "none";
-        //mrSvg[i].attr("styleClass", "visible");
       }
     }
   }
 
   function toggleSensorIcons() {
-    let sensorIcons = document.getElementsByClassName('iconSvg')
+    let sensorIcons = document.getElementsByClassName('iconSvg');
     for (let i = 0; i < sensorIcons.length; i++) {
       if (checkBox1.checked) {
         sensorIcons[i].style.display = "block";
