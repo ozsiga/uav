@@ -44,12 +44,14 @@
   let checkBox2 = document.getElementById("toggleUavPanel");
 
   function toggleMrSvg() {
-    let mrSvg = document.getElementsByClassName('mrSvg');
+    let mrSvg = document.getElementsByClassName('path');
+
     for (let i = 0; i < mrSvg.length; i++) {
       if (checkBox.checked) {
-        mrSvg[i].style.display = "block";
+        mrSvg[i].style.opacity = 0.033;
       } else {
-        mrSvg[i].style.display = "none";
+        mrSvg[i].style.opacity = 0;
+        mrSvg[i].style.transition = "opacity 0.3s linear";
       }
     }
   }
