@@ -15,9 +15,8 @@ function getSensorData() {
     })
     .then(data => {
       let sensorData = data.sensors;
-      for (let i = 0; i < sensorData.length; i++) {
-        normalizeDomain(sensorData[i].domain);
-      }
+      sensorData.forEach(x => normalizeDomain(x.domain));
+
       makeSensorIconSvg(sensorData);
       makeSensorMeasureRangeSvg(sensorData, sensorLayers);
     })
@@ -62,7 +61,7 @@ function makeSensorIconSvg(input) {
     .attr("height", 50);
   circle
     .append("circle")
-    .attr("class", "fadeIn")
+    .attr("class", "fadeIn sensor")
     .attr("cx", 25)
     .attr("cy", 25)
     .attr("r", 6)
@@ -102,8 +101,7 @@ function makeSensorMeasureRangeSvg(sensorData, n) {
       let rMax = d.domain.r.max1 * Math.cos(d.domain.theta.min0);
       return (2 * rMax) / superScale;
     })
-    .attr("styleClass", "visible")
-    .attr("class", "mrSvg")
+    .attr("class", "mrSvg");
 
   svg.each(function (d, i) {
     let path = d3
