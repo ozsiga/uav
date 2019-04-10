@@ -306,7 +306,7 @@ function makeTooltip(input) {
     for (let i = 0; i < input.length; i++) {
         if (input[i].id == showTooltip) {
             createTooltipValueandPosition(input[i]);
-            changeMrSvgPathColorDynamically(input[i])
+            changeMrSvgPathColorDynamically(input[i]);
             removeNecessary = false;
             break;
         }
