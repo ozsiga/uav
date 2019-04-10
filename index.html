@@ -20,48 +20,42 @@
   <div id="control-panel" class="leaflet-top leaflet-left">
     <div>
       <input type="checkbox" id="toggleSensorIcons" class="checkbox"
-        onclick="toggleAllSvg('#toggleSensorIcons', '.sensor', 1)" checked>
+        onclick="toggleAllSvg('toggleSensorIcons', '.sensor', 1)" checked>
       <p id="label0">Szenzor ikonok</p>
     </div>
     <div>
-      <input type="checkbox" id="toggleMrSvg" class="checkbox"
-        onclick="toggleAllSvg('#toggleSensorIcons', '.path', 0.033)" checked>
+      <input type="checkbox" id="toggleMrSvg" class="checkbox" onclick="toggleAllSvg('toggleMrSvg', '.path', 0.033)"
+        checked>
       <p id="label1">Szenzor érzékelési tartományok</p>
     </div>
     <div>
       <input type="checkbox" id="toggleUavPanel" class="checkbox"
-        onclick="toggleAllSvg('#toggleUavPanel','#uav-panel', 1)" checked>
+        onclick="toggleAllSvg('toggleUavPanel','#uav-panel', 1)" checked>
       <p id="label2">UAV adatok</p>
     </div>
   </div>
 
-  <div id="uav-panel" class="leaflet-top leaflet-right fadeIn">
+  <div id="uav-panel" class="leaflet-top leaflet-right">
     <p id="title">UAV adatok</p>
     <div class="uavData"></div>
   </div>
 </body>
 
 <script>
-  console.time(func)
-  for (let i = 0; i < 10000000; i++) {
-    toggleAllSvg('#toggleSensorIcons', '.sensor', 1)
-  }
-  console.timeEnd(func)
-
   function toggleAllSvg(checkbox, selector, opacity) {
-
-    if (checkbox.checked) {
+    let cb = document.getElementById(checkbox)
+    if (cb.checked) {
       d3.selectAll(selector)
         .transition()
         .duration(300)
         .ease(d3.easeLinear)
-        .style('opacity', 0.033);
+        .style('opacity', opacity);
     } else {
-      d3.selectAll('.path')
+      d3.selectAll(selector)
         .transition()
         .duration(300)
         .ease(d3.easeLinear)
-        .style('opacity', opacity);
+        .style('opacity', 0);
     }
   }
 </script>
