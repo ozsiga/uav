@@ -106,7 +106,7 @@ function makeMarkerandLineSvg(input) {
     let mapDiv = d3.select('#map');
     mapDiv.on("click", function () {
         showTooltip = undefined;
-        if (tooltip == undefined) {
+        if (tooltip == undefined && tooltiphtml !== undefined) {
             tooltiphtml._groups[0][0].classList.remove("fadeIn")
             tooltiphtml._groups[0][0].classList.add("fadeOut")
             setTimeout(() => {
@@ -250,24 +250,7 @@ function changeMrSvgPathColorDynamically(data) {
 //Change line svg width with zoom
 function setLinezoomWidth() {
     let strokeW = [
-        15,
-        8.5,
-        8,
-        7.5,
-        7,
-        6.5,
-        6,
-        5.5,
-        5,
-        4.5,
-        4,
-        3.5,
-        3,
-        4,
-        2,
-        1.9,
-        1.8,
-        1.1
+        15, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 4, 2, 1.9, 1.8, 1.1
     ];
     let zoom = map.getZoom();
     let width = strokeW[zoom - 1];
@@ -337,7 +320,6 @@ function makeTooltip(input) {
                 setTimeout(() => {
                     tooltiphtml.style("display", "none");
                 }, 200);
-                debugger
             } else {
                 tooltiphtml._groups[0][0].classList.add("fadeOut");
 
