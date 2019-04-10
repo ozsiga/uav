@@ -43,48 +43,96 @@
   let checkBox1 = document.getElementById("toggleSensorIcons");
   let checkBox2 = document.getElementById("toggleUavPanel");
 
-  function toggleMrSvg() {
-    let mrSvg = document.getElementsByClassName('path');
+  // console.time('toggleSensorIcons');
+  // for (let i = 0; i < 1000000; i++) {
+  //   toggleSensorIcons();
+  // }
+  // console.timeEnd('toggleSensorIcons');
 
-    for (let i = 0; i < mrSvg.length; i++) {
-      if (checkBox.checked) {
-        mrSvg[i].style.opacity = 0.033;
-      } else {
-        mrSvg[i].style.opacity = 0;
-        mrSvg[i].style.transition = "opacity 0.3s linear";
-      }
+  function toggleMrSvg() {
+    // let mrSvg = document.getElementsByClassName('path');
+
+    // for (let i = 0; i < mrSvg.length; i++) {
+    //   if (checkBox.checked) {
+    //     mrSvg[i].style.opacity = 0.033;
+    //   } else {
+    //     mrSvg[i].style.opacity = 0;
+    //     mrSvg[i].style.transition = "opacity 0.3s linear";
+    //   }
+    // }
+
+    if (checkBox.checked) {
+      d3.selectAll('.path')
+        .transition()
+        .duration(300)
+        .ease(d3.easeLinear)
+        .style('opacity', 0.033);
+    } else {
+      d3.selectAll('.path')
+        .transition()
+        .duration(300)
+        .ease(d3.easeLinear)
+        .style('opacity', 0);
     }
   }
 
   function toggleSensorIcons() {
-    let sensorIcons = document.getElementsByClassName('sensor');
+    // let sensorIcons = document.getElementsByClassName('sensor');
 
-    for (let i = 0; i < sensorIcons.length; i++) {
-      sensorIcons[i].classList.toggle('fadeIn');
-      sensorIcons[i].classList.toggle('fadeOut');
+    // for (let i = 0; i < sensorIcons.length; i++) {
+    //   sensorIcons[i].classList.toggle('fadeIn');
+    //   sensorIcons[i].classList.toggle('fadeOut');
 
-      if (sensorIcons[i].classList.contains('fadeOut')) {
-        setTimeout(() => {
-          sensorIcons[i].style.display = 'none';
-        }, 500);
-      } else if (sensorIcons[i].classList.contains('fadeIn')) {
-        sensorIcons[i].style.display = 'block';
-      }
+    //   if (sensorIcons[i].classList.contains('fadeOut')) {
+    //     setTimeout(() => {
+    //       sensorIcons[i].style.display = 'none';
+    //     }, 500);
+    //   } else if (sensorIcons[i].classList.contains('fadeIn')) {
+    //     sensorIcons[i].style.display = 'block';
+    //   }
+    // }
+
+    if (checkBox1.checked) {
+      d3.selectAll('.sensor')
+        .transition()
+        .duration(300)
+        .ease(d3.easeLinear)
+        .style('opacity', 1);
+    } else {
+      d3.selectAll('.sensor')
+        .transition()
+        .duration(300)
+        .ease(d3.easeLinear)
+        .style('opacity', 0);
     }
   }
 
   function toggleUavPanel() {
-    let uavPanel = document.querySelector('#uav-panel');
+    // let uavPanel = document.querySelector('#uav-panel');
 
-    uavPanel.classList.toggle('fadeIn');
-    uavPanel.classList.toggle('fadeOut');
+    // uavPanel.classList.toggle('fadeIn');
+    // uavPanel.classList.toggle('fadeOut');
 
-    if (uavPanel.classList.contains('fadeOut')) {
-      setTimeout(() => {
-        uavPanel.style.display = 'none';
-      }, 500);
-    } else if (uavPanel.classList.contains('fadeIn')) {
-      uavPanel.style.display = 'block';
+    // if (uavPanel.classList.contains('fadeOut')) {
+    //   setTimeout(() => {
+    //     uavPanel.style.display = 'none';
+    //   }, 500);
+    // } else if (uavPanel.classList.contains('fadeIn')) {
+    //   uavPanel.style.display = 'block';
+    // }
+
+    if (checkBox2.checked) {
+      d3.select('#uav-panel')
+        .transition()
+        .duration(300)
+        .ease(d3.easeLinear)
+        .style('opacity', 1);
+    } else {
+      d3.select('#uav-panel')
+        .transition()
+        .duration(300)
+        .ease(d3.easeLinear)
+        .style('opacity', 0);
     }
   }
 </script>
