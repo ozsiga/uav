@@ -1,3 +1,5 @@
+/* global d3 */
+
 import * as sensor from './sensor.js';
 import * as marker from './marker.js';
 
@@ -11,7 +13,7 @@ let tooltipPane = d3.select(map.getPanes().tooltipPane);
 tooltipPane
     .style("z-index", 10000)
     .style("display", "none")
-    .html(`<div class="tooltip"></div>`)
+    .html(`<div class="tooltip"></div>`);
 
 // if zoom repositioning svg
 map.on("zoom", function () {

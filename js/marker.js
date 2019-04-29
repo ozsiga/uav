@@ -1,3 +1,5 @@
+/* global d3, fetch */
+
 import {
     map
 } from "./script.js";
@@ -47,8 +49,8 @@ function makeMarkerandLineSvg(input) {
     newSvg.attr("customId", function (d) {
         return d.id;
     });
-    newSvg.style("width", 50);
-    newSvg.style("height", 50);
+    newSvg.style("width", "50px");
+    newSvg.style("height", "50px");
     newSvg.style("z-index", 1000);
     droneSvgContainer = newSvg.merge(droneSvgContainer);
     droneSvgContainer
@@ -65,8 +67,8 @@ function makeMarkerandLineSvg(input) {
                 "px, 0px)"
             );
         })
-        .style("margin-top", -25)
-        .style("margin-left", -25);
+        .style("margin-top", "-25px")
+        .style("margin-left", "-25px");
     let newCircleGroup = newSvg
         .append("g")
         .attr("class", "circle")
@@ -107,8 +109,8 @@ function makeMarkerandLineSvg(input) {
     mapDiv.on("click", function () {
         showTooltip = undefined;
         if (tooltip == undefined && tooltiphtml !== undefined) {
-            tooltiphtml._groups[0][0].classList.remove("fadeIn")
-            tooltiphtml._groups[0][0].classList.add("fadeOut")
+            tooltiphtml._groups[0][0].classList.remove("fadeIn");
+            tooltiphtml._groups[0][0].classList.add("fadeOut");
             setTimeout(() => {
                 tooltiphtml.style("display", "none");
             }, 200);
@@ -128,7 +130,7 @@ function makeMarkerandLineSvg(input) {
     droneSvgContainer.select('g.circle').select('circle')
         .attr("fill", function (d) {
             return colorScale(d.domain.height);
-        })
+        });
 
     let newSvg1 = lineSvgContainer.enter().append("svg");
     newSvg1.attr("class", "lineSvg");
@@ -203,7 +205,7 @@ function positionLineSvg() {
 
 // Create tooltip value for the existing tooltip div and position to drone
 function createTooltipValueandPosition(data) {
-    let tooltipPane = d3.select(map.getPanes().tooltipPane)
+    let tooltipPane = d3.select(map.getPanes().tooltipPane);
     let tooltipDiv = d3.select('.tooltip');
     if (tooltipDiv.classed('fadeOut')) {
         tooltipDiv.classed('fadeOut', false);
@@ -227,8 +229,8 @@ function createTooltipValueandPosition(data) {
             "px, " +
             (map.latLngToLayerPoint(droneLL).y - 57) +
             "px, 0px)"
-        )
-    })
+        );
+    });
 }
 
 // Measure range svg color change in fetch

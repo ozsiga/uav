@@ -1,3 +1,5 @@
+/* global d3 */
+
 import {
 map
         } from "./script.js";
@@ -37,8 +39,8 @@ function makeSensorIconSvg(input) {
     svgContainer.exit().remove();
     let newSvg = svgContainer.enter().append("svg");
     newSvg.attr("class", "iconSvg");
-    newSvg.style("width", 50);
-    newSvg.style("height", 50);
+    newSvg.style("width", "50px");
+    newSvg.style("height", "50px");
     newSvg.style("z-index", 1500);
     svgContainer = newSvg.merge(svgContainer);
     svgContainer.style("transform", function (d) {
@@ -229,9 +231,7 @@ function positionSvgContainer() {
                     "px, 0px)"
                     );
         });
-        svgContainer.attr("transform-origin", function (d) {
-            return "0 0";
-        });
+        svgContainer.style("transform-origin", "0px 0px");
     }
 }
 
